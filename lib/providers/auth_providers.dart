@@ -6,9 +6,10 @@ import '../models/auth_tokens/auth_token.dart';
 import '../providers/dio_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final authControllerProvider = AsyncNotifierProvider<AuthController, void>(
-  () => AuthController(),
-);
+final authControllerProvider =
+    AutoDisposeAsyncNotifierProvider<AuthController, void>(
+      () => AuthController(),
+    );
 
 final authTokenProvider = AsyncNotifierProvider<AuthTokenNotifier, AuthToken?>(
   () => AuthTokenNotifier(),
