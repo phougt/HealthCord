@@ -37,7 +37,7 @@ class AuthViewModel extends AutoDisposeAsyncNotifier<void> {
 
     if (result.isSuccessful) {
       final tokenNotifier = ref.read(authTokenProvider.notifier);
-      tokenNotifier.setAuthToken(result.data!);
+      await tokenNotifier.setAuthToken(result.data!);
       state = const AsyncValue.data(null);
       return true;
     } else {
@@ -83,7 +83,7 @@ class AuthViewModel extends AutoDisposeAsyncNotifier<void> {
 
     if (result.isSuccessful) {
       final tokenNotifier = ref.read(authTokenProvider.notifier);
-      tokenNotifier.clearAuthToken();
+      await tokenNotifier.clearAuthToken();
       state = const AsyncValue.data(null);
       return true;
     } else {
