@@ -38,11 +38,7 @@ class SignupScreen extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 10,
                     children: [
-                      Icon(
-                        Icons.person_add,
-                        size: 100,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                      Icon(Icons.person_add, size: 100),
                       Text(
                         "Sign Up",
                         textAlign: TextAlign.center,

@@ -1,0 +1,6 @@
+import 'package:family_health_record/models/groups/group.dart';
+import 'package:family_health_record/utils/result.dart';
+
+abstract class GroupRepository {
+  Future<Result<List<Group>>> getGroupsWithPagination(int perPage, int page);
+}

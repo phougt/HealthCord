@@ -24,11 +24,7 @@ class LoginScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 10,
                 children: [
-                  Icon(
-                    Icons.book,
-                    size: 100,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  Icon(Icons.book, size: 100),
                   Text(
                     "HealthCord",
                     textAlign: TextAlign.center,
@@ -64,7 +60,10 @@ class LoginScreen extends ConsumerWidget {
                   if (stateError['message'] != null && errors.isEmpty)
                     Text(
                       stateError['message'].toString(),
-                      style: TextStyle(color: Colors.red),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                        fontSize: 16,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                   const SizedBox(height: 20),
