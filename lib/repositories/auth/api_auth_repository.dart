@@ -6,7 +6,6 @@ import '../../utils/result.dart';
 
 class ApiAuthRepository extends AuthRepository {
   final Dio _dio;
-  Dio get dio => _dio;
   ApiAuthRepository({required Dio dio}) : _dio = dio;
 
   @override
