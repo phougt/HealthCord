@@ -9,7 +9,6 @@ class SignupScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authController = ref.watch(authControllerProvider.notifier);
     final state = ref.watch(authControllerProvider);
 
     final stateError = state.error as Map<String, dynamic>? ?? {};
@@ -51,7 +50,9 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 30),
                       TextField(
-                        controller: authController.usernameController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .usernameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
@@ -59,7 +60,9 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: authController.passwordController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',
@@ -68,7 +71,9 @@ class SignupScreen extends ConsumerWidget {
                         obscureText: true,
                       ),
                       TextField(
-                        controller: authController.confirmPasswordController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .confirmPasswordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Confirm Password',
@@ -78,7 +83,9 @@ class SignupScreen extends ConsumerWidget {
                         obscureText: true,
                       ),
                       TextField(
-                        controller: authController.emailController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .emailController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Email',
@@ -86,7 +93,9 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: authController.firstNameController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .firstNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'First Name',
@@ -94,7 +103,9 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: authController.lastNameController,
+                        controller: ref
+                            .read(authControllerProvider.notifier)
+                            .lastNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Last Name',
@@ -106,7 +117,9 @@ class SignupScreen extends ConsumerWidget {
                         onPressed: () async {
                           if (state.isLoading) return;
 
-                          if (await authController.signup()) {
+                          if (await ref
+                              .read(authControllerProvider.notifier)
+                              .signup()) {
                             if (!context.mounted) return;
                             context.goNamed('splashScreen');
                           }
