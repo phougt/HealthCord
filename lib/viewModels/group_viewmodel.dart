@@ -26,19 +26,15 @@ class GroupViewModel extends AsyncNotifier<void> {
   }
 
   Future<bool> loadMoreGroups() async {
-    if (scrollController.position.pixels >=
-        scrollController.position.maxScrollExtent - 100) {
-      state = const AsyncValue.loading();
-      currentPage++;
-      final repo = ref.read(groupRepositoryProvider);
-      final result = await repo.getGroupsWithPagination(perPage, currentPage);
-      if (result.isSuccessful) {
-        groups.addAll(result.data!);
-        state = AsyncData(null);
-        return true;
-      } else {
-        state = AsyncError(result.error!.toJson(), StackTrace.current);
-      }
+    currentPage++;
+    final repo = ref.read(groupRepositoryProvider);
+    final result = await repo.getGroupsWithPagination(perPage, currentPage);
+    if (result.isSuccessful) {
+      groups.addAll(result.data!);
+      state = AsyncData(null);
+      return true;
+    } else {
+      state = AsyncError(result.error!.toJson(), StackTrace.current);
     }
 
     return false;

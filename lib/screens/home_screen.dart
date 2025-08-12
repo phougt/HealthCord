@@ -44,54 +44,64 @@ class HomeScreen extends StatelessWidget {
                 return const Center(child: Text('No groups found'));
               }
 
-              return RefreshIndicator(
-                child: ListView.builder(
-                  controller: groupViewModel.scrollController,
-                  itemCount: groupViewModel.groups.length,
-                  itemBuilder: (context, index) {
-                    final group = groupViewModel.groups[index];
-                    return Card(
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6.0),
-                        ),
-                        titleTextStyle: Theme.of(context)
-                            .listTileTheme
-                            .titleTextStyle
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                        ),
-                        title: Text(group.name, maxLines: 1),
-                        subtitle: Text(
-                          group.description ?? 'No description',
-                          maxLines: 2,
-                        ),
-                        leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                            group.groupProfile ??
-                                'https://via.placeholder.com/150',
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization':
-                                  'Bearer ${ref.read(authTokenProvider).value?.accessToken}',
-                            },
-                          ),
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
-                        ),
-                        onTap: () {},
-                      ),
-                    );
-                  },
-                ),
-                onRefresh: () async {
-                  await ref
-                      .read(groupViewModelProvider.notifier)
-                      .refreshGroups();
+              return NotificationListener(
+                onNotification: (notification) {
+                  if (notification is ScrollUpdateNotification &&
+                      notification.metrics.pixels >=
+                          notification.metrics.maxScrollExtent - 100) {
+                    groupViewModel.loadMoreGroups();
+                  }
+                  return true;
                 },
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await ref
+                        .read(groupViewModelProvider.notifier)
+                        .refreshGroups();
+                  },
+                  child: ListView.builder(
+                    controller: groupViewModel.scrollController,
+                    itemCount: groupViewModel.groups.length,
+                    itemBuilder: (context, index) {
+                      final group = groupViewModel.groups[index];
+                      return Card(
+                        child: ListTile(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                          ),
+                          titleTextStyle: Theme.of(context)
+                              .listTileTheme
+                              .titleTextStyle
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                          ),
+                          title: Text(group.name, maxLines: 1),
+                          subtitle: Text(
+                            group.description ?? 'No description',
+                            maxLines: 2,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              group.groupProfile ??
+                                  'https://via.placeholder.com/150',
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization':
+                                    'Bearer ${ref.read(authTokenProvider).value?.accessToken}',
+                              },
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.more_vert),
+                            onPressed: () {},
+                          ),
+                          onTap: () {},
+                        ),
+                      );
+                    },
+                  ),
+                ),
               );
             },
             error: (error, stackTrace) {
