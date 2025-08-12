@@ -35,22 +35,21 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final state = ref.watch(groupControllerProvider);
+          final state = ref.watch(groupViewModelProvider);
+          final groupViewModel = ref.read(groupViewModelProvider.notifier);
 
           return state.when(
-            data: (groups) {
-              if (groups.isEmpty) {
+            data: (void data) {
+              if (ref.read(groupViewModelProvider.notifier).groups.isEmpty) {
                 return const Center(child: Text('No groups found'));
               }
 
               return RefreshIndicator(
                 child: ListView.builder(
-                  controller: ref
-                      .read(groupControllerProvider.notifier)
-                      .scrollController,
-                  itemCount: groups.length,
+                  controller: groupViewModel.scrollController,
+                  itemCount: groupViewModel.groups.length,
                   itemBuilder: (context, index) {
-                    final group = groups[index];
+                    final group = groupViewModel.groups[index];
                     return Card(
                       child: ListTile(
                         shape: RoundedRectangleBorder(
@@ -90,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 onRefresh: () async {
                   await ref
-                      .read(groupControllerProvider.notifier)
+                      .read(groupViewModelProvider.notifier)
                       .refreshGroups();
                 },
               );

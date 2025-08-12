@@ -1,4 +1,4 @@
-import 'package:family_health_record/controllers/auth_controller.dart';
+import 'package:family_health_record/viewModels/auth_viewmodel.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../repositories/auth/auth_repository.dart';
@@ -6,9 +6,9 @@ import '../models/auth_tokens/auth_token.dart';
 import '../providers/dio_provider.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-final authControllerProvider =
-    AutoDisposeAsyncNotifierProvider<AuthController, void>(
-      () => AuthController(),
+final authViewModelProvider =
+    AutoDisposeAsyncNotifierProvider<AuthViewModel, void>(
+      () => AuthViewModel(),
     );
 
 final authTokenProvider = AsyncNotifierProvider<AuthTokenNotifier, AuthToken?>(

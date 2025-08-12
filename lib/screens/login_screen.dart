@@ -8,7 +8,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authControllerProvider);
+    final state = ref.watch(authViewModelProvider);
 
     final stateError = state.error as Map<String, dynamic>? ?? {};
     final errors = stateError['errors'] as Map<String, dynamic>? ?? {};
@@ -38,7 +38,7 @@ class LoginScreen extends ConsumerWidget {
                   const SizedBox(height: 30),
                   TextField(
                     controller: ref
-                        .read(authControllerProvider.notifier)
+                        .read(authViewModelProvider.notifier)
                         .usernameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -48,7 +48,7 @@ class LoginScreen extends ConsumerWidget {
                   ),
                   TextField(
                     controller: ref
-                        .read(authControllerProvider.notifier)
+                        .read(authViewModelProvider.notifier)
                         .passwordController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -70,7 +70,7 @@ class LoginScreen extends ConsumerWidget {
                   FilledButton(
                     onPressed: () async {
                       if (state.isLoading) return;
-                      ref.read(authControllerProvider.notifier).login();
+                      ref.read(authViewModelProvider.notifier).login();
                     },
                     child: state.isLoading
                         ? const CircularProgressIndicator(

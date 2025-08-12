@@ -9,7 +9,7 @@ class SignupScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authControllerProvider);
+    final state = ref.watch(authViewModelProvider);
 
     final stateError = state.error as Map<String, dynamic>? ?? {};
     final errors = stateError['errors'] as Map<String, dynamic>? ?? {};
@@ -47,7 +47,7 @@ class SignupScreen extends ConsumerWidget {
                       const SizedBox(height: 30),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .usernameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -57,7 +57,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -68,7 +68,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .confirmPasswordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -80,7 +80,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .emailController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -90,7 +90,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .firstNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -100,7 +100,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       TextField(
                         controller: ref
-                            .read(authControllerProvider.notifier)
+                            .read(authViewModelProvider.notifier)
                             .lastNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
@@ -114,7 +114,7 @@ class SignupScreen extends ConsumerWidget {
                           if (state.isLoading) return;
 
                           if (await ref
-                              .read(authControllerProvider.notifier)
+                              .read(authViewModelProvider.notifier)
                               .signup()) {
                             if (!context.mounted) return;
                             context.goNamed('splashScreen');

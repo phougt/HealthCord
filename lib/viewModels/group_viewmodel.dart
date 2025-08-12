@@ -3,13 +3,14 @@ import 'package:family_health_record/providers/group_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
-class GroupController extends AsyncNotifier<List<Group>> {
+class GroupViewModel extends AsyncNotifier<void> {
   final scrollController = ScrollController();
+  final groups = <Group>[];
   final perPage = 10;
   int currentPage = 1;
 
   @override
-  Future<List<Group>> build() async {
+  Future<void> build() async {
     ref.onDispose(() {
       scrollController.dispose();
     });
@@ -17,9 +18,10 @@ class GroupController extends AsyncNotifier<List<Group>> {
     final repo = ref.read(groupRepositoryProvider);
     final result = await repo.getGroupsWithPagination(perPage, currentPage);
     if (result.isSuccessful) {
-      return result.data!;
+      groups.addAll(result.data!);
+      state = AsyncData(null);
     } else {
-      return [];
+      state = AsyncError(result.error!.toJson(), StackTrace.current);
     }
   }
 
@@ -31,7 +33,8 @@ class GroupController extends AsyncNotifier<List<Group>> {
       final repo = ref.read(groupRepositoryProvider);
       final result = await repo.getGroupsWithPagination(perPage, currentPage);
       if (result.isSuccessful) {
-        state = AsyncData([...state.value ?? [], ...result.data!]);
+        groups.addAll(result.data!);
+        state = AsyncData(null);
         return true;
       } else {
         state = AsyncError(result.error!.toJson(), StackTrace.current);
@@ -47,7 +50,9 @@ class GroupController extends AsyncNotifier<List<Group>> {
     final repo = ref.read(groupRepositoryProvider);
     final result = await repo.getGroupsWithPagination(perPage, currentPage);
     if (result.isSuccessful) {
-      state = AsyncData(result.data!);
+      groups.clear();
+      groups.addAll(result.data!);
+      state = AsyncData(null);
       return true;
     } else {
       state = AsyncError(result.error!.toJson(), StackTrace.current);
