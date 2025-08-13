@@ -9,38 +9,6 @@ class ApiAuthRepository extends AuthRepository {
   ApiAuthRepository({required Dio dio}) : _dio = dio;
 
   @override
-  Future<Result<AuthToken>> getFreshToken(String refreshToken) async {
-    try {
-      final response = await _dio.post(
-        '/refresh-token',
-        data: {'refreshToken': refreshToken},
-      );
-
-      if (response.statusCode == 200) {
-        final json = response.data;
-        final data = json['data'];
-        final authToken = AuthToken.fromJson(data);
-        return Result.ok(
-          data: authToken,
-          message: json['message'] ?? 'Token refreshed successfully',
-        );
-      } else if (response.statusCode == 401 || response.statusCode == 422) {
-        return Result.fail(ApiError.fromJson(response.data));
-      }
-    } catch (e) {
-      return Result.fail(
-        ApiError(message: 'An error occurred while refreshing the token'),
-      );
-    }
-
-    return Result.fail(
-      ApiError(
-        message: 'An unexpected error occurred while refreshing the token',
-      ),
-    );
-  }
-
-  @override
   Future<Result<AuthToken>> login(String username, String password) async {
     try {
       final response = await _dio.post(

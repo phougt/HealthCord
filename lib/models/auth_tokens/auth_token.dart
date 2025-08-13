@@ -11,9 +11,6 @@ sealed class AuthToken with _$AuthToken {
     @JsonKey(name: 'access_token') required String accessToken,
     @JsonKey(name: 'access_token_expiry')
     required DateTime accessTokenExpiryDate,
-    @JsonKey(name: 'refresh_token') required String refreshToken,
-    @JsonKey(name: 'refresh_token_expiry')
-    required DateTime refreshTokenExpiryDate,
   }) = _AuthToken;
 
   factory AuthToken.fromJson(Map<String, dynamic> json) =>

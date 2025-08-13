@@ -62,7 +62,6 @@ class LoginScreen extends ConsumerWidget {
                       stateError['message'].toString(),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.error,
-                        fontSize: 16,
                       ),
                       textAlign: TextAlign.center,
                     ),
