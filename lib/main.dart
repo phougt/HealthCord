@@ -1,10 +1,51 @@
+import 'package:dio/dio.dart';
+import 'package:family_health_record/configs/router_config.dart';
+import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
+import 'package:family_health_record/repositories/auth/auth_repository.dart';
 import 'package:flutter/material.dart';
-import 'configs/router_config.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart';
+import 'managers/auth_token_manager.dart';
+import 'package:family_health_record/configs/constant.dart';
 import 'configs/theme.dart';
 
 void main() {
-  runApp(const ProviderScope(child: MainApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthTokenManager()),
+        ProxyProvider<AuthTokenManager, Dio>(
+          create: (context) {
+            return Dio()
+              ..options.connectTimeout = const Duration(seconds: 10)
+              ..options.receiveTimeout = const Duration(seconds: 10)
+              ..options.baseUrl = baseUrl
+              ..options.headers['Accept'] = 'application/json'
+              ..options.validateStatus = (status) {
+                return status != null &&
+                    (status >= 200 && status < 300 ||
+                        status == 401 ||
+                        status == 422);
+              };
+          },
+          update: (context, authTokenManager, previous) {
+            final dio = previous!;
+            dio.options.headers['Authorization'] =
+                'Bearer ${authTokenManager.authToken}';
+            return dio;
+          },
+        ),
+        ProxyProvider<Dio, AuthRepository>(
+          create: (context) {
+            return ApiAuthRepository(dio: context.read<Dio>());
+          },
+          update: (context, dio, previous) {
+            return ApiAuthRepository(dio: dio);
+          },
+        ),
+      ],
+      child: const MainApp(),
+    ),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -17,8 +58,8 @@ class MainApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       darkTheme: MaterialTheme(Typography.blackCupertino).dark(),
       theme: MaterialTheme(Typography.whiteCupertino).light(),
-      routerConfig: rootRouter,
       debugShowCheckedModeBanner: false,
+      routerConfig: rootRouter,
     );
   }
 }

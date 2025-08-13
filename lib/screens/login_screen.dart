@@ -1,17 +1,16 @@
+import 'package:family_health_record/viewModels/login_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/auth_providers.dart';
+import 'package:provider/provider.dart';
 
-class LoginScreen extends ConsumerWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authViewModelProvider);
-
-    final stateError = state.error as Map<String, dynamic>? ?? {};
-    final errors = stateError['errors'] as Map<String, dynamic>? ?? {};
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<LoginViewModel>();
+    final Map<String, dynamic> errors = viewModel.errors['errors'] ?? {};
+    final message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
       body: SafeArea(
@@ -37,9 +36,7 @@ class LoginScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 30),
                   TextField(
-                    controller: ref
-                        .read(authViewModelProvider.notifier)
-                        .usernameController,
+                    controller: viewModel.usernameController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Username',
@@ -47,9 +44,7 @@ class LoginScreen extends ConsumerWidget {
                     ),
                   ),
                   TextField(
-                    controller: ref
-                        .read(authViewModelProvider.notifier)
-                        .passwordController,
+                    controller: viewModel.passwordController,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Password',
@@ -57,21 +52,21 @@ class LoginScreen extends ConsumerWidget {
                     ),
                     obscureText: true,
                   ),
-                  if (stateError['message'] != null && errors.isEmpty)
+                  if (message.isNotEmpty && errors.isEmpty)
                     Text(
-                      stateError['message'].toString(),
+                      message,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.error,
                       ),
-                      textAlign: TextAlign.center,
                     ),
                   const SizedBox(height: 20),
                   FilledButton(
                     onPressed: () async {
-                      if (state.isLoading) return;
-                      ref.read(authViewModelProvider.notifier).login();
+                      if (viewModel.isLoading) return;
+                      viewModel.login();
                     },
-                    child: state.isLoading
+                    child: viewModel.isLoading
                         ? const CircularProgressIndicator(
                             color: Colors.white,
                             strokeWidth: 2,

@@ -1,18 +1,17 @@
+import 'package:family_health_record/viewModels/signup_viewmodel.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../providers/auth_providers.dart';
+import 'package:provider/provider.dart';
 
-class SignupScreen extends ConsumerWidget {
+class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(authViewModelProvider);
-
-    final stateError = state.error as Map<String, dynamic>? ?? {};
-    final errors = stateError['errors'] as Map<String, dynamic>? ?? {};
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<SignupViewModel>();
+    final errors = viewModel.errors['errors'] ?? {};
+    final message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
       appBar: AppBar(
@@ -46,9 +45,7 @@ class SignupScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 30),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .usernameController,
+                        controller: viewModel.usernameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Username',
@@ -56,9 +53,7 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .passwordController,
+                        controller: viewModel.passwordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Password',
@@ -67,9 +62,7 @@ class SignupScreen extends ConsumerWidget {
                         obscureText: true,
                       ),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .confirmPasswordController,
+                        controller: viewModel.confirmPasswordController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Confirm Password',
@@ -79,9 +72,7 @@ class SignupScreen extends ConsumerWidget {
                         obscureText: true,
                       ),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .emailController,
+                        controller: viewModel.emailController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Email',
@@ -89,9 +80,7 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .firstNameController,
+                        controller: viewModel.firstnameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'First Name',
@@ -99,9 +88,7 @@ class SignupScreen extends ConsumerWidget {
                         ),
                       ),
                       TextField(
-                        controller: ref
-                            .read(authViewModelProvider.notifier)
-                            .lastNameController,
+                        controller: viewModel.lastnameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(),
                           labelText: 'Last Name',
@@ -111,14 +98,8 @@ class SignupScreen extends ConsumerWidget {
                       const SizedBox(height: 20),
                       FilledButton(
                         onPressed: () async {
-                          if (state.isLoading) return;
-
-                          if (await ref
-                              .read(authViewModelProvider.notifier)
-                              .signup()) {
-                            if (!context.mounted) return;
-                            context.goNamed('splashScreen');
-                          }
+                          if (viewModel.isLoading) return;
+                          final success = await viewModel.signup();
                         },
                         child: const Text('Sign Up'),
                       ),
