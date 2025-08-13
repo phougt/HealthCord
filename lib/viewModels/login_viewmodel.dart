@@ -26,7 +26,7 @@ class LoginViewModel extends ChangeNotifier {
 
     final result = await _authRepository.login(username, password);
     if (result.isSuccessful) {
-      _authTokenManager.setAuthToken(result.data!);
+      await _authTokenManager.setAuthToken(result.data!);
       isLoading = false;
       notifyListeners();
       return true;

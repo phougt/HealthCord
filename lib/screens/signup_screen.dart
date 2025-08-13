@@ -1,4 +1,4 @@
-import 'package:family_health_record/viewModels/signup_viewmodel.dart';
+import 'package:family_health_record/viewmodels/signup_viewmodel.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';

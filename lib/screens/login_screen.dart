@@ -64,7 +64,11 @@ class LoginScreen extends StatelessWidget {
                   FilledButton(
                     onPressed: () async {
                       if (viewModel.isLoading) return;
-                      viewModel.login();
+                      if (await viewModel.login()) {
+                        if (context.mounted) {
+                          context.goNamed('homeScreen');
+                        }
+                      }
                     },
                     child: viewModel.isLoading
                         ? const CircularProgressIndicator(

@@ -1,11 +1,12 @@
 import "package:family_health_record/managers/auth_token_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
+import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
 import "package:family_health_record/screens/signup_screen.dart";
-import "package:family_health_record/viewModels/signup_viewmodel.dart";
+import "package:family_health_record/viewmodels/signup_viewmodel.dart";
 import "package:go_router/go_router.dart";
 import "package:provider/provider.dart";
-import '../viewModels/login_viewmodel.dart';
+import "package:family_health_record/viewModels/login_viewmodel.dart";
 
 final GoRouter rootRouter = GoRouter(
   routes: <GoRoute>[
@@ -24,16 +25,18 @@ final GoRouter rootRouter = GoRouter(
               authTokenManager: context.read<AuthTokenManager>(),
             );
           },
-          child: const LoginScreen(),
+          child: LoginScreen(),
         );
       },
       name: 'loginScreen',
     ),
-    // GoRoute(
-    //   path: '/home',
-    //   builder: (context, state) => const HomeScreen(),
-    //   name: 'homeScreen',
-    // ),
+    GoRoute(
+      path: '/home',
+      name: 'homeScreen',
+      builder: (context, state) {
+        return const HomeScreen();
+      },
+    ),
     GoRoute(
       path: '/signupScreen',
       builder: (context, state) {

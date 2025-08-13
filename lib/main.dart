@@ -2,6 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:family_health_record/configs/router_config.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
+import 'package:family_health_record/repositories/group/api_group_repository.dart';
+import 'package:family_health_record/repositories/group/group_repository.dart';
+import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'managers/auth_token_manager.dart';
@@ -30,17 +33,23 @@ void main() {
           update: (context, authTokenManager, previous) {
             final dio = previous!;
             dio.options.headers['Authorization'] =
-                'Bearer ${authTokenManager.authToken}';
+                'Bearer ${authTokenManager.authToken?.accessToken}';
             return dio;
           },
         ),
-        ProxyProvider<Dio, AuthRepository>(
+        Provider<GroupRepository>(
+          create: (context) {
+            return ApiGroupRepository(dio: context.read<Dio>());
+          },
+        ),
+        Provider<AuthRepository>(
           create: (context) {
             return ApiAuthRepository(dio: context.read<Dio>());
           },
-          update: (context, dio, previous) {
-            return ApiAuthRepository(dio: dio);
-          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              HomeViewModel(groupRepository: context.read<GroupRepository>()),
         ),
       ],
       child: const MainApp(),
