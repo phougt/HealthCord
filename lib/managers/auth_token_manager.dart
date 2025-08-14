@@ -31,6 +31,17 @@ class AuthTokenManager extends ChangeNotifier {
         accessTokenExpiryDate: DateTime.parse(accessTokenExpiry),
       );
 
+      bool isExpired = _authToken!.accessTokenExpiryDate.isBefore(
+        DateTime.now().toUtc(),
+      );
+
+      if (isExpired) {
+        await clearAuthToken();
+        isFinishedLoading = true;
+        notifyListeners();
+        return;
+      }
+
       _dio.options.headers['Authorization'] =
           'Bearer ${_authToken!.accessToken}';
 
