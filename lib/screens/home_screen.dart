@@ -11,13 +11,26 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
+    final authTokenManager = context.watch<AuthTokenManager>();
 
     return Scaffold(
       appBar: AppBar(
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(radius: 15, child: Icon(Icons.person)),
+            child: CircleAvatar(
+              radius: 15,
+              child: authTokenManager.user?.profile != null
+                  ? Image.network(
+                      authTokenManager.user?.profile ?? '',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization':
+                            'Bearer ${authTokenManager.authToken?.accessToken}',
+                      },
+                    )
+                  : const Icon(Icons.person, size: 30),
+            ),
           ),
         ],
         title: Row(
@@ -69,10 +82,16 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'Welcome back, Mint',
+                                    "Welcome back,",
                                     style: Theme.of(
                                       context,
-                                    ).textTheme.headlineLarge,
+                                    ).textTheme.headlineMedium,
+                                  ),
+                                  Text(
+                                    "${authTokenManager.user?.firstname} ${authTokenManager.user?.lastname}",
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.headlineSmall,
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
@@ -114,16 +133,19 @@ class HomeScreen extends StatelessWidget {
           return FloatingActionButton(
             onPressed: () {
               showModalBottomSheet(
+                showDragHandle: true,
                 useSafeArea: true,
                 isScrollControlled: true,
                 context: context,
                 builder: (context) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
+                  return SafeArea(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
                           leading: const Icon(Icons.group_add),
                           title: const Text('Create New Group'),
                           onTap: () {
@@ -131,6 +153,9 @@ class HomeScreen extends StatelessWidget {
                           },
                         ),
                         ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                          ),
                           leading: const Icon(Icons.group_rounded),
                           title: const Text('Join Existing Group'),
                           onTap: () {

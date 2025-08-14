@@ -15,7 +15,26 @@ void main() {
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthTokenManager()),
+        Provider(
+          create: (context) {
+            return Dio()
+              ..options.baseUrl = baseUrl
+              ..options.connectTimeout = const Duration(seconds: 10)
+              ..options.receiveTimeout = const Duration(seconds: 10)
+              ..options.headers['Accept'] = 'application/json'
+              ..options.validateStatus = (status) {
+                return status != null &&
+                    (status >= 200 && status < 300 ||
+                        status == 401 ||
+                        status == 422);
+              };
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) {
+            return AuthTokenManager(dio: context.read<Dio>())..loadAuthData();
+          },
+        ),
         ProxyProvider<AuthTokenManager, Dio>(
           create: (context) {
             return Dio()

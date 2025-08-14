@@ -1,30 +1,26 @@
-// import 'package:family_health_record/screens/home_screen.dart';
-// import 'package:family_health_record/screens/login_screen.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../providers/auth_providers.dart';
+import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-// class SplashScreen extends ConsumerWidget {
-//   const SplashScreen({super.key});
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
 
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final authTokenProviderValue = ref.watch(authTokenProvider);
+  @override
+  Widget build(BuildContext context) {
+    final authTokenManager = context.watch<AuthTokenManager>();
+    if (authTokenManager.isFinishedLoading) {
+      if (authTokenManager.authToken != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.goNamed('homeScreen');
+        });
+      } else {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          context.goNamed('loginScreen');
+        });
+      }
+    }
 
-//     return authTokenProviderValue.when(
-//       data: (authToken) {
-//         if (authToken == null) {
-//           return const LoginScreen();
-//         } else {
-//           return const HomeScreen();
-//         }
-//       },
-//       error: (error, stackTrace) {
-//         return Scaffold(body: Center(child: CircularProgressIndicator()));
-//       },
-//       loading: () {
-//         return Scaffold(body: Center(child: CircularProgressIndicator()));
-//       },
-//     );
-//   }
-// }
+    return Scaffold(body: Center(child: CircularProgressIndicator()));
+  }
+}
