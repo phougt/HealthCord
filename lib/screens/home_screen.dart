@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
@@ -19,7 +21,7 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              radius: 15,
+              radius: 20,
               child: authTokenManager.user?.profile != null
                   ? Image.network(
                       authTokenManager.user?.profile ?? '',
@@ -29,7 +31,7 @@ class HomeScreen extends StatelessWidget {
                             'Bearer ${authTokenManager.authToken?.accessToken}',
                       },
                     )
-                  : const Icon(Icons.person, size: 30),
+                  : const Icon(Icons.person, size: 35),
             ),
           ),
         ],
@@ -70,22 +72,30 @@ class HomeScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Icon(
-                                        Icons.waving_hand_rounded,
+                                        Icons.tag_faces_rounded,
                                         size: 100,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                      Icon(
+                                        Icons.waving_hand_rounded,
+                                        size: 60,
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.primary,
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(height: 16),
+                                  const SizedBox(height: 8),
                                   Text(
                                     "Welcome back,",
                                     style: Theme.of(
                                       context,
-                                    ).textTheme.headlineMedium,
+                                    ).textTheme.headlineSmall,
                                   ),
                                   Text(
                                     "${authTokenManager.user?.firstname} ${authTokenManager.user?.lastname}",
@@ -93,7 +103,6 @@ class HomeScreen extends StatelessWidget {
                                       context,
                                     ).textTheme.headlineSmall,
                                   ),
-                                  const SizedBox(height: 8),
                                   Text(
                                     'How are you doing today?',
                                     style: Theme.of(
@@ -210,6 +219,7 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       if (group.groupProfile != null)
                         CircleAvatar(
+                          radius: 30,
                           backgroundImage: NetworkImage(
                             group.groupProfile!,
                             headers: {
@@ -234,7 +244,9 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    group.description ?? 'No description',
+                    group.description == null || group.description!.isEmpty
+                        ? 'No description provided'
+                        : group.description!,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],

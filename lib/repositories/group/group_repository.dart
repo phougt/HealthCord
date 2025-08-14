@@ -3,4 +3,9 @@ import 'package:family_health_record/utils/result.dart';
 
 abstract class GroupRepository {
   Future<Result<List<Group>>> getGroupsWithPagination(int perPage, int page);
+  Future<Result<Group>> createGroup({
+    required String name,
+    String? description,
+    String? groupProfile,
+  });
 }

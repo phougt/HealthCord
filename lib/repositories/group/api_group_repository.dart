@@ -41,4 +41,48 @@ class ApiGroupRepository extends GroupRepository {
       ApiError(message: 'An unexpected error occurred while fetching groups'),
     );
   }
+
+  @override
+  Future<Result<Group>> createGroup({
+    required String name,
+    String? description,
+    String? groupProfile,
+  }) async {
+    try {
+      final dio = _dio.clone();
+      dio.options.headers['Content-Type'] = 'multipart/form-data';
+
+      final formData = FormData.fromMap({
+        'name': name,
+        'description': description,
+        'group_profile': groupProfile != null
+            ? await MultipartFile.fromFile(groupProfile)
+            : null,
+      });
+
+      final response = await dio.post('/group', data: formData);
+
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final data = json['data'];
+        final createdGroup = Group.fromJson(data);
+        return Result.ok(
+          data: createdGroup,
+          message: json['message'] ?? 'Group created successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Future.value(
+        Result.fail(
+          ApiError(message: 'An error occurred while creating group'),
+        ),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while creating group'),
+    );
+  }
 }
