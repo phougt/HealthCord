@@ -66,14 +66,28 @@ class HomeScreen extends StatelessWidget {
                       return Column(
                         children: [
                           Card(
+                            borderOnForeground: true,
+                            surfaceTintColor: Theme.of(
+                              context,
+                            ).colorScheme.primary,
                             child: Padding(
                               padding: const EdgeInsets.all(16.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
+                                      Transform.flip(
+                                        flipX: true,
+                                        child: Icon(
+                                          Icons.waving_hand_rounded,
+                                          size: 40,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                      ),
                                       Icon(
                                         Icons.tag_faces_rounded,
                                         size: 100,
@@ -83,7 +97,7 @@ class HomeScreen extends StatelessWidget {
                                       ),
                                       Icon(
                                         Icons.waving_hand_rounded,
-                                        size: 60,
+                                        size: 40,
                                         color: Theme.of(
                                           context,
                                         ).colorScheme.primary,
@@ -92,22 +106,11 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
-                                    "Welcome back,",
+                                    textAlign: TextAlign.center,
+                                    "Welcome back, ${authTokenManager.user?.firstname ?? 'User'}",
                                     style: Theme.of(
                                       context,
                                     ).textTheme.headlineSmall,
-                                  ),
-                                  Text(
-                                    "${authTokenManager.user?.firstname} ${authTokenManager.user?.lastname}",
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.headlineSmall,
-                                  ),
-                                  Text(
-                                    'How are you doing today?',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyLarge,
                                   ),
                                 ],
                               ),
@@ -196,6 +199,23 @@ class HomeScreen extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
+            if (group.groupProfile != null && group.groupProfile!.isNotEmpty)
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.05,
+                  child: Image.network(
+                    scale: 5,
+                    filterQuality: FilterQuality.low,
+                    group.groupProfile ?? '',
+                    fit: BoxFit.cover,
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization':
+                          'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
+                    },
+                  ),
+                ),
+              ),
             Positioned(
               bottom: -35,
               right: -20,
