@@ -3,6 +3,27 @@ import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewModel extends ChangeNotifier {
+  static const colorPool = [
+    Colors.red,
+    Colors.green,
+    Colors.blue,
+    Colors.orange,
+    Colors.purple,
+    Colors.teal,
+    Colors.amber,
+    Colors.cyan,
+    Colors.lime,
+    Colors.indigo,
+    Colors.pink,
+  ];
+  static const iconPool = [
+    Icons.adb_outlined,
+    Icons.account_balance_wallet_rounded,
+    Icons.accessibility_new_rounded,
+    Icons.handshake_rounded,
+    Icons.group_work,
+    Icons.nature,
+  ];
   final GroupRepository _groupRepository;
   final scrollController = ScrollController();
   final groups = <Group>[];
@@ -25,7 +46,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<bool> loadMoreGroups() async {
-    if (!hasMore) return false;
+    // if (!hasMore) return false;
     if (isLoading) return false;
     isLoading = true;
     notifyListeners();
@@ -36,9 +57,9 @@ class HomeViewModel extends ChangeNotifier {
       currentPage,
     );
     if (result.isSuccessful) {
-      if (result.data!.isEmpty) {
-        hasMore = false;
-      }
+      // if (result.data!.isEmpty) {
+      //   hasMore = false;
+      // }
       groups.addAll(result.data!);
       isLoading = false;
       notifyListeners();

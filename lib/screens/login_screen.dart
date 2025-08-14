@@ -23,7 +23,7 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 10,
                 children: [
-                  Icon(Icons.book, size: 100),
+                  Icon(Icons.note_add_rounded, size: 100),
                   Text(
                     "HealthCord",
                     textAlign: TextAlign.center,
