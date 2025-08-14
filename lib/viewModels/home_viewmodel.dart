@@ -7,6 +7,7 @@ class HomeViewModel extends ChangeNotifier {
   final scrollController = ScrollController();
   final groups = <Group>[];
   final perPage = 10;
+  bool hasMore = true;
   int currentPage = 1;
   bool isLoading = false;
   Map<String, dynamic> errors = {};
@@ -24,6 +25,7 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<bool> loadMoreGroups() async {
+    if (!hasMore) return false;
     if (isLoading) return false;
     isLoading = true;
     notifyListeners();
@@ -34,6 +36,9 @@ class HomeViewModel extends ChangeNotifier {
       currentPage,
     );
     if (result.isSuccessful) {
+      if (result.data!.isEmpty) {
+        hasMore = false;
+      }
       groups.addAll(result.data!);
       isLoading = false;
       notifyListeners();

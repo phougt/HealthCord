@@ -44,6 +44,14 @@ class HomeScreen extends StatelessWidget {
           itemCount: viewModel.groups.length,
           itemBuilder: (context, index) {
             final group = viewModel.groups[index];
+            if (index == viewModel.groups.length - 1 && viewModel.isLoading) {
+              return const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            }
             return Card(
               child: ListTile(
                 shape: RoundedRectangleBorder(
@@ -75,6 +83,7 @@ class HomeScreen extends StatelessWidget {
               ),
             );
           },
+          physics: const AlwaysScrollableScrollPhysics(),
         ),
       ),
       floatingActionButton: FloatingActionButton(
