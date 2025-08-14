@@ -8,4 +8,5 @@ abstract class GroupRepository {
     String? description,
     String? groupProfile,
   });
+  Future<Result<void>> joinGroup(String link);
 }

@@ -3,10 +3,12 @@ import "package:family_health_record/repositories/auth/auth_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
+import "package:family_health_record/screens/join_group_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
 import "package:family_health_record/screens/signup_screen.dart";
 import "package:family_health_record/screens/splash_screen.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
+import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewmodels/signup_viewmodel.dart";
 import "package:go_router/go_router.dart";
 import "package:image_picker/image_picker.dart";
@@ -75,6 +77,20 @@ final GoRouter rootRouter = GoRouter(
         );
       },
       name: 'createGroupScreen',
+    ),
+    GoRoute(
+      path: '/joinGroup',
+      builder: (context, state) {
+        return ChangeNotifierProvider(
+          create: (context) {
+            return JoinGroupViewModel(
+              groupRepository: context.read<GroupRepository>(),
+            );
+          },
+          child: const JoinGroupScreen(),
+        );
+      },
+      name: 'joinGroupScreen',
     ),
   ],
   redirect: (context, state) {

@@ -85,4 +85,30 @@ class ApiGroupRepository extends GroupRepository {
       ApiError(message: 'An unexpected error occurred while creating group'),
     );
   }
+
+  @override
+  Future<Result<void>> joinGroup(String link) async {
+    try {
+      final response = await _dio.post(
+        '/invite-link',
+        data: {'invite_link': link},
+      );
+      if (response.statusCode == 200) {
+        return Result.ok(
+          data: null,
+          message: response.data['message'] ?? 'Joined group successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while joining group'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while joining group'),
+    );
+  }
 }
