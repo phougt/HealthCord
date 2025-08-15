@@ -46,7 +46,9 @@ void main() {
                 return status != null &&
                     (status >= 200 && status < 300 ||
                         status == 401 ||
-                        status == 422);
+                        status == 422 ||
+                        status == 404 ||
+                        status == 400);
               };
           },
           update: (context, authTokenManager, previous) {
