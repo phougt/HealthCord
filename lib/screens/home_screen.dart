@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
@@ -56,85 +54,55 @@ class HomeScreen extends StatelessWidget {
                 onRefresh: () async {
                   await viewModel.refreshGroups();
                 },
-                child: ListView.builder(
-                  controller: viewModel.scrollController,
-                  itemCount: viewModel.groups.length,
-                  itemBuilder: (context, index) {
-                    final group = viewModel.groups[index];
+                child: viewModel.groups.isEmpty && !viewModel.isLoading
+                    ? const Center(
+                        child: Text(
+                          'No groups found.\nCreate or join a group to get started.',
+                          style: TextStyle(fontSize: 16),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    : ListView.builder(
+                        controller: viewModel.scrollController,
+                        itemCount: viewModel.groups.length,
+                        itemBuilder: (context, index) {
+                          final group = viewModel.groups[index];
 
-                    if (index == 0) {
-                      return Column(
-                        children: [
-                          Card(
-                            borderOnForeground: true,
-                            surfaceTintColor: Theme.of(
-                              context,
-                            ).colorScheme.primary,
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Transform.flip(
-                                        flipX: true,
-                                        child: Icon(
-                                          Icons.waving_hand_rounded,
-                                          size: 40,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
-                                      ),
-                                      Icon(
-                                        Icons.tag_faces_rounded,
-                                        size: 100,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                      Icon(
-                                        Icons.waving_hand_rounded,
-                                        size: 40,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    textAlign: TextAlign.center,
-                                    "Welcome back, ${authTokenManager.user?.firstname ?? 'User'}",
+                          if (index == 0) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    'Your Groups:',
                                     style: Theme.of(
                                       context,
-                                    ).textTheme.headlineSmall,
+                                    ).textTheme.titleLarge,
+                                    textAlign: TextAlign.start,
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          groupCard(context, group, index),
-                        ],
-                      );
-                    }
+                                ),
+                                groupCard(context, group, index),
+                              ],
+                            );
+                          }
 
-                    if (index == viewModel.groups.length - 1 &&
-                        viewModel.isLoading) {
-                      return Column(
-                        children: [
-                          groupCard(context, group, index),
-                          const Center(child: CircularProgressIndicator()),
-                        ],
-                      );
-                    }
+                          if (index == viewModel.groups.length - 1 &&
+                              viewModel.isLoading) {
+                            return Column(
+                              children: [
+                                groupCard(context, group, index),
+                                const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ],
+                            );
+                          }
 
-                    return groupCard(context, group, index);
-                  },
-                  physics: const AlwaysScrollableScrollPhysics(),
-                ),
+                          return groupCard(context, group, index);
+                        },
+                        physics: const AlwaysScrollableScrollPhysics(),
+                      ),
               ),
             ),
           ],
@@ -194,7 +162,9 @@ class HomeScreen extends StatelessWidget {
       surfaceTintColor:
           HomeViewModel.colorPool[index % HomeViewModel.colorPool.length],
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          context.pushNamed('groupHomeScreen');
+        },
         splashColor: Colors.white30,
         child: Stack(
           alignment: Alignment.bottomRight,
@@ -216,60 +186,33 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            Positioned(
-              bottom: -35,
-              right: -20,
-              child: Opacity(
-                opacity: 0.4,
-                child: Icon(
-                  HomeViewModel.iconPool[index % HomeViewModel.iconPool.length],
-                  color: Colors.white,
-                  size: 100,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                spacing: 8,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      if (group.groupProfile != null)
-                        CircleAvatar(
-                          radius: 30,
-                          backgroundImage: NetworkImage(
-                            group.groupProfile!,
-                            headers: {
-                              'Content-Type': 'application/json',
-                              'Authorization':
-                                  'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
-                            },
-                          ),
-                        )
-                      else
-                        const CircleAvatar(child: Icon(Icons.group)),
-                      IconButton(
-                        icon: const Icon(Icons.more_vert),
-                        onPressed: () {},
+            ListTile(
+              leading:
+                  group.groupProfile != null && group.groupProfile!.isNotEmpty
+                  ? CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        group.groupProfile!,
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization':
+                              'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
+                        },
                       ),
-                    ],
-                  ),
-                  Text(
-                    group.name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    group.description == null || group.description!.isEmpty
-                        ? 'No description provided'
-                        : group.description!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
+                    )
+                  : const CircleAvatar(child: Icon(Icons.group)),
+              title: Text(
+                group.name,
+                style: Theme.of(context).textTheme.titleMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                group.description == null || group.description!.isEmpty
+                    ? 'No description provided this is not cool this is so cool and this is lame and this is not cool this is so cool and lame'
+                    : group.description!,
+                style: Theme.of(context).textTheme.bodyMedium,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
             ),
           ],

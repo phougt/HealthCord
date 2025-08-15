@@ -46,7 +46,6 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<bool> loadMoreGroups() async {
-    // if (!hasMore) return false;
     if (isLoading) return false;
     isLoading = true;
     notifyListeners();
@@ -57,9 +56,6 @@ class HomeViewModel extends ChangeNotifier {
       currentPage,
     );
     if (result.isSuccessful) {
-      // if (result.data!.isEmpty) {
-      //   hasMore = false;
-      // }
       groups.addAll(result.data!);
       isLoading = false;
       notifyListeners();
@@ -83,5 +79,23 @@ class HomeViewModel extends ChangeNotifier {
   void dispose() {
     scrollController.dispose();
     super.dispose();
+  }
+
+  Future<bool> leaveGroup(int groupId) async {
+    isLoading = true;
+    notifyListeners();
+
+    final result = await _groupRepository.leaveGroup(groupId);
+    if (result.isSuccessful) {
+      groups.removeWhere((group) => group.id == groupId);
+      isLoading = false;
+      notifyListeners();
+      return true;
+    }
+
+    errors = result.error?.toJson() ?? {};
+    isLoading = false;
+    notifyListeners();
+    return false;
   }
 }
