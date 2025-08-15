@@ -55,12 +55,21 @@ class HomeScreen extends StatelessWidget {
                   await viewModel.refreshGroups();
                 },
                 child: viewModel.groups.isEmpty && !viewModel.isLoading
-                    ? const Center(
-                        child: Text(
-                          'No groups found.\nCreate or join a group to get started.',
-                          style: TextStyle(fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
+                    ? Stack(
+                        children: [
+                          Positioned(
+                            right: 0,
+                            bottom: 110,
+                            child: Icon(Icons.arrow_downward_rounded, size: 80),
+                          ),
+                          const Center(
+                            child: Text(
+                              'No groups found.\nClick the "+" button to create or join a group.',
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
                       )
                     : ListView.builder(
                         controller: viewModel.scrollController,
@@ -165,7 +174,6 @@ class HomeScreen extends StatelessWidget {
         onTap: () {
           context.pushNamed('groupHomeScreen');
         },
-        splashColor: Colors.white30,
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
