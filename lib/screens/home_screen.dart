@@ -172,7 +172,7 @@ class HomeScreen extends StatelessWidget {
           HomeViewModel.colorPool[index % HomeViewModel.colorPool.length],
       child: InkWell(
         onTap: () {
-          context.pushNamed('groupHomeScreen');
+          context.pushNamed('groupHomeScreen', extra: group.id);
         },
         child: Stack(
           alignment: Alignment.bottomRight,

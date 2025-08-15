@@ -9,4 +9,5 @@ abstract class GroupRepository {
     String? groupProfile,
   });
   Future<Result<void>> joinGroup(String link);
+  Future<Result<void>> leaveGroup(int groupId);
 }

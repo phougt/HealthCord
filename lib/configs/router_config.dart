@@ -2,21 +2,96 @@ import "package:family_health_record/managers/auth_token_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
+import "package:family_health_record/screens/group_home_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/join_group_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
 import "package:family_health_record/screens/signup_screen.dart";
 import "package:family_health_record/screens/splash_screen.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
+import "package:family_health_record/viewModels/group_home_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewmodels/signup_viewmodel.dart";
+import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:image_picker/image_picker.dart";
 import "package:provider/provider.dart";
 import "package:family_health_record/viewModels/login_viewmodel.dart";
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter rootRouter = GoRouter(
-  routes: <GoRoute>[
+  navigatorKey: _rootNavigatorKey,
+  routes: [
+    ShellRoute(
+      navigatorKey: _shellNavigatorKey,
+      builder: (context, state, child) {
+        final List<String> routeNames = ['groupHomeScreen', 'test'];
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => GroupHomeViewModel(
+                authTokenManager: context.read<AuthTokenManager>(),
+              ),
+            ),
+          ],
+          child: Scaffold(
+            appBar: AppBar(),
+            body: child,
+            bottomNavigationBar: NavigationBar(
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  label: 'Home',
+                  selectedIcon: const Icon(Icons.home_filled),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.book_outlined),
+                  label: 'Records',
+                  selectedIcon: const Icon(Icons.book_rounded),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.medical_information_outlined),
+                  label: 'Medical Entities',
+                  selectedIcon: const Icon(Icons.medical_information_rounded),
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.people_alt_outlined),
+                  label: 'Members',
+                  selectedIcon: const Icon(Icons.people_alt_rounded),
+                ),
+              ],
+              selectedIndex: routeNames.indexOf(
+                GoRouter.of(context).state.name ?? 'groupHomeScreen',
+              ),
+              onDestinationSelected: (index) {
+                context.pushNamed(routeNames[index]);
+              },
+            ),
+          ),
+        );
+      },
+      routes: [
+        GoRoute(
+          path: '/groupHome',
+          name: 'groupHomeScreen',
+          builder: (context, state) {
+            context.read<GroupHomeViewModel>().loadUserPermissions(
+              state.extra as int? ?? 0,
+            );
+            return const GroupHomeScreen();
+          },
+        ),
+        GoRoute(
+          path: '/test',
+          name: 'test',
+          builder: (context, state) {
+            return Center(child: Text('hello'));
+          },
+        ),
+      ],
+    ),
     GoRoute(
       path: '/',
       builder: (context, state) => const SplashScreen(),

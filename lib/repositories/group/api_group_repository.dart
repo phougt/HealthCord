@@ -98,7 +98,10 @@ class ApiGroupRepository extends GroupRepository {
           data: null,
           message: response.data['message'] ?? 'Joined group successfully',
         );
-      } else if (response.statusCode == 401 || response.statusCode == 422) {
+      } else if (response.statusCode == 401 ||
+          response.statusCode == 422 ||
+          response.statusCode == 404 ||
+          response.statusCode == 400) {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
@@ -109,6 +112,29 @@ class ApiGroupRepository extends GroupRepository {
 
     return Result.fail(
       ApiError(message: 'An unexpected error occurred while joining group'),
+    );
+  }
+
+  @override
+  Future<Result<void>> leaveGroup(int groupId) async {
+    try {
+      final response = await _dio.deleteUri(Uri.parse('/user/group/$groupId'));
+      if (response.statusCode == 200) {
+        return Result.ok(
+          data: null,
+          message: response.data['message'] ?? 'Left group successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while leaving group'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while leaving group'),
     );
   }
 }

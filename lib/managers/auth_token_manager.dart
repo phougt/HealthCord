@@ -11,8 +11,8 @@ class AuthTokenManager extends ChangeNotifier {
   AuthToken? get authToken => _authToken;
   User? _user;
   User? get user => _user;
-  List<String> _permissions = [];
-  List<String> get permissions => _permissions;
+  Map<String, List<String>> _permissions = {};
+  Map<String, List<String>> get permissions => _permissions;
   bool isFinishedLoading = false;
   final _secureStorage = FlutterSecureStorage();
   final Dio _dio;
@@ -167,5 +167,24 @@ class AuthTokenManager extends ChangeNotifier {
     return Result.fail(
       ApiError(message: 'An unexpected error occurred while fetching user'),
     );
+  }
+
+  Future<bool> fetchPermissions(int groupId) async {
+    try {
+      final response = await _dio.get('/user/group/$groupId/permission');
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final data = json['data'];
+        _permissions['$groupId'] = List<String>.from(data);
+        notifyListeners();
+        return true;
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+
+    return false;
   }
 }
