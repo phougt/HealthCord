@@ -9,11 +9,11 @@ class JoinGroupScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<JoinGroupViewModel>();
-    final errors = viewModel.errors['errors'] ?? {};
-    final message = viewModel.errors['message'] ?? '';
+    final Map<String, dynamic> errors = viewModel.errors['errors'] ?? {};
+    final String message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Group')),
+      appBar: AppBar(title: const Text('Join Group')),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -31,9 +31,19 @@ class JoinGroupScreen extends StatelessWidget {
                   errorText: errors['invite_link']?[0].toString(),
                 ),
               ),
+              Text(
+                'Enter the group link or code provided by the group owner.',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
+              Text(
+                'Note:\n- Ensure the link is valid.\n- The group code is consisted of 10 characters.\n- It should be a combination of lower-case letters and numbers.',
+                style: TextStyle(color: Colors.grey[600]),
+              ),
               FilledButton(
                 onPressed: () async {
-                  if (await viewModel.joinGroup()) {
+                  final result = await viewModel.joinGroup();
+
+                  if (result) {
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Join group successfully!')),
@@ -43,6 +53,13 @@ class JoinGroupScreen extends StatelessWidget {
                       if (!context.mounted) return;
                       context.pop();
                     });
+                  }
+
+                  if (message.isNotEmpty && errors.isEmpty) {
+                    if (!context.mounted) return;
+                    ScaffoldMessenger.of(
+                      context,
+                    ).showSnackBar(SnackBar(content: Text(message)));
                   }
                 },
                 child: Row(
