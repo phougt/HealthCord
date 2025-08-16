@@ -101,6 +101,7 @@ class HomeScreen extends StatelessWidget {
                                           ).colorScheme.primary,
                                         ),
                                       ),
+                                      const SizedBox(width: 8),
                                       Icon(
                                         Icons.face_2,
                                         size: 50,
@@ -108,7 +109,7 @@ class HomeScreen extends StatelessWidget {
                                           context,
                                         ).colorScheme.primary,
                                       ),
-                                      const SizedBox(width: 8),
+                                      const SizedBox(width: 16),
                                       Flexible(
                                         child: Text(
                                           'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}!',
