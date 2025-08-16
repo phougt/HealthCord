@@ -2,8 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:family_health_record/configs/router_config.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
+import 'package:family_health_record/repositories/doctor/api_doctor_repository.dart';
+import 'package:family_health_record/repositories/doctor/doctor_repository.dart';
 import 'package:family_health_record/repositories/group/api_group_repository.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
+import 'package:family_health_record/repositories/hospital/api_hospital_repository.dart';
+import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -66,6 +70,16 @@ void main() {
         Provider<AuthRepository>(
           create: (context) {
             return ApiAuthRepository(dio: context.read<Dio>());
+          },
+        ),
+        Provider<DoctorRepository>(
+          create: (context) {
+            return ApiDoctorRepository(dio: context.read<Dio>());
+          },
+        ),
+        Provider<HospitalRepository>(
+          create: (context) {
+            return ApiHospitalRepository(dio: context.read<Dio>());
           },
         ),
         ChangeNotifierProvider(

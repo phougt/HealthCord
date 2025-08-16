@@ -11,7 +11,7 @@ class AuthTokenManager extends ChangeNotifier {
   AuthToken? get authToken => _authToken;
   User? _user;
   User? get user => _user;
-  Map<String, List<String>> _permissions = {};
+  final Map<String, List<String>> _permissions = {};
   Map<String, List<String>> get permissions => _permissions;
   bool isFinishedLoading = false;
   final _secureStorage = FlutterSecureStorage();
@@ -182,7 +182,6 @@ class AuthTokenManager extends ChangeNotifier {
         final json = response.data;
         final data = json['data'];
         _permissions['$groupId'] = List<String>.from(data);
-        print(_permissions);
         notifyListeners();
         return true;
       } else if (response.statusCode == 401 || response.statusCode == 422) {

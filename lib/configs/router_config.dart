@@ -1,18 +1,22 @@
 import "package:family_health_record/managers/auth_token_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
+import "package:family_health_record/repositories/doctor/doctor_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
+import "package:family_health_record/repositories/hospital/hospital_repository.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/group_home_screen.dart";
 import "package:family_health_record/screens/group_member_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/join_group_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
+import "package:family_health_record/screens/medical_entities_screen.dart";
 import "package:family_health_record/screens/signup_screen.dart";
 import "package:family_health_record/screens/splash_screen.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
 import "package:family_health_record/viewModels/group_home_viewmodel.dart";
 import "package:family_health_record/viewModels/group_member_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
+import "package:family_health_record/viewModels/medical_entities_viewmodel.dart";
 import "package:family_health_record/viewmodels/signup_viewmodel.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
@@ -32,7 +36,7 @@ final GoRouter rootRouter = GoRouter(
         final List<String> routeNames = [
           'groupHomeScreen',
           '',
-          '',
+          'medicalEntitiesScreen',
           'groupMembersScreen',
         ];
         final routeDecorationsNames = [
@@ -68,6 +72,22 @@ final GoRouter rootRouter = GoRouter(
                 if (state.extra is int) {
                   viewModel.groupId = state.extra as int;
                   viewModel.refreshGroupMembers();
+                }
+
+                return viewModel;
+              },
+            ),
+            ChangeNotifierProvider(
+              lazy: false,
+              create: (context) {
+                final viewModel = MedicalEntitiesViewModel(
+                  doctorRepository: context.read<DoctorRepository>(),
+                  hospitalRepository: context.read<HospitalRepository>(),
+                );
+
+                if (state.extra is int) {
+                  viewModel.groupId = state.extra as int;
+                  viewModel.refreshEntities();
                 }
 
                 return viewModel;
@@ -129,6 +149,13 @@ final GoRouter rootRouter = GoRouter(
           name: 'groupMembersScreen',
           builder: (context, state) {
             return const GroupMemberScreen();
+          },
+        ),
+        GoRoute(
+          path: '/medicalEntities',
+          name: 'medicalEntitiesScreen',
+          builder: (context, state) {
+            return const MedicalEntitiesScreen();
           },
         ),
       ],
