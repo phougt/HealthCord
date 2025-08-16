@@ -3,17 +3,25 @@ import 'package:flutter/material.dart';
 
 class GroupHomeViewModel extends ChangeNotifier {
   final AuthTokenManager _authTokenManager;
+  int groupId = 0;
   bool _isLoading = true;
   get isLoading => _isLoading;
 
   GroupHomeViewModel({required AuthTokenManager authTokenManager})
     : _authTokenManager = authTokenManager;
 
-  Future<bool> loadUserPermissions(int groupId) async {
+  Future<bool> loadUserPermissions() async {
+    _isLoading = true;
+    notifyListeners();
+
     if (_authTokenManager.permissions.containsKey(groupId.toString())) {
+      _isLoading = false;
+      notifyListeners();
       return true;
     }
 
+    _isLoading = false;
+    notifyListeners();
     return _authTokenManager.fetchPermissions(groupId);
   }
 }

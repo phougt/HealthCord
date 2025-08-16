@@ -1,3 +1,4 @@
+import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/utils/result.dart';
@@ -135,6 +136,45 @@ class ApiGroupRepository extends GroupRepository {
 
     return Result.fail(
       ApiError(message: 'An unexpected error occurred while leaving group'),
+    );
+  }
+
+  @override
+  Future<Result<List<User>>> getGroupMembers(
+    int groupId,
+    int perPage,
+    int page,
+  ) async {
+    try {
+      final response = await _dio.get(
+        '/group/$groupId/user',
+        queryParameters: {'per_page': perPage, 'page': page},
+      );
+
+      if (response.statusCode == 200) {
+        final json = response.data as Map<String, dynamic>;
+        final data = json['data'] as List<dynamic>;
+        final members = data
+            .map((e) => User.fromJson(e as Map<String, dynamic>))
+            .toList();
+        return Result.ok(
+          data: members,
+          message: json['message'] ?? 'Group members fetched successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      print(e);
+      return Result.fail(
+        ApiError(message: 'An error occurred while fetching group members'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(
+        message: 'An unexpected error occurred while fetching group members',
+      ),
     );
   }
 }

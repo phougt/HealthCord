@@ -19,6 +19,12 @@ class AuthTokenManager extends ChangeNotifier {
 
   AuthTokenManager({required Dio dio}) : _dio = dio;
 
+  bool hasPermission(String permission, int groupId) {
+    final groupPermissions = _permissions[groupId.toString()];
+    if (groupPermissions == null) return false;
+    return groupPermissions.contains(permission);
+  }
+
   Future<void> loadAuthData() async {
     final accessToken = await _secureStorage.read(key: 'accessToken');
     final accessTokenExpiry = await _secureStorage.read(
@@ -176,6 +182,7 @@ class AuthTokenManager extends ChangeNotifier {
         final json = response.data;
         final data = json['data'];
         _permissions['$groupId'] = List<String>.from(data);
+        print(_permissions);
         notifyListeners();
         return true;
       } else if (response.statusCode == 401 || response.statusCode == 422) {

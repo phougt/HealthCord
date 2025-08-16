@@ -1,4 +1,5 @@
 import 'package:family_health_record/models/groups/group.dart';
+import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/utils/result.dart';
 
 abstract class GroupRepository {
@@ -10,4 +11,9 @@ abstract class GroupRepository {
   });
   Future<Result<void>> joinGroup(String link);
   Future<Result<void>> leaveGroup(int groupId);
+  Future<Result<List<User>>> getGroupMembers(
+    int groupId,
+    int page,
+    int perPage,
+  );
 }

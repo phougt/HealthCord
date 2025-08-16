@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$User {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'username') String get username;@JsonKey(name: 'firstname') String get firstname;@JsonKey(name: 'lastname') String get lastname;@JsonKey(name: 'email') String get email;@JsonKey(name: 'phone') String? get phone;@JsonKey(name: 'profile') String? get profile;@JsonKey(name: 'blood_type_id') int? get bloodTypeId;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'username') String get username;@JsonKey(name: 'firstname') String get firstname;@JsonKey(name: 'lastname') String get lastname;@JsonKey(name: 'email') String get email;@JsonKey(name: 'phone') String? get phone;@JsonKey(name: 'profile') String? get profile;@JsonKey(name: 'blood_type_id') int? get bloodTypeId;@JsonKey(name: 'roles') List<Role>? get roles;
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $UserCopyWith<User> get copyWith => _$UserCopyWithImpl<User>(this as User, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.firstname, firstname) || other.firstname == firstname)&&(identical(other.lastname, lastname) || other.lastname == lastname)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.bloodTypeId, bloodTypeId) || other.bloodTypeId == bloodTypeId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.firstname, firstname) || other.firstname == firstname)&&(identical(other.lastname, lastname) || other.lastname == lastname)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.bloodTypeId, bloodTypeId) || other.bloodTypeId == bloodTypeId)&&const DeepCollectionEquality().equals(other.roles, roles));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,firstname,lastname,email,phone,profile,bloodTypeId);
+int get hashCode => Object.hash(runtimeType,id,username,firstname,lastname,email,phone,profile,bloodTypeId,const DeepCollectionEquality().hash(roles));
 
 @override
 String toString() {
-  return 'User(id: $id, username: $username, firstname: $firstname, lastname: $lastname, email: $email, phone: $phone, profile: $profile, bloodTypeId: $bloodTypeId)';
+  return 'User(id: $id, username: $username, firstname: $firstname, lastname: $lastname, email: $email, phone: $phone, profile: $profile, bloodTypeId: $bloodTypeId, roles: $roles)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $UserCopyWith<$Res>  {
   factory $UserCopyWith(User value, $Res Function(User) _then) = _$UserCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'username') String username,@JsonKey(name: 'firstname') String firstname,@JsonKey(name: 'lastname') String lastname,@JsonKey(name: 'email') String email,@JsonKey(name: 'phone') String? phone,@JsonKey(name: 'profile') String? profile,@JsonKey(name: 'blood_type_id') int? bloodTypeId
+@JsonKey(name: 'id') int id,@JsonKey(name: 'username') String username,@JsonKey(name: 'firstname') String firstname,@JsonKey(name: 'lastname') String lastname,@JsonKey(name: 'email') String email,@JsonKey(name: 'phone') String? phone,@JsonKey(name: 'profile') String? profile,@JsonKey(name: 'blood_type_id') int? bloodTypeId,@JsonKey(name: 'roles') List<Role>? roles
 });
 
 
@@ -65,7 +65,7 @@ class _$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? firstname = null,Object? lastname = null,Object? email = null,Object? phone = freezed,Object? profile = freezed,Object? bloodTypeId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? username = null,Object? firstname = null,Object? lastname = null,Object? email = null,Object? phone = freezed,Object? profile = freezed,Object? bloodTypeId = freezed,Object? roles = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,8 @@ as String,email: null == email ? _self.email : email // ignore: cast_nullable_to
 as String,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
 as String?,bloodTypeId: freezed == bloodTypeId ? _self.bloodTypeId : bloodTypeId // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,roles: freezed == roles ? _self.roles : roles // ignore: cast_nullable_to_non_nullable
+as List<Role>?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId, @JsonKey(name: 'roles')  List<Role>? roles)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId);case _:
+return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId,_that.roles);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.ema
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId, @JsonKey(name: 'roles')  List<Role>? roles)  $default,) {final _that = this;
 switch (_that) {
 case _User():
-return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId);}
+return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId,_that.roles);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -195,10 +196,10 @@ return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.ema
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'username')  String username, @JsonKey(name: 'firstname')  String firstname, @JsonKey(name: 'lastname')  String lastname, @JsonKey(name: 'email')  String email, @JsonKey(name: 'phone')  String? phone, @JsonKey(name: 'profile')  String? profile, @JsonKey(name: 'blood_type_id')  int? bloodTypeId, @JsonKey(name: 'roles')  List<Role>? roles)?  $default,) {final _that = this;
 switch (_that) {
 case _User() when $default != null:
-return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId);case _:
+return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.email,_that.phone,_that.profile,_that.bloodTypeId,_that.roles);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.id,_that.username,_that.firstname,_that.lastname,_that.ema
 @JsonSerializable()
 
 class _User implements User {
-  const _User({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'username') required this.username, @JsonKey(name: 'firstname') required this.firstname, @JsonKey(name: 'lastname') required this.lastname, @JsonKey(name: 'email') required this.email, @JsonKey(name: 'phone') this.phone, @JsonKey(name: 'profile') this.profile, @JsonKey(name: 'blood_type_id') this.bloodTypeId});
+  const _User({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'username') required this.username, @JsonKey(name: 'firstname') required this.firstname, @JsonKey(name: 'lastname') required this.lastname, @JsonKey(name: 'email') required this.email, @JsonKey(name: 'phone') this.phone, @JsonKey(name: 'profile') this.profile, @JsonKey(name: 'blood_type_id') this.bloodTypeId, @JsonKey(name: 'roles') final  List<Role>? roles}): _roles = roles;
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
@@ -221,6 +222,15 @@ class _User implements User {
 @override@JsonKey(name: 'phone') final  String? phone;
 @override@JsonKey(name: 'profile') final  String? profile;
 @override@JsonKey(name: 'blood_type_id') final  int? bloodTypeId;
+ final  List<Role>? _roles;
+@override@JsonKey(name: 'roles') List<Role>? get roles {
+  final value = _roles;
+  if (value == null) return null;
+  if (_roles is EqualUnmodifiableListView) return _roles;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.firstname, firstname) || other.firstname == firstname)&&(identical(other.lastname, lastname) || other.lastname == lastname)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.bloodTypeId, bloodTypeId) || other.bloodTypeId == bloodTypeId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _User&&(identical(other.id, id) || other.id == id)&&(identical(other.username, username) || other.username == username)&&(identical(other.firstname, firstname) || other.firstname == firstname)&&(identical(other.lastname, lastname) || other.lastname == lastname)&&(identical(other.email, email) || other.email == email)&&(identical(other.phone, phone) || other.phone == phone)&&(identical(other.profile, profile) || other.profile == profile)&&(identical(other.bloodTypeId, bloodTypeId) || other.bloodTypeId == bloodTypeId)&&const DeepCollectionEquality().equals(other._roles, _roles));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,username,firstname,lastname,email,phone,profile,bloodTypeId);
+int get hashCode => Object.hash(runtimeType,id,username,firstname,lastname,email,phone,profile,bloodTypeId,const DeepCollectionEquality().hash(_roles));
 
 @override
 String toString() {
-  return 'User(id: $id, username: $username, firstname: $firstname, lastname: $lastname, email: $email, phone: $phone, profile: $profile, bloodTypeId: $bloodTypeId)';
+  return 'User(id: $id, username: $username, firstname: $firstname, lastname: $lastname, email: $email, phone: $phone, profile: $profile, bloodTypeId: $bloodTypeId, roles: $roles)';
 }
 
 
@@ -255,7 +265,7 @@ abstract mixin class _$UserCopyWith<$Res> implements $UserCopyWith<$Res> {
   factory _$UserCopyWith(_User value, $Res Function(_User) _then) = __$UserCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'username') String username,@JsonKey(name: 'firstname') String firstname,@JsonKey(name: 'lastname') String lastname,@JsonKey(name: 'email') String email,@JsonKey(name: 'phone') String? phone,@JsonKey(name: 'profile') String? profile,@JsonKey(name: 'blood_type_id') int? bloodTypeId
+@JsonKey(name: 'id') int id,@JsonKey(name: 'username') String username,@JsonKey(name: 'firstname') String firstname,@JsonKey(name: 'lastname') String lastname,@JsonKey(name: 'email') String email,@JsonKey(name: 'phone') String? phone,@JsonKey(name: 'profile') String? profile,@JsonKey(name: 'blood_type_id') int? bloodTypeId,@JsonKey(name: 'roles') List<Role>? roles
 });
 
 
@@ -272,7 +282,7 @@ class __$UserCopyWithImpl<$Res>
 
 /// Create a copy of User
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? firstname = null,Object? lastname = null,Object? email = null,Object? phone = freezed,Object? profile = freezed,Object? bloodTypeId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? username = null,Object? firstname = null,Object? lastname = null,Object? email = null,Object? phone = freezed,Object? profile = freezed,Object? bloodTypeId = freezed,Object? roles = freezed,}) {
   return _then(_User(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,username: null == username ? _self.username : username // ignore: cast_nullable_to_non_nullable
@@ -282,7 +292,8 @@ as String,email: null == email ? _self.email : email // ignore: cast_nullable_to
 as String,phone: freezed == phone ? _self.phone : phone // ignore: cast_nullable_to_non_nullable
 as String?,profile: freezed == profile ? _self.profile : profile // ignore: cast_nullable_to_non_nullable
 as String?,bloodTypeId: freezed == bloodTypeId ? _self.bloodTypeId : bloodTypeId // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,roles: freezed == roles ? _self._roles : roles // ignore: cast_nullable_to_non_nullable
+as List<Role>?,
   ));
 }
 

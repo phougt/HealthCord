@@ -3,6 +3,7 @@ import "package:family_health_record/repositories/auth/auth_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/group_home_screen.dart";
+import "package:family_health_record/screens/group_member_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/join_group_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
@@ -10,6 +11,7 @@ import "package:family_health_record/screens/signup_screen.dart";
 import "package:family_health_record/screens/splash_screen.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
 import "package:family_health_record/viewModels/group_home_viewmodel.dart";
+import "package:family_health_record/viewModels/group_member_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewmodels/signup_viewmodel.dart";
 import "package:flutter/material.dart";
@@ -27,17 +29,59 @@ final GoRouter rootRouter = GoRouter(
     ShellRoute(
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
-        final List<String> routeNames = ['groupHomeScreen', 'test'];
+        final List<String> routeNames = [
+          'groupHomeScreen',
+          '',
+          '',
+          'groupMembersScreen',
+        ];
+        final routeDecorationsNames = [
+          'Group Home',
+          'Health Records',
+          'Medical Entities',
+          'Group Members',
+        ];
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
-              create: (context) => GroupHomeViewModel(
-                authTokenManager: context.read<AuthTokenManager>(),
-              ),
+              create: (context) {
+                final groupHomeViewModel = GroupHomeViewModel(
+                  authTokenManager: context.read<AuthTokenManager>(),
+                );
+
+                if (state.extra is int) {
+                  groupHomeViewModel.groupId = state.extra as int;
+                  groupHomeViewModel.loadUserPermissions();
+                }
+
+                return groupHomeViewModel;
+              },
+            ),
+            ChangeNotifierProvider(
+              lazy: false,
+              create: (context) {
+                final viewModel = GroupMemberViewModel(
+                  groupRepository: context.read<GroupRepository>(),
+                  authTokenManager: context.read<AuthTokenManager>(),
+                );
+
+                if (state.extra is int) {
+                  viewModel.groupId = state.extra as int;
+                  viewModel.refreshGroupMembers();
+                }
+
+                return viewModel;
+              },
             ),
           ],
           child: Scaffold(
-            appBar: AppBar(),
+            appBar: AppBar(
+              title: Text(
+                routeDecorationsNames[routeNames.indexOf(
+                  GoRouter.of(context).state.name ?? 'groupHomeScreen',
+                )],
+              ),
+            ),
             body: child,
             bottomNavigationBar: NavigationBar(
               destinations: [
@@ -77,17 +121,14 @@ final GoRouter rootRouter = GoRouter(
           path: '/groupHome',
           name: 'groupHomeScreen',
           builder: (context, state) {
-            context.read<GroupHomeViewModel>().loadUserPermissions(
-              state.extra as int? ?? 0,
-            );
             return const GroupHomeScreen();
           },
         ),
         GoRoute(
-          path: '/test',
-          name: 'test',
+          path: '/groupMembers',
+          name: 'groupMembersScreen',
           builder: (context, state) {
-            return Center(child: Text('hello'));
+            return const GroupMemberScreen();
           },
         ),
       ],
