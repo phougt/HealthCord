@@ -35,11 +35,17 @@ class HomeScreen extends StatelessWidget {
         ],
         title: Row(
           children: [
-            Icon(Icons.note_add_rounded),
+            Icon(
+              Icons.note_add_rounded,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
               'HEALTHCORD',
-              style: TextStyle(fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ],
         ),
@@ -81,6 +87,46 @@ class HomeScreen extends StatelessWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      Transform.flip(
+                                        flipX: true,
+                                        child: Icon(
+                                          Icons.waving_hand_rounded,
+                                          size: 40,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.face_2,
+                                        size: 50,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Flexible(
+                                        child: Text(
+                                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}!',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.primary,
+                                              ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(

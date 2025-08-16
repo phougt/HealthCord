@@ -23,16 +23,24 @@ class LoginScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 10,
                 children: [
-                  Icon(Icons.note_add_rounded, size: 100),
+                  Icon(
+                    Icons.note_add_rounded,
+                    size: 100,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                   Text(
                     "HealthCord",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge,
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                   Text(
                     "Record your health records with ease",
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                   const SizedBox(height: 30),
                   TextField(

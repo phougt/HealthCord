@@ -1,5 +1,4 @@
 import 'package:family_health_record/viewmodels/signup_viewmodel.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +14,6 @@ class SignupScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -37,11 +35,18 @@ class SignupScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     spacing: 10,
                     children: [
-                      Icon(Icons.person_add, size: 100),
+                      Icon(
+                        Icons.person_add,
+                        size: 100,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                       Text(
                         "Sign Up",
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium,
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                       const SizedBox(height: 30),
                       TextField(
