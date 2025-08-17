@@ -165,7 +165,6 @@ class ApiGroupRepository extends GroupRepository {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
-      print(e);
       return Result.fail(
         ApiError(message: 'An error occurred while fetching group members'),
       );

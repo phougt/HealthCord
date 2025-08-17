@@ -11,7 +11,8 @@ class GroupMemberViewModel extends ChangeNotifier {
   bool isLoading = true;
   Map<String, dynamic> errors = {};
   int page = 1;
-  int perPage = 10;
+  int perPage =
+      100; // Haven't implemented infinite scroll yet, so using a fixed perPage value
 
   GroupMemberViewModel({
     required GroupRepository groupRepository,

@@ -73,28 +73,30 @@ class CreateGroupScreen extends StatelessWidget {
                 ),
               ),
               FilledButton(
-                onPressed: () async {
-                  if (await viewModel.createGroup()) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Group created successfully!'),
-                      ),
-                    );
+                onPressed: !viewModel.isLoading
+                    ? () async {
+                        if (await viewModel.createGroup()) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Group created successfully!'),
+                            ),
+                          );
 
-                    Future.delayed(const Duration(seconds: 3), () {
-                      if (!context.mounted) return;
-                      context.pop();
-                    });
-                  }
-                },
+                          if (!context.mounted) return;
+                          context.pop();
+                        }
+                      }
+                    : null,
                 child: Row(
                   spacing: 5,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.add_circle_outline),
-                    Text('Create Group'),
-                  ],
+                  children: !viewModel.isLoading
+                      ? const [
+                          Icon(Icons.add_circle_outline),
+                          Text('Create Group'),
+                        ]
+                      : const [CircularProgressIndicator()],
                 ),
               ),
             ],

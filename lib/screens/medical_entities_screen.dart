@@ -1,5 +1,6 @@
 import 'package:family_health_record/viewModels/medical_entities_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class MedicalEntitiesScreen extends StatelessWidget {
@@ -55,34 +56,46 @@ class MedicalEntitiesScreen extends StatelessWidget {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            showDragHandle: true,
-            useSafeArea: true,
-            context: context,
-            builder: (context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.person_4_rounded),
-                    title: const Text('Add Doctor'),
-                    onTap: () {},
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.home_work_rounded),
-                    title: const Text('Add Hospital'),
-                    onTap: () {},
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton:
+          viewModel.hasPermissions('doctor.create') ||
+              viewModel.hasPermissions('hospital.create')
+          ? FloatingActionButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  showDragHandle: true,
+                  useSafeArea: true,
+                  context: context,
+                  builder: (context) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        viewModel.hasPermissions('doctor.create')
+                            ? ListTile(
+                                leading: const Icon(Icons.person_4_rounded),
+                                title: const Text('Add Doctor'),
+                                onTap: () {
+                                  context.pushNamed('createDoctorScreen');
+                                },
+                              )
+                            : const SizedBox.shrink(),
+                        viewModel.hasPermissions('hospital.create')
+                            ? ListTile(
+                                leading: const Icon(Icons.home_work_rounded),
+                                title: const Text('Add Hospital'),
+                                onTap: () {
+                                  context.pushNamed('createHospitalScreen');
+                                },
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }

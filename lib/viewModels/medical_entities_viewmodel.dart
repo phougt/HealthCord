@@ -1,8 +1,9 @@
+import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/doctors/doctor.dart';
 import 'package:family_health_record/models/hospitals/hospital.dart';
 import 'package:family_health_record/repositories/doctor/doctor_repository.dart';
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class MedicalEntitiesViewModel extends ChangeNotifier {
   List<Hospital> hospitals = [];
@@ -12,16 +13,20 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
   Map<String, dynamic> doctorErrors = {};
   Map<String, dynamic> hospitalErrors = {};
   int _page = 1;
-  final int _perPage = 10;
+  final int _perPage =
+      100; // Haven't implemented infinite scroll yet, so using a fixed perPage value
   int groupId = 0;
   final DoctorRepository _doctorRepository;
   final HospitalRepository _hospitalRepository;
+  final AuthTokenManager _authTokenManager;
 
   MedicalEntitiesViewModel({
     required DoctorRepository doctorRepository,
     required HospitalRepository hospitalRepository,
+    required AuthTokenManager authTokenManager,
   }) : _doctorRepository = doctorRepository,
-       _hospitalRepository = hospitalRepository;
+       _hospitalRepository = hospitalRepository,
+       _authTokenManager = authTokenManager;
 
   Future<bool> loadMoreEntities() async {
     _page++;
@@ -67,5 +72,9 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
     doctorErrors.clear();
     hospitalErrors.clear();
     return loadMoreEntities();
+  }
+
+  bool hasPermissions(String permission) {
+    return _authTokenManager.hasPermission(permission, groupId);
   }
 }

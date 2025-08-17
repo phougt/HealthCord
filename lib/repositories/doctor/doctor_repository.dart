@@ -7,5 +7,8 @@ abstract class DoctorRepository {
     int perPage,
     int page,
   );
-  Future<Result<Doctor>> createDoctor({required String name});
+  Future<Result<void>> createDoctor({
+    required String name,
+    required int groupId,
+  });
 }

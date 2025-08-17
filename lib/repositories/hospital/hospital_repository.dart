@@ -7,4 +7,8 @@ abstract class HospitalRepository {
     int perPage,
     int page,
   );
+  Future<Result<void>> createHospital({
+    required String name,
+    required int groupId,
+  });
 }

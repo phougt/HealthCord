@@ -23,7 +23,6 @@ class ApiHospitalRepository extends HospitalRepository {
         final json = response.data;
         final data = json['data'] as List;
         final hospitals = data.map((e) => Hospital.fromJson(e)).toList();
-        print(hospitals);
         return Result.ok(
           data: hospitals,
           message: 'Hospitals fetched successfully',
@@ -40,6 +39,38 @@ class ApiHospitalRepository extends HospitalRepository {
     return Result.fail(
       ApiError(
         message: 'An unexpected error occurred while fetching hospitals',
+      ),
+    );
+  }
+
+  @override
+  Future<Result<void>> createHospital({
+    required String name,
+    required int groupId,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/group/$groupId/hospital',
+        data: {'name': name},
+      );
+      if (response.statusCode == 200) {
+        final json = response.data;
+        return Result.ok(
+          data: null,
+          message: json['message'] ?? 'Doctor created successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while creating the doctor'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(
+        message: 'An unexpected error occurred while creating the doctor',
       ),
     );
   }

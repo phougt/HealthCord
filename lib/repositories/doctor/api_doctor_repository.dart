@@ -42,11 +42,34 @@ class ApiDoctorRepository extends DoctorRepository {
   }
 
   @override
-  Future<Result<Doctor>> createDoctor({
+  Future<Result<void>> createDoctor({
     required String name,
-    String? specialty,
-    String? profilePicture,
-  }) {
-    throw UnimplementedError();
+    required int groupId,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/group/$groupId/doctor',
+        data: {'name': name},
+      );
+      if (response.statusCode == 200) {
+        final json = response.data;
+        return Result.ok(
+          data: null,
+          message: json['message'] ?? 'Doctor created successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while creating the doctor'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(
+        message: 'An unexpected error occurred while creating the doctor',
+      ),
+    );
   }
 }

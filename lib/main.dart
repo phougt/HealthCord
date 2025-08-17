@@ -52,7 +52,8 @@ void main() {
                         status == 401 ||
                         status == 422 ||
                         status == 404 ||
-                        status == 400);
+                        status == 400 ||
+                        status == 403);
               };
           },
           update: (context, authTokenManager, previous) {
