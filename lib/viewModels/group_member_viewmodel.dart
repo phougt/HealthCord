@@ -1,24 +1,32 @@
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class GroupMemberViewModel extends ChangeNotifier {
   final AuthTokenManager _authTokenManager;
   final GroupRepository _groupRepository;
+  final ScrollController scrollController = ScrollController();
   int groupId = 0;
   List<User> members = [];
   bool isLoading = true;
   Map<String, dynamic> errors = {};
   int page = 1;
-  int perPage =
-      100; // Haven't implemented infinite scroll yet, so using a fixed perPage value
+  int perPage = 10;
 
   GroupMemberViewModel({
     required GroupRepository groupRepository,
     required AuthTokenManager authTokenManager,
   }) : _groupRepository = groupRepository,
-       _authTokenManager = authTokenManager;
+       _authTokenManager = authTokenManager {
+    refreshGroupMembers();
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 100) {
+        loadMoreGroupMembers();
+      }
+    });
+  }
 
   Future<bool> loadMoreGroupMembers() async {
     page++;
@@ -52,5 +60,11 @@ class GroupMemberViewModel extends ChangeNotifier {
 
   bool hasPermission(String permission) {
     return _authTokenManager.hasPermission(permission, groupId);
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
