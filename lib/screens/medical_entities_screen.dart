@@ -22,6 +22,8 @@ class MedicalEntitiesScreen extends StatelessWidget {
           viewModel.refreshEntities();
         },
         child: ListView.builder(
+          controller: viewModel.scrollController,
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: viewModel.doctors.length + viewModel.hospitals.length,
           itemBuilder: (context, index) {
             if (index < viewModel.doctors.length) {

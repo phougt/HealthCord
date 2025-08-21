@@ -13,12 +13,12 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
   Map<String, dynamic> doctorErrors = {};
   Map<String, dynamic> hospitalErrors = {};
   int _page = 1;
-  final int _perPage =
-      100; // Haven't implemented infinite scroll yet, so using a fixed perPage value
+  final int _perPage = 10;
   int groupId = 0;
   final DoctorRepository _doctorRepository;
   final HospitalRepository _hospitalRepository;
   final AuthTokenManager _authTokenManager;
+  final ScrollController scrollController = ScrollController();
 
   MedicalEntitiesViewModel({
     required DoctorRepository doctorRepository,
@@ -26,7 +26,14 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
     required AuthTokenManager authTokenManager,
   }) : _doctorRepository = doctorRepository,
        _hospitalRepository = hospitalRepository,
-       _authTokenManager = authTokenManager;
+       _authTokenManager = authTokenManager {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 100) {
+        loadMoreEntities();
+      }
+    });
+  }
 
   Future<bool> loadMoreEntities() async {
     _page++;
@@ -76,5 +83,11 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
 
   bool hasPermissions(String permission) {
     return _authTokenManager.hasPermission(permission, groupId);
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
   }
 }
