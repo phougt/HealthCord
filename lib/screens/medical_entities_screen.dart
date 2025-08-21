@@ -17,6 +17,7 @@ class MedicalEntitiesScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      appBar: AppBar(title: const Text('Medical Entities')),
       body: RefreshIndicator(
         onRefresh: () async {
           viewModel.refreshEntities();

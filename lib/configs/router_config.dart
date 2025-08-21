@@ -43,12 +43,6 @@ final GoRouter rootRouter = GoRouter(
           'medicalEntitiesScreen',
           'groupMembersScreen',
         ];
-        final routeDecorationsNames = [
-          'Group Home',
-          'Health Records',
-          'Medical Entities',
-          'Group Members',
-        ];
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
@@ -128,15 +122,6 @@ final GoRouter rootRouter = GoRouter(
             ),
           ],
           child: Scaffold(
-            appBar: routeNames.contains(GoRouter.of(context).state.name ?? '')
-                ? AppBar(
-                    title: Text(
-                      routeDecorationsNames[routeNames.indexOf(
-                        GoRouter.of(context).state.name ?? '',
-                      )],
-                    ),
-                  )
-                : null,
             body: child,
             bottomNavigationBar:
                 routeNames.contains(GoRouter.of(context).state.name ?? '')
@@ -169,7 +154,7 @@ final GoRouter rootRouter = GoRouter(
                       GoRouter.of(context).state.name ?? 'groupHomeScreen',
                     ),
                     onDestinationSelected: (index) {
-                      context.pushNamed(routeNames[index]);
+                      context.goNamed(routeNames[index]);
                     },
                   )
                 : null,

@@ -1,5 +1,6 @@
 import 'package:family_health_record/viewModels/group_home_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class GroupHomeScreen extends StatelessWidget {
@@ -9,10 +10,22 @@ class GroupHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<GroupHomeViewModel>();
 
-    return Center(
-      child: Text(
-        'Group Home Screen',
-        style: Theme.of(context).textTheme.bodyLarge,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Home'),
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
+        leading: IconButton(
+          onPressed: () {
+            context.goNamed('homeScreen');
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
+      ),
+      body: Center(
+        child: Text(
+          'Group Home Screen',
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ),
     );
   }
