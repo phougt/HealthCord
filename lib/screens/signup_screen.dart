@@ -105,6 +105,16 @@ class SignupScreen extends StatelessWidget {
                         onPressed: () async {
                           if (viewModel.isLoading) return;
                           final success = await viewModel.signup();
+
+                          if (success) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Sign up successful!'),
+                              ),
+                            );
+                            context.goNamed('groupHomeScreen');
+                          }
                         },
                         child: const Text('Sign Up'),
                       ),
