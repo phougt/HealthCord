@@ -26,38 +26,46 @@ class GroupMemberScreen extends StatelessWidget {
           controller: viewModel.scrollController,
           itemBuilder: (context, index) {
             final member = viewModel.members[index];
-            return ListTile(
-              title: Row(
-                spacing: 5.0,
-                children: [
-                  SelectableText('${member.firstname} ${member.lastname}'),
-                  ?member.id == authTokenManager.user?.id
-                      ? Text('(You)')
-                      : null,
-                  Badge(label: Text(member.roles![0].name)),
-                ],
-              ),
-              subtitle: SelectableText(member.email),
-              leading: CircleAvatar(
-                backgroundImage: member.profile != null
-                    ? NetworkImage(member.profile!)
-                    : null,
-                child: Icon(Icons.person),
-              ),
-              trailing: PopupMenuButton(
-                itemBuilder: (context) {
-                  return [
-                    if (viewModel.hasPermission('group-user.delete') &&
-                        member.id != authTokenManager.user?.id &&
-                        member.roles![0].name != 'Owner')
-                      PopupMenuItem(
-                        value: 'remove-from-group',
-                        child: Text('Remove from Group'),
-                      ),
-                  ];
-                },
-                onSelected: (value) async {},
-              ),
+            return Column(
+              children: [
+                ListTile(
+                  title: Row(
+                    spacing: 5.0,
+                    children: [
+                      SelectableText('${member.firstname} ${member.lastname}'),
+                      ?member.id == authTokenManager.user?.id
+                          ? Text('(You)')
+                          : null,
+                      Badge(label: Text(member.roles![0].name)),
+                    ],
+                  ),
+                  subtitle: SelectableText(member.email),
+                  leading: CircleAvatar(
+                    backgroundImage: member.profile != null
+                        ? NetworkImage(member.profile!)
+                        : null,
+                    child: Icon(Icons.person),
+                  ),
+                  trailing: PopupMenuButton(
+                    itemBuilder: (context) {
+                      return [
+                        if (viewModel.hasPermission('group-user.delete') &&
+                            member.id != authTokenManager.user?.id &&
+                            member.roles![0].name != 'Owner')
+                          PopupMenuItem(
+                            value: 'remove-from-group',
+                            child: Text('Remove from Group'),
+                          ),
+                      ];
+                    },
+                    onSelected: (value) async {},
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: const Divider(thickness: 1.0, height: 0.0),
+                ),
+              ],
             );
           },
           itemCount: viewModel.members.length,

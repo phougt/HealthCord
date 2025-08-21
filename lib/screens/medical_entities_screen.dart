@@ -29,18 +29,28 @@ class MedicalEntitiesScreen extends StatelessWidget {
           itemBuilder: (context, index) {
             if (index < viewModel.doctors.length) {
               final doctor = viewModel.doctors[index];
-              return ListTile(
-                title: Row(
-                  spacing: 8,
-                  children: [
-                    Text(doctor.name, overflow: TextOverflow.ellipsis),
-                    Badge(
-                      label: Text('Doctor'),
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
+              return Column(
+                children: [
+                  ListTile(
+                    title: Row(
+                      spacing: 8,
+                      children: [
+                        Text(doctor.name, overflow: TextOverflow.ellipsis),
+                        Badge(
+                          label: Text('Doctor'),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.tertiary,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                leading: CircleAvatar(child: Icon(Icons.person_4_rounded)),
+                    leading: CircleAvatar(child: Icon(Icons.person_4_rounded)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: const Divider(thickness: 1.0, height: 0.0),
+                  ),
+                ],
               );
             } else {
               final hospital =
