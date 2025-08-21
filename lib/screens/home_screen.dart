@@ -89,47 +89,6 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Transform.flip(
-                                        flipX: true,
-                                        child: Icon(
-                                          Icons.waving_hand_rounded,
-                                          size: 40,
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Icon(
-                                        Icons.face_2,
-                                        size: 50,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Flexible(
-                                        child: Text(
-                                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}!',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge!
-                                              .copyWith(
-                                                fontWeight: FontWeight.bold,
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.primary,
-                                              ),
-                                          textAlign: TextAlign.start,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     'Your Groups:',
                                     style: Theme.of(
