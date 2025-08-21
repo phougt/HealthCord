@@ -55,15 +55,23 @@ class MedicalEntitiesScreen extends StatelessWidget {
             } else {
               final hospital =
                   viewModel.hospitals[index - viewModel.doctors.length];
-              return ListTile(
-                title: Row(
-                  spacing: 8,
-                  children: [
-                    Text(hospital.name, overflow: TextOverflow.ellipsis),
-                    Badge(label: Text('Hospital')),
-                  ],
-                ),
-                leading: CircleAvatar(child: Icon(Icons.maps_home_work)),
+              return Column(
+                children: [
+                  ListTile(
+                    title: Row(
+                      spacing: 8,
+                      children: [
+                        Text(hospital.name, overflow: TextOverflow.ellipsis),
+                        Badge(label: Text('Hospital')),
+                      ],
+                    ),
+                    leading: CircleAvatar(child: Icon(Icons.maps_home_work)),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: const Divider(thickness: 1.0, height: 0.0),
+                  ),
+                ],
               );
             }
           },
