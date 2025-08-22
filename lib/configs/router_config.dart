@@ -2,6 +2,7 @@ import "package:family_health_record/managers/auth_token_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/repositories/doctor/doctor_repository.dart";
+import "package:family_health_record/repositories/group_link/group_link_repository.dart";
 import "package:family_health_record/repositories/hospital/hospital_repository.dart";
 import "package:family_health_record/screens/create_doctor_screen.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
@@ -143,7 +144,7 @@ final GoRouter rootRouter = GoRouter(
               create: (context) {
                 final viewModel = GroupLinkViewModel(
                   authTokenManager: context.read<AuthTokenManager>(),
-                  groupRepository: context.read<GroupRepository>(),
+                  groupLinkRepository: context.read<GroupLinkRepository>(),
                 );
 
                 if (state.extra is int) {

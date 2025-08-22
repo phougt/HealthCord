@@ -6,6 +6,8 @@ import 'package:family_health_record/repositories/doctor/api_doctor_repository.d
 import 'package:family_health_record/repositories/doctor/doctor_repository.dart';
 import 'package:family_health_record/repositories/group/api_group_repository.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
+import 'package:family_health_record/repositories/group_link/api_group_link_repository.dart';
+import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:family_health_record/repositories/hospital/api_hospital_repository.dart';
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
@@ -81,6 +83,11 @@ void main() {
         Provider<HospitalRepository>(
           create: (context) {
             return ApiHospitalRepository(dio: context.read<Dio>());
+          },
+        ),
+        Provider<GroupLinkRepository>(
+          create: (context) {
+            return ApiGroupLinkRepository(dio: context.read<Dio>());
           },
         ),
         ChangeNotifierProvider(

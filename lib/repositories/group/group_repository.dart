@@ -17,10 +17,4 @@ abstract class GroupRepository {
     int page,
     int perPage,
   );
-  Future<Result<List<GroupLink>>> getGroupLinks(
-    int groupId,
-    int page,
-    int perPage,
-  );
-  Future<Result<GroupLink>> generateNewGroupLink(int groupId);
 }

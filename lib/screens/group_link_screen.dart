@@ -89,9 +89,29 @@ class GroupLinkScreen extends StatelessWidget {
                               size: 30,
                               color: Theme.of(context).colorScheme.error,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              final result = await viewModel.revokeLink(
+                                link.id,
+                              );
+
+                              if (result) {
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Link revoked successfully'),
+                                  ),
+                                );
+                                return;
+                              }
+
+                              if (!context.mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Link deleted')),
+                                SnackBar(
+                                  content: Text(
+                                    viewModel.errors['message'] ??
+                                        'Failed to revoke link',
+                                  ),
+                                ),
                               );
                             },
                           ),

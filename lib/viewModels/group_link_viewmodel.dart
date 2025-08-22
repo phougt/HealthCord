@@ -1,6 +1,6 @@
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/group_links/group_link.dart';
-import 'package:family_health_record/repositories/group/group_repository.dart';
+import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:flutter/material.dart';
 
 class GroupLinkViewModel extends ChangeNotifier {
@@ -10,14 +10,14 @@ class GroupLinkViewModel extends ChangeNotifier {
   int _page = 0;
   final int perPage = 10;
   Map<String, dynamic> errors = {};
-  final GroupRepository _groupRepository;
+  final GroupLinkRepository _groupLinkRepository;
   final ScrollController scrollController = ScrollController();
   final AuthTokenManager _authTokenManager;
 
   GroupLinkViewModel({
-    required GroupRepository groupRepository,
+    required GroupLinkRepository groupLinkRepository,
     required AuthTokenManager authTokenManager,
-  }) : _groupRepository = groupRepository,
+  }) : _groupLinkRepository = groupLinkRepository,
        _authTokenManager = authTokenManager {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -36,7 +36,7 @@ class GroupLinkViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _groupRepository.getGroupLinks(
+    final result = await _groupLinkRepository.getGroupLinks(
       groupId,
       _page,
       perPage,
@@ -66,10 +66,29 @@ class GroupLinkViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _groupRepository.generateNewGroupLink(groupId);
+    final result = await _groupLinkRepository.generateNewGroupLink(groupId);
 
     if (result.isSuccessful) {
       groupLinks.insert(0, result.data!);
+      isLoading = false;
+      notifyListeners();
+      return true;
+    }
+
+    errors = result.error?.toJson() ?? {};
+    isLoading = false;
+    notifyListeners();
+    return false;
+  }
+
+  Future<bool> revokeLink(int linkId) async {
+    isLoading = true;
+    notifyListeners();
+
+    final result = await _groupLinkRepository.revokeGroupLink(linkId);
+
+    if (result.isSuccessful) {
+      groupLinks.removeWhere((link) => link.id == linkId);
       isLoading = false;
       notifyListeners();
       return true;
