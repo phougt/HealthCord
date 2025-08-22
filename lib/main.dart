@@ -99,7 +99,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'HealthCord',
       themeMode: ThemeMode.system,
       darkTheme: MaterialTheme(Typography.blackCupertino).dark(),
       theme: MaterialTheme(Typography.whiteCupertino).light(),

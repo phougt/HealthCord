@@ -15,11 +15,15 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          color: Theme.of(context).colorScheme.primaryContainer,
+        ),
+        forceMaterialTransparency: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
-              radius: 20,
+              radius: 18,
               child: authTokenManager.user?.profile != null
                   ? Image.network(
                       authTokenManager.user?.profile ?? '',
@@ -29,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                             'Bearer ${authTokenManager.authToken?.accessToken}',
                       },
                     )
-                  : const Icon(Icons.person, size: 35),
+                  : const Icon(Icons.person, size: 25),
             ),
           ),
         ],
@@ -49,78 +53,92 @@ class HomeScreen extends StatelessWidget {
             ),
           ],
         ),
-        forceMaterialTransparency: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            Flexible(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await viewModel.refreshGroups();
-                },
-                child: viewModel.groups.isEmpty && !viewModel.isLoading
-                    ? Stack(
-                        children: [
-                          Positioned(
-                            right: 0,
-                            bottom: 110,
-                            child: Icon(Icons.arrow_downward_rounded, size: 80),
-                          ),
-                          const Center(
-                            child: Text(
-                              'No groups found.\nClick the "+" button to create or join a group.',
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Theme.of(context).colorScheme.primaryContainer,
+              Theme.of(context).colorScheme.primary,
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Flexible(
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    await viewModel.refreshGroups();
+                  },
+                  child: viewModel.groups.isEmpty && !viewModel.isLoading
+                      ? Stack(
+                          children: [
+                            Positioned(
+                              right: 0,
+                              bottom: 110,
+                              child: Icon(
+                                Icons.arrow_downward_rounded,
+                                size: 80,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    : ListView.builder(
-                        controller: viewModel.scrollController,
-                        itemCount: viewModel.groups.length,
-                        itemBuilder: (context, index) {
-                          final group = viewModel.groups[index];
+                            const Center(
+                              child: Text(
+                                'No groups found.\nClick the "+" button to create or join a group.',
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        )
+                      : ListView.builder(
+                          controller: viewModel.scrollController,
+                          itemCount: viewModel.groups.length,
+                          itemBuilder: (context, index) {
+                            final group = viewModel.groups[index];
 
-                          if (index == 0) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    'Your Groups:',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge,
-                                    textAlign: TextAlign.start,
+                            if (index == 0) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'Your Groups:',
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleLarge,
+                                      textAlign: TextAlign.start,
+                                    ),
                                   ),
-                                ),
-                                groupCard(context, group, index),
-                              ],
-                            );
-                          }
+                                  groupCard(context, group, index),
+                                ],
+                              );
+                            }
 
-                          if (index == viewModel.groups.length - 1 &&
-                              viewModel.isLoading) {
-                            return Column(
-                              children: [
-                                groupCard(context, group, index),
-                                const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                              ],
-                            );
-                          }
+                            if (index == viewModel.groups.length - 1 &&
+                                viewModel.isLoading) {
+                              return Column(
+                                children: [
+                                  groupCard(context, group, index),
+                                  const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ],
+                              );
+                            }
 
-                          return groupCard(context, group, index);
-                        },
-                        physics: const AlwaysScrollableScrollPhysics(),
-                      ),
+                            return groupCard(context, group, index);
+                          },
+                          physics: const AlwaysScrollableScrollPhysics(),
+                        ),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       floatingActionButton: Builder(
