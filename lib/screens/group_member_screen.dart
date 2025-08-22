@@ -24,6 +24,7 @@ class GroupMemberScreen extends StatelessWidget {
         child: ListView.builder(
           physics: const AlwaysScrollableScrollPhysics(),
           controller: viewModel.scrollController,
+          itemCount: viewModel.members.length,
           itemBuilder: (context, index) {
             final member = viewModel.members[index];
             return Column(
@@ -68,7 +69,6 @@ class GroupMemberScreen extends StatelessWidget {
               ],
             );
           },
-          itemCount: viewModel.members.length,
         ),
       ),
     );
