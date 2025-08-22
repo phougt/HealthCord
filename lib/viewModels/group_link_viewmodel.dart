@@ -1,5 +1,4 @@
 import 'package:family_health_record/managers/auth_token_manager.dart';
-import 'package:family_health_record/models/auth_tokens/auth_token.dart';
 import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:flutter/material.dart';

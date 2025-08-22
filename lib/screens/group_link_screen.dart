@@ -62,9 +62,6 @@ class GroupLinkScreen extends StatelessWidget {
                   return ListTile(
                     leading: CircleAvatar(child: Icon(Icons.link)),
                     title: SelectableText(link.link),
-                    subtitle: Text(
-                      'Link ${viewModel.groupLinks.length - index}',
-                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
