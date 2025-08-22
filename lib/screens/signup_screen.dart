@@ -113,7 +113,7 @@ class SignupScreen extends StatelessWidget {
                                 content: Text('Sign up successful!'),
                               ),
                             );
-                            context.goNamed('groupHomeScreen');
+                            context.goNamed('homeScreen');
                           }
                         },
                         child: const Text('Sign Up'),

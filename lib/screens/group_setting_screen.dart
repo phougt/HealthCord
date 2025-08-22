@@ -1,4 +1,3 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/viewModels/group_setting_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
