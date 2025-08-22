@@ -1,3 +1,4 @@
+import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/utils/result.dart';
@@ -16,4 +17,10 @@ abstract class GroupRepository {
     int page,
     int perPage,
   );
+  Future<Result<List<GroupLink>>> getGroupLinks(
+    int groupId,
+    int page,
+    int perPage,
+  );
+  Future<Result<GroupLink>> generateNewGroupLink(int groupId);
 }

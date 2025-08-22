@@ -13,7 +13,14 @@ class GroupHomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.settings))],
+        actions: [
+          IconButton(
+            onPressed: () {
+              context.pushNamed('groupSettingScreen');
+            },
+            icon: Icon(Icons.settings),
+          ),
+        ],
         leading: IconButton(
           onPressed: () {
             context.goNamed('homeScreen');

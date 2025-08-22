@@ -7,7 +7,9 @@ import "package:family_health_record/screens/create_doctor_screen.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/create_hospital_screen.dart";
 import "package:family_health_record/screens/group_home_screen.dart";
+import "package:family_health_record/screens/group_link_screen.dart";
 import "package:family_health_record/screens/group_member_screen.dart";
+import "package:family_health_record/screens/group_setting_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/join_group_screen.dart";
 import "package:family_health_record/screens/login_screen.dart";
@@ -18,7 +20,9 @@ import "package:family_health_record/viewModels/create_doctor_viewmodel.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
 import "package:family_health_record/viewModels/create_hospital_viewmodel.dart";
 import "package:family_health_record/viewModels/group_home_viewmodel.dart";
+import "package:family_health_record/viewModels/group_link_viewmodel.dart";
 import "package:family_health_record/viewModels/group_member_viewmodel.dart";
+import "package:family_health_record/viewModels/group_setting_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewModels/medical_entities_viewmodel.dart";
 import "package:family_health_record/viewmodels/signup_viewmodel.dart";
@@ -95,29 +99,59 @@ final GoRouter rootRouter = GoRouter(
             ChangeNotifierProvider(
               lazy: false,
               create: (context) {
-                final viewMoel = CreateDoctorViewModel(
+                final viewModel = CreateDoctorViewModel(
                   doctorRepository: context.read<DoctorRepository>(),
                 );
 
                 if (state.extra is int) {
-                  viewMoel.groupId = state.extra as int;
+                  viewModel.groupId = state.extra as int;
                 }
 
-                return viewMoel;
+                return viewModel;
               },
             ),
             ChangeNotifierProvider(
               lazy: false,
               create: (context) {
-                final viewMoel = CreateHospitalViewModel(
+                final viewModel = CreateHospitalViewModel(
                   hospitalRepository: context.read<HospitalRepository>(),
                 );
 
                 if (state.extra is int) {
-                  viewMoel.groupId = state.extra as int;
+                  viewModel.groupId = state.extra as int;
                 }
 
-                return viewMoel;
+                return viewModel;
+              },
+            ),
+            ChangeNotifierProvider(
+              lazy: false,
+              create: (context) {
+                final viewModel = GroupSettingViewModel(
+                  authTokenManager: context.read<AuthTokenManager>(),
+                );
+
+                if (state.extra is int) {
+                  viewModel.groupId = state.extra as int;
+                }
+
+                return viewModel;
+              },
+            ),
+            ChangeNotifierProvider(
+              lazy: false,
+              create: (context) {
+                final viewModel = GroupLinkViewModel(
+                  authTokenManager: context.read<AuthTokenManager>(),
+                  groupRepository: context.read<GroupRepository>(),
+                );
+
+                if (state.extra is int) {
+                  viewModel.groupId = state.extra as int;
+                  viewModel.refreshGroupLinks();
+                }
+
+                return viewModel;
               },
             ),
           ],
@@ -162,6 +196,20 @@ final GoRouter rootRouter = GoRouter(
         );
       },
       routes: [
+        GoRoute(
+          path: '/groupLink',
+          name: 'groupLinkScreen',
+          builder: (context, state) {
+            return const GroupLinkScreen();
+          },
+        ),
+        GoRoute(
+          path: '/groupSetting',
+          name: 'groupSettingScreen',
+          builder: (context, state) {
+            return const GroupSettingScreen();
+          },
+        ),
         GoRoute(
           path: '/groupHome',
           name: 'groupHomeScreen',
