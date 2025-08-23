@@ -126,9 +126,9 @@ class HomeScreen extends StatelessWidget {
                                         child: Text(
                                           'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.luckiestGuy(
+                                          style: GoogleFonts.deliciousHandrawn(
                                             textStyle: TextStyle(
-                                              fontSize: 30,
+                                              fontSize: 36,
                                               color: Theme.of(
                                                 context,
                                               ).colorScheme.onPrimaryContainer,
