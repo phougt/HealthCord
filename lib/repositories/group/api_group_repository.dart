@@ -1,4 +1,3 @@
-import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:family_health_record/models/groups/group.dart';
@@ -45,6 +44,36 @@ class ApiGroupRepository extends GroupRepository {
   }
 
   @override
+  Future<Result<Group>> getGroupDetails(int groupId) async {
+    try {
+      final response = await _dio.get('/group/$groupId');
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final data = json['data'];
+        final group = Group.fromJson(data);
+        return Result.ok(
+          data: group,
+          message: json['message'] ?? 'Group details fetched successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Future.value(
+        Result.fail(
+          ApiError(message: 'An error occurred while fetching group details'),
+        ),
+      );
+    }
+
+    return Result.fail(
+      ApiError(
+        message: 'An unexpected error occurred while fetching group details',
+      ),
+    );
+  }
+
+  @override
   Future<Result<Group>> createGroup({
     required String name,
     String? description,
@@ -76,15 +105,57 @@ class ApiGroupRepository extends GroupRepository {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
-      return Future.value(
-        Result.fail(
-          ApiError(message: 'An error occurred while creating group'),
-        ),
+      return Result.fail(
+        ApiError(message: 'An error occurred while creating group'),
       );
     }
 
     return Result.fail(
       ApiError(message: 'An unexpected error occurred while creating group'),
+    );
+  }
+
+  @override
+  Future<Result<Group>> updateGroup({
+    required int groupId,
+    String? name,
+    String? description,
+    String? groupProfile,
+  }) async {
+    try {
+      final dio = _dio.clone();
+
+      final formData = FormData.fromMap({
+        '_method': 'put',
+        'name': name,
+        'description': description,
+        'group_profile': groupProfile != null
+            ? await MultipartFile.fromFile(groupProfile)
+            : null,
+      });
+
+      final response = await dio.post('/group/$groupId', data: formData);
+
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final data = json['data'];
+        final updatedGroup = Group.fromJson(data);
+        return Result.ok(
+          data: updatedGroup,
+          message: json['message'] ?? 'Group updated successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      print(e);
+      return Result.fail(
+        ApiError(message: 'An error occurred while updating group'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while updating group'),
     );
   }
 

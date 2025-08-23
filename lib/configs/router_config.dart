@@ -128,20 +128,6 @@ final GoRouter rootRouter = GoRouter(
             ChangeNotifierProvider(
               lazy: false,
               create: (context) {
-                final viewModel = GroupSettingViewModel(
-                  authTokenManager: context.read<AuthTokenManager>(),
-                );
-
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
-                }
-
-                return viewModel;
-              },
-            ),
-            ChangeNotifierProvider(
-              lazy: false,
-              create: (context) {
                 final viewModel = GroupLinkViewModel(
                   authTokenManager: context.read<AuthTokenManager>(),
                   groupLinkRepository: context.read<GroupLinkRepository>(),
@@ -208,7 +194,28 @@ final GoRouter rootRouter = GoRouter(
           path: '/groupSetting',
           name: 'groupSettingScreen',
           builder: (context, state) {
-            return const GroupSettingScreen();
+            return MultiProvider(
+              providers: [
+                Provider<ImagePicker>(create: (context) => ImagePicker()),
+                ChangeNotifierProvider(
+                  create: (context) {
+                    final viewModel = GroupSettingViewModel(
+                      authTokenManager: context.read<AuthTokenManager>(),
+                      groupRepository: context.read<GroupRepository>(),
+                      imagePicker: context.read<ImagePicker>(),
+                    );
+
+                    if (state.extra is int) {
+                      viewModel.groupId = state.extra as int;
+                      viewModel.fetchGroupDetails();
+                    }
+
+                    return viewModel;
+                  },
+                ),
+              ],
+              child: const GroupSettingScreen(),
+            );
           },
         ),
         GoRoute(
