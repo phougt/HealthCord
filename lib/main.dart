@@ -12,6 +12,7 @@ import 'package:family_health_record/repositories/hospital/api_hospital_reposito
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'managers/auth_token_manager.dart';
 import 'package:family_health_record/configs/constant.dart';
@@ -108,8 +109,8 @@ class MainApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'HealthCord',
       themeMode: ThemeMode.system,
-      darkTheme: MaterialTheme(Typography.blackCupertino).dark(),
-      theme: MaterialTheme(Typography.whiteCupertino).light(),
+      darkTheme: MaterialTheme(GoogleFonts.robotoTextTheme()).dark(),
+      theme: MaterialTheme(GoogleFonts.robotoTextTheme()).light(),
       debugShowCheckedModeBanner: false,
       routerConfig: rootRouter,
     );

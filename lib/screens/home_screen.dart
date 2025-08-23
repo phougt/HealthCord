@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -23,6 +26,7 @@ class HomeScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
               radius: 18,
               child: authTokenManager.user?.profile != null
                   ? Image.network(
@@ -47,7 +51,7 @@ class HomeScreen extends StatelessWidget {
             Text(
               'HEALTHCORD',
               style: TextStyle(
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
@@ -66,7 +70,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             children: [
               Flexible(
@@ -82,6 +86,9 @@ class HomeScreen extends StatelessWidget {
                               bottom: 110,
                               child: Icon(
                                 Icons.arrow_downward_rounded,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurfaceVariant,
                                 size: 80,
                               ),
                             ),
@@ -104,34 +111,52 @@ class HomeScreen extends StatelessWidget {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/family.png',
+                                        fit: BoxFit.cover,
+                                        scale: 2,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.all(16.0),
+                                        child: Text(
+                                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.luckiestGuy(
+                                            textStyle: TextStyle(
+                                              fontSize: 30,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onPrimaryContainer,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      'Your Groups:',
-                                      style: Theme.of(
-                                        context,
-                                      ).textTheme.titleLarge,
+                                      'Groups:',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleLarge
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                       textAlign: TextAlign.start,
                                     ),
                                   ),
-                                  groupCard(context, group, index),
+                                  groupCard(context, group, index, viewModel),
                                 ],
                               );
                             }
 
-                            if (index == viewModel.groups.length - 1 &&
-                                viewModel.isLoading) {
-                              return Column(
-                                children: [
-                                  groupCard(context, group, index),
-                                  const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                ],
-                              );
-                            }
-
-                            return groupCard(context, group, index);
+                            return groupCard(context, group, index, viewModel);
                           },
                           physics: const AlwaysScrollableScrollPhysics(),
                         ),
@@ -188,12 +213,16 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget groupCard(BuildContext context, Group group, int index) {
+  Widget groupCard(
+    BuildContext context,
+    Group group,
+    int index,
+    HomeViewModel viewModel,
+  ) {
     return Card(
+      elevation: 2,
       clipBehavior: Clip.hardEdge,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-      surfaceTintColor:
-          HomeViewModel.colorPool[index % HomeViewModel.colorPool.length],
       child: InkWell(
         onTap: () {
           context.pushNamed('groupHomeScreen', extra: group.id);
@@ -201,8 +230,10 @@ class HomeScreen extends StatelessWidget {
         child: Stack(
           alignment: Alignment.bottomRight,
           children: [
-            if (group.groupProfile != null && group.groupProfile!.isNotEmpty)
-              Positioned.fill(
+            Visibility(
+              visible:
+                  group.groupProfile != null && group.groupProfile!.isNotEmpty,
+              child: Positioned.fill(
                 child: Opacity(
                   opacity: 0.05,
                   child: Image.network(
@@ -218,20 +249,49 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
             ListTile(
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
               leading:
                   group.groupProfile != null && group.groupProfile!.isNotEmpty
-                  ? CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        group.groupProfile!,
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization':
-                              'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
-                        },
+                  ? Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          group.groupProfile!,
+                          headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization':
+                                'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
+                          },
+                        ),
                       ),
                     )
-                  : const CircleAvatar(child: Icon(Icons.group)),
+                  : Container(
+                      padding: const EdgeInsets.all(1),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: HomeViewModel
+                            .colorPool[index % HomeViewModel.colorPool.length],
+                        child: Text(
+                          group.name.length > 1
+                              ? group.name[0].toUpperCase() +
+                                    group.name[1].toUpperCase()
+                              : group.name[0].toUpperCase(),
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
               title: Text(
                 group.name,
                 style: Theme.of(context).textTheme.titleMedium,
@@ -242,10 +302,13 @@ class HomeScreen extends StatelessWidget {
                 group.description == null || group.description!.isEmpty
                     ? 'No description provided this is not cool this is so cool and this is lame and this is not cool this is so cool and lame'
                     : group.description!,
-                style: Theme.of(context).textTheme.bodyMedium,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
+              trailing: const Icon(Icons.chevron_right),
             ),
           ],
         ),
