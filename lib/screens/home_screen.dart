@@ -1,11 +1,8 @@
-import 'dart:ui';
-
 import 'package:family_health_record/managers/auth_token_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -18,9 +15,6 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        flexibleSpace: Container(
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
         forceMaterialTransparency: true,
         actions: [
           Padding(
@@ -58,112 +52,122 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Theme.of(context).colorScheme.primaryContainer,
-              Theme.of(context).colorScheme.primary,
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Column(
-            children: [
-              Flexible(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    await viewModel.refreshGroups();
-                  },
-                  child: viewModel.groups.isEmpty && !viewModel.isLoading
-                      ? Stack(
-                          children: [
-                            Positioned(
-                              right: 0,
-                              bottom: 110,
-                              child: Icon(
-                                Icons.arrow_downward_rounded,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onSurfaceVariant,
-                                size: 80,
-                              ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            Flexible(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await viewModel.refreshGroups();
+                },
+                child: viewModel.groups.isEmpty && !viewModel.isLoading
+                    ? Stack(
+                        children: [
+                          Positioned(
+                            right: 0,
+                            bottom: 110,
+                            child: Icon(
+                              Icons.arrow_downward_rounded,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurfaceVariant,
+                              size: 80,
                             ),
-                            const Center(
-                              child: Text(
-                                'No groups found.\nClick the "+" button to create or join a group.',
-                                style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
+                          ),
+                          const Center(
+                            child: Text(
+                              'No groups found.\nClick the "+" button to create or join a group.',
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        )
-                      : ListView.builder(
-                          controller: viewModel.scrollController,
-                          itemCount: viewModel.groups.length,
-                          itemBuilder: (context, index) {
-                            final group = viewModel.groups[index];
+                          ),
+                        ],
+                      )
+                    : ListView.builder(
+                        controller: viewModel.scrollController,
+                        itemCount: viewModel.groups.length,
+                        itemBuilder: (context, index) {
+                          final group = viewModel.groups[index];
 
-                            if (index == 0) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        'assets/images/family.png',
-                                        fit: BoxFit.cover,
-                                        scale: 2,
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(
+                          if (index == 0) {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Card(
+                                  clipBehavior: Clip.hardEdge,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.primaryContainer,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16,
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Image.asset(
+                                          'assets/images/family.png',
+                                          fit: BoxFit.cover,
+                                          scale: 2.5,
+                                        ),
+                                        Text(
                                           'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.deliciousHandrawn(
-                                            textStyle: TextStyle(
-                                              fontSize: 36,
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onPrimaryContainer,
-                                            ),
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 26,
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onPrimaryContainer,
                                           ),
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    spacing: 8,
+                                    children: [
+                                      Icon(
+                                        Icons.group_rounded,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                      ),
+                                      Text(
+                                        'Groups',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                        textAlign: TextAlign.start,
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Groups:',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                      textAlign: TextAlign.start,
-                                    ),
-                                  ),
-                                  groupCard(context, group, index, viewModel),
-                                ],
-                              );
-                            }
+                                ),
+                                groupCard(context, group, index, viewModel),
+                              ],
+                            );
+                          }
 
-                            return groupCard(context, group, index, viewModel);
-                          },
-                          physics: const AlwaysScrollableScrollPhysics(),
-                        ),
-                ),
+                          return groupCard(context, group, index, viewModel);
+                        },
+                        physics: const AlwaysScrollableScrollPhysics(),
+                      ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: Builder(
@@ -222,95 +226,69 @@ class HomeScreen extends StatelessWidget {
     return Card(
       elevation: 2,
       clipBehavior: Clip.hardEdge,
+      surfaceTintColor:
+          HomeViewModel.colorPool[index % HomeViewModel.colorPool.length],
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: InkWell(
         onTap: () {
           context.pushNamed('groupHomeScreen', extra: group.id);
         },
-        child: Stack(
-          alignment: Alignment.bottomRight,
-          children: [
-            Visibility(
-              visible:
-                  group.groupProfile != null && group.groupProfile!.isNotEmpty,
-              child: Positioned.fill(
-                child: Opacity(
-                  opacity: 0.05,
-                  child: Image.network(
-                    scale: 5,
-                    filterQuality: FilterQuality.low,
-                    group.groupProfile ?? '',
-                    fit: BoxFit.cover,
-                    headers: {
-                      'Content-Type': 'application/json',
-                      'Authorization':
-                          'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
-                    },
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 8,
+          ),
+          leading: group.groupProfile != null && group.groupProfile!.isNotEmpty
+              ? Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                      group.groupProfile!,
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization':
+                            'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
+                      },
+                    ),
+                  ),
+                )
+              : Container(
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                  ),
+                  child: CircleAvatar(
+                    child: Text(
+                      group.name.length > 1
+                          ? group.name[0].toUpperCase() +
+                                group.name[1].toUpperCase()
+                          : group.name[0].toUpperCase(),
+                      style: const TextStyle(fontSize: 18),
+                    ),
                   ),
                 ),
-              ),
+          title: Text(
+            group.name,
+            style: Theme.of(context).textTheme.titleMedium,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          subtitle: Text(
+            group.description == null || group.description!.isEmpty
+                ? 'No description provided this is not cool this is so cool and this is lame and this is not cool this is so cool and lame'
+                : group.description!,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
-            ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              leading:
-                  group.groupProfile != null && group.groupProfile!.isNotEmpty
-                  ? Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          group.groupProfile!,
-                          headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization':
-                                'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
-                          },
-                        ),
-                      ),
-                    )
-                  : Container(
-                      padding: const EdgeInsets.all(1),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircleAvatar(
-                        backgroundColor: HomeViewModel
-                            .colorPool[index % HomeViewModel.colorPool.length],
-                        child: Text(
-                          group.name.length > 1
-                              ? group.name[0].toUpperCase() +
-                                    group.name[1].toUpperCase()
-                              : group.name[0].toUpperCase(),
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
-              title: Text(
-                group.name,
-                style: Theme.of(context).textTheme.titleMedium,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              subtitle: Text(
-                group.description == null || group.description!.isEmpty
-                    ? 'No description provided this is not cool this is so cool and this is lame and this is not cool this is so cool and lame'
-                    : group.description!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing: const Icon(Icons.chevron_right),
-            ),
-          ],
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          trailing: const Icon(Icons.chevron_right),
         ),
       ),
     );
