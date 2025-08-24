@@ -131,7 +131,10 @@ void _showDeleteConfirmationDialog(
             },
             child: Text('Cancel'),
           ),
-          TextButton(
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             onPressed: () async {
               final result = await viewModel.revokeLink(link.id);
 
@@ -151,10 +154,7 @@ void _showDeleteConfirmationDialog(
               ).showSnackBar(SnackBar(content: Text("Failed to delete link")));
               context.pop();
             },
-            child: Text(
-              'Delete',
-              style: TextStyle(color: Theme.of(context).colorScheme.error),
-            ),
+            child: Text('Delete'),
           ),
         ],
       );
