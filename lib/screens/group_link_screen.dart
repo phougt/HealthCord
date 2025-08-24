@@ -1,5 +1,7 @@
+import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/viewModels/group_link_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 
@@ -90,28 +92,10 @@ class GroupLinkScreen extends StatelessWidget {
                               color: Theme.of(context).colorScheme.error,
                             ),
                             onPressed: () async {
-                              final result = await viewModel.revokeLink(
-                                link.id,
-                              );
-
-                              if (result) {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text('Link revoked successfully'),
-                                  ),
-                                );
-                                return;
-                              }
-
-                              if (!context.mounted) return;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    viewModel.errors['message'] ??
-                                        'Failed to revoke link',
-                                  ),
-                                ),
+                              _showDeleteConfirmationDialog(
+                                context,
+                                viewModel,
+                                link,
                               );
                             },
                           ),
@@ -127,4 +111,53 @@ class GroupLinkScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDeleteConfirmationDialog(
+  BuildContext context,
+  GroupLinkViewModel viewModel,
+  GroupLink link,
+) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Delete Link'),
+        content: Text('Are you sure you want to delete this link?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final result = await viewModel.revokeLink(link.id);
+
+              if (result) {
+                if (!context.mounted) return;
+                viewModel.refreshGroupLinks();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Link deleted successfully")),
+                );
+                context.pop();
+                return;
+              }
+
+              if (!context.mounted) return;
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text("Failed to delete link")));
+              context.pop();
+            },
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Theme.of(context).colorScheme.error),
+            ),
+          ),
+        ],
+      );
+    },
+  );
 }
