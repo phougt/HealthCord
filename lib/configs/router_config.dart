@@ -56,8 +56,9 @@ final GoRouter rootRouter = GoRouter(
                   authTokenManager: context.read<AuthTokenManager>(),
                 );
 
-                if (state.extra is int) {
-                  groupHomeViewModel.groupId = state.extra as int;
+                if (state.extra is Map<String, dynamic>) {
+                  groupHomeViewModel.groupId =
+                      (state.extra as Map<String, dynamic>)['groupId'];
                   groupHomeViewModel.loadUserPermissions();
                 }
 
@@ -72,8 +73,9 @@ final GoRouter rootRouter = GoRouter(
                   authTokenManager: context.read<AuthTokenManager>(),
                 );
 
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
+                if (state.extra is Map<String, dynamic>) {
+                  viewModel.groupId =
+                      (state.extra as Map<String, dynamic>)['groupId'];
                   viewModel.refreshGroupMembers();
                 }
 
@@ -88,38 +90,10 @@ final GoRouter rootRouter = GoRouter(
                   hospitalRepository: context.read<HospitalRepository>(),
                   authTokenManager: context.read<AuthTokenManager>(),
                 );
-
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
+                if (state.extra is Map<String, dynamic>) {
+                  viewModel.groupId =
+                      (state.extra as Map<String, dynamic>)['groupId'];
                   viewModel.refreshEntities();
-                }
-
-                return viewModel;
-              },
-            ),
-            ChangeNotifierProvider(
-              lazy: false,
-              create: (context) {
-                final viewModel = CreateDoctorViewModel(
-                  doctorRepository: context.read<DoctorRepository>(),
-                );
-
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
-                }
-
-                return viewModel;
-              },
-            ),
-            ChangeNotifierProvider(
-              lazy: false,
-              create: (context) {
-                final viewModel = CreateHospitalViewModel(
-                  hospitalRepository: context.read<HospitalRepository>(),
-                );
-
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
                 }
 
                 return viewModel;
@@ -133,8 +107,9 @@ final GoRouter rootRouter = GoRouter(
                   groupLinkRepository: context.read<GroupLinkRepository>(),
                 );
 
-                if (state.extra is int) {
-                  viewModel.groupId = state.extra as int;
+                if (state.extra is Map<String, dynamic>) {
+                  viewModel.groupId =
+                      (state.extra as Map<String, dynamic>)['groupId'];
                   viewModel.refreshGroupLinks();
                 }
 
@@ -205,8 +180,9 @@ final GoRouter rootRouter = GoRouter(
                       imagePicker: context.read<ImagePicker>(),
                     );
 
-                    if (state.extra is int) {
-                      viewModel.groupId = state.extra as int;
+                    if (state.extra is Map<String, dynamic>) {
+                      viewModel.groupId =
+                          (state.extra as Map<String, dynamic>)['groupId'];
                       viewModel.fetchGroupDetails();
                     }
 
@@ -243,14 +219,50 @@ final GoRouter rootRouter = GoRouter(
           path: '/createDoctor',
           name: 'createDoctorScreen',
           builder: (context, state) {
-            return const CreateDoctorScreen();
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) {
+                    final viewModel = CreateDoctorViewModel(
+                      doctorRepository: context.read<DoctorRepository>(),
+                    );
+
+                    if (state.extra is Map<String, dynamic>) {
+                      viewModel.groupId =
+                          (state.extra as Map<String, dynamic>)['groupId'];
+                    }
+
+                    return viewModel;
+                  },
+                ),
+              ],
+              child: const CreateDoctorScreen(),
+            );
           },
         ),
         GoRoute(
           path: '/createHospital',
           name: 'createHospitalScreen',
           builder: (context, state) {
-            return const CreateHospitalScreen();
+            return MultiProvider(
+              providers: [
+                ChangeNotifierProvider(
+                  create: (context) {
+                    final viewModel = CreateHospitalViewModel(
+                      hospitalRepository: context.read<HospitalRepository>(),
+                    );
+
+                    if (state.extra is Map<String, dynamic>) {
+                      viewModel.groupId =
+                          (state.extra as Map<String, dynamic>)['groupId'];
+                    }
+
+                    return viewModel;
+                  },
+                ),
+              ],
+              child: const CreateHospitalScreen(),
+            );
           },
         ),
       ],

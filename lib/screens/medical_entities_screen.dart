@@ -96,7 +96,10 @@ class MedicalEntitiesScreen extends StatelessWidget {
                                 leading: const Icon(Icons.person_4_rounded),
                                 title: const Text('Add Doctor'),
                                 onTap: () {
-                                  context.pushNamed('createDoctorScreen');
+                                  context.pushNamed(
+                                    'createDoctorScreen',
+                                    extra: {'groupId': viewModel.groupId},
+                                  );
                                 },
                               )
                             : const SizedBox.shrink(),
@@ -105,7 +108,10 @@ class MedicalEntitiesScreen extends StatelessWidget {
                                 leading: const Icon(Icons.home_work_rounded),
                                 title: const Text('Add Hospital'),
                                 onTap: () {
-                                  context.pushNamed('createHospitalScreen');
+                                  context.pushNamed(
+                                    'createHospitalScreen',
+                                    extra: {'groupId': viewModel.groupId},
+                                  );
                                 },
                               )
                             : const SizedBox.shrink(),

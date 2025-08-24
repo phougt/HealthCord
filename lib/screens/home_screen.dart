@@ -156,12 +156,12 @@ class HomeScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ),
-                                groupCard(context, group, index, viewModel),
+                                groupCard(context, group, index),
                               ],
                             );
                           }
 
-                          return groupCard(context, group, index, viewModel);
+                          return groupCard(context, group, index);
                         },
                         physics: const AlwaysScrollableScrollPhysics(),
                       ),
@@ -217,12 +217,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget groupCard(
-    BuildContext context,
-    Group group,
-    int index,
-    HomeViewModel viewModel,
-  ) {
+  Widget groupCard(BuildContext context, Group group, int index) {
     return Card(
       elevation: 2,
       clipBehavior: Clip.hardEdge,
@@ -231,7 +226,7 @@ class HomeScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: InkWell(
         onTap: () {
-          context.pushNamed('groupHomeScreen', extra: group.id);
+          context.pushNamed('groupHomeScreen', extra: {'groupId': group.id});
         },
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(

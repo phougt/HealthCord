@@ -16,7 +16,10 @@ class GroupHomeScreen extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              context.pushNamed('groupSettingScreen', extra: viewModel.groupId);
+              context.pushNamed(
+                'groupSettingScreen',
+                extra: {'groupId': viewModel.groupId},
+              );
             },
             icon: Icon(Icons.settings),
           ),
