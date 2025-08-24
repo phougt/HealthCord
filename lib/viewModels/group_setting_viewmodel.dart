@@ -20,6 +20,12 @@ class GroupSettingViewModel extends ChangeNotifier {
 
   AuthToken? get authToken => _authTokenManager.authToken;
 
+  bool get isChanged {
+    return (groupNameController.text != group?.name ||
+        groupDescriptionController.text != (group?.description ?? '') ||
+        groupProfile != null);
+  }
+
   GroupSettingViewModel({
     required AuthTokenManager authTokenManager,
     required GroupRepository groupRepository,

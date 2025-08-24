@@ -17,6 +17,20 @@ class GroupSettingScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Group Setting'),
+        leading: Visibility(
+          visible: context.canPop(),
+          child: IconButton(
+            onPressed: () {
+              if (viewModel.isChanged) {
+                _showUnsavedChangesDialog(context);
+                return;
+              }
+
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+        ),
         actions: [
           Visibility(
             visible: viewModel.hasPermission('group.update'),
@@ -149,4 +163,34 @@ class GroupSettingScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showUnsavedChangesDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Unsaved Changes'),
+        content: Text('You have unsaved changes. Do you want to discard them?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () {
+              context.pop();
+              context.pop();
+            },
+            child: Text('Discard'),
+          ),
+        ],
+      );
+    },
+  );
 }
