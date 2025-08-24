@@ -102,21 +102,25 @@ class SignupScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       FilledButton(
-                        onPressed: () async {
-                          if (viewModel.isLoading) return;
-                          final success = await viewModel.signup();
+                        onPressed: viewModel.isLoading
+                            ? null
+                            : () async {
+                                if (viewModel.isLoading) return;
+                                final success = await viewModel.signup();
 
-                          if (success) {
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Sign up successful!'),
-                              ),
-                            );
-                            context.goNamed('homeScreen');
-                          }
-                        },
-                        child: const Text('Sign Up'),
+                                if (success) {
+                                  if (!context.mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Sign up successful!'),
+                                    ),
+                                  );
+                                  context.goNamed('homeScreen');
+                                }
+                              },
+                        child: viewModel.isLoading
+                            ? const CircularProgressIndicator()
+                            : const Text('Sign Up'),
                       ),
                     ],
                   ),

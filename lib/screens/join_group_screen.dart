@@ -40,33 +40,38 @@ class JoinGroupScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.grey[600]),
               ),
               FilledButton(
-                onPressed: () async {
-                  final result = await viewModel.joinGroup();
+                onPressed: viewModel.isLoading
+                    ? null
+                    : () async {
+                        final result = await viewModel.joinGroup();
 
-                  if (result) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Join group successfully!')),
-                    );
+                        if (result) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Join group successfully!'),
+                            ),
+                          );
 
-                    Future.delayed(const Duration(seconds: 3), () {
-                      if (!context.mounted) return;
-                      context.pop();
-                    });
-                  }
+                          if (!context.mounted) return;
+                          context.pop();
+                          return;
+                        }
 
-                  if (message.isNotEmpty && errors.isEmpty) {
-                    if (!context.mounted) return;
-                    ScaffoldMessenger.of(
-                      context,
-                    ).showSnackBar(SnackBar(content: Text(message)));
-                  }
-                },
-                child: Row(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [Icon(Icons.group), Text('Join Group')],
-                ),
+                        if (message.isNotEmpty && errors.isEmpty) {
+                          if (!context.mounted) return;
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(message)));
+                        }
+                      },
+                child: viewModel.isLoading
+                    ? const CircularProgressIndicator()
+                    : Row(
+                        spacing: 5,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [Icon(Icons.group), Text('Join Group')],
+                      ),
               ),
             ],
           ),
