@@ -75,11 +75,20 @@ class HomeScreen extends StatelessWidget {
                               size: 80,
                             ),
                           ),
-                          const Center(
-                            child: Text(
-                              'No groups found.\nClick the "+" button to create or join a group.',
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/empty.png',
+                                  height: 150,
+                                ),
+                                const Text(
+                                  'No groups found.\nClick the "+" button to create or join a group.',
+                                  style: TextStyle(fontSize: 16),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
                             ),
                           ),
                         ],

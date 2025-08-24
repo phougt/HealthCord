@@ -110,11 +110,14 @@ class GroupSettingScreen extends StatelessWidget {
                 readOnly: !viewModel.hasPermission('group.update'),
                 controller: viewModel.groupNameController,
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      viewModel.undoName();
-                    },
-                    icon: Icon(Icons.undo_rounded),
+                  suffixIcon: Visibility(
+                    visible: viewModel.hasPermission('group.update'),
+                    child: IconButton(
+                      onPressed: () {
+                        viewModel.undoName();
+                      },
+                      icon: Icon(Icons.undo_rounded),
+                    ),
                   ),
                   icon: const Icon(Icons.group_rounded),
                   border: OutlineInputBorder(),
@@ -128,11 +131,14 @@ class GroupSettingScreen extends StatelessWidget {
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
                 decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      viewModel.undoDescription();
-                    },
-                    icon: Icon(Icons.undo_rounded),
+                  suffixIcon: Visibility(
+                    visible: viewModel.hasPermission('group.update'),
+                    child: IconButton(
+                      onPressed: () {
+                        viewModel.undoDescription();
+                      },
+                      icon: Icon(Icons.undo_rounded),
+                    ),
                   ),
                   icon: const Icon(Icons.description),
                   border: OutlineInputBorder(),

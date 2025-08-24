@@ -17,6 +17,18 @@ class GroupLinkScreen extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 12,
+            children: [
+              Image.asset('assets/images/link.png', height: 150),
+              Text(
+                'Share these links to invite others to join the group',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ],
+          ),
           Visibility(
             visible: viewModel.hasPermission('invite-link.create'),
             child: Padding(
