@@ -1,7 +1,9 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
+import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/models/auth_tokens/auth_token.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
+import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -9,8 +11,10 @@ class GroupSettingViewModel extends ChangeNotifier {
   int groupId = 0;
   bool isLoading = true;
   Map<String, dynamic> errors = {};
-  final AuthTokenManager _authTokenManager;
+  final SessionManager _authTokenManager;
+  final PermissionManager _permissionManager;
   final GroupRepository _groupRepository;
+  final UserRepository _userRepository;
   XFile? groupProfile;
   final ImagePicker _imagePicker;
   Group? group;
@@ -27,11 +31,15 @@ class GroupSettingViewModel extends ChangeNotifier {
   }
 
   GroupSettingViewModel({
-    required AuthTokenManager authTokenManager,
+    required SessionManager authTokenManager,
+    required UserRepository userRepository,
+    required PermissionManager permissionManager,
     required GroupRepository groupRepository,
     required ImagePicker imagePicker,
   }) : _groupRepository = groupRepository,
+       _userRepository = userRepository,
        _imagePicker = imagePicker,
+       _permissionManager = permissionManager,
        _authTokenManager = authTokenManager;
 
   Future<bool> fetchGroupDetails() async {
@@ -106,8 +114,27 @@ class GroupSettingViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<bool> leaveGroup() async {
+    isLoading = true;
+    notifyListeners();
+
+    final result = await _userRepository.leaveGroup(groupId);
+
+    if (result.isSuccessful) {
+      isLoading = false;
+      group = null;
+      _permissionManager.clearGroupPermissionsCache(groupId);
+      notifyListeners();
+      return true;
+    }
+
+    isLoading = false;
+    notifyListeners();
+    return false;
+  }
+
   bool hasPermission(String permission) {
-    return _authTokenManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, groupId);
   }
 
   void undoName() {

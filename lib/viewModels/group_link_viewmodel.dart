@@ -1,4 +1,4 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:flutter/material.dart';
@@ -12,13 +12,13 @@ class GroupLinkViewModel extends ChangeNotifier {
   Map<String, dynamic> errors = {};
   final GroupLinkRepository _groupLinkRepository;
   final ScrollController scrollController = ScrollController();
-  final AuthTokenManager _authTokenManager;
+  final PermissionManager _permissionManager;
 
   GroupLinkViewModel({
     required GroupLinkRepository groupLinkRepository,
-    required AuthTokenManager authTokenManager,
+    required PermissionManager permissionManager,
   }) : _groupLinkRepository = groupLinkRepository,
-       _authTokenManager = authTokenManager {
+       _permissionManager = permissionManager {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 100) {
@@ -28,7 +28,7 @@ class GroupLinkViewModel extends ChangeNotifier {
   }
 
   bool hasPermission(String permission) {
-    return _authTokenManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, groupId);
   }
 
   Future<bool> loadMoreGroupLinks() async {

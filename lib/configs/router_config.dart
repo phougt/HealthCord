@@ -1,9 +1,11 @@
-import "package:family_health_record/managers/auth_token_manager.dart";
+import "package:family_health_record/managers/session_manager.dart";
+import "package:family_health_record/managers/permission_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/repositories/doctor/doctor_repository.dart";
 import "package:family_health_record/repositories/group_link/group_link_repository.dart";
 import "package:family_health_record/repositories/hospital/hospital_repository.dart";
+import "package:family_health_record/repositories/user/user_repository.dart";
 import "package:family_health_record/screens/create_doctor_screen.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/create_hospital_screen.dart";
@@ -53,7 +55,7 @@ final GoRouter rootRouter = GoRouter(
             ChangeNotifierProvider(
               create: (context) {
                 final groupHomeViewModel = GroupHomeViewModel(
-                  authTokenManager: context.read<AuthTokenManager>(),
+                  permissionManager: context.read<PermissionManager>(),
                 );
 
                 if (state.extra is Map<String, dynamic>) {
@@ -70,7 +72,7 @@ final GoRouter rootRouter = GoRouter(
               create: (context) {
                 final viewModel = GroupMemberViewModel(
                   groupRepository: context.read<GroupRepository>(),
-                  authTokenManager: context.read<AuthTokenManager>(),
+                  permissionManager: context.read<PermissionManager>(),
                 );
 
                 if (state.extra is Map<String, dynamic>) {
@@ -88,7 +90,7 @@ final GoRouter rootRouter = GoRouter(
                 final viewModel = MedicalEntitiesViewModel(
                   doctorRepository: context.read<DoctorRepository>(),
                   hospitalRepository: context.read<HospitalRepository>(),
-                  authTokenManager: context.read<AuthTokenManager>(),
+                  permissionManager: context.read<PermissionManager>(),
                 );
                 if (state.extra is Map<String, dynamic>) {
                   viewModel.groupId =
@@ -103,7 +105,7 @@ final GoRouter rootRouter = GoRouter(
               lazy: false,
               create: (context) {
                 final viewModel = GroupLinkViewModel(
-                  authTokenManager: context.read<AuthTokenManager>(),
+                  permissionManager: context.read<PermissionManager>(),
                   groupLinkRepository: context.read<GroupLinkRepository>(),
                 );
 
@@ -175,7 +177,9 @@ final GoRouter rootRouter = GoRouter(
                 ChangeNotifierProvider(
                   create: (context) {
                     final viewModel = GroupSettingViewModel(
-                      authTokenManager: context.read<AuthTokenManager>(),
+                      permissionManager: context.read<PermissionManager>(),
+                      userRepository: context.read<UserRepository>(),
+                      authTokenManager: context.read<SessionManager>(),
                       groupRepository: context.read<GroupRepository>(),
                       imagePicker: context.read<ImagePicker>(),
                     );
@@ -278,7 +282,7 @@ final GoRouter rootRouter = GoRouter(
         return ChangeNotifierProvider(
           create: (context) {
             return LoginViewModel(
-              authTokenManager: context.read<AuthTokenManager>(),
+              authTokenManager: context.read<SessionManager>(),
             );
           },
           child: LoginScreen(),
@@ -300,7 +304,7 @@ final GoRouter rootRouter = GoRouter(
           create: (context) {
             return SignupViewModel(
               authRepository: context.read<AuthRepository>(),
-              authTokenManager: context.read<AuthTokenManager>(),
+              authTokenManager: context.read<SessionManager>(),
             );
           },
           child: const SignupScreen(),

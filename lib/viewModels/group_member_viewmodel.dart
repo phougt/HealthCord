@@ -1,10 +1,10 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:flutter/material.dart';
 
 class GroupMemberViewModel extends ChangeNotifier {
-  final AuthTokenManager _authTokenManager;
+  final PermissionManager _permissionManager;
   final GroupRepository _groupRepository;
   final ScrollController scrollController = ScrollController();
   int groupId = 0;
@@ -16,9 +16,9 @@ class GroupMemberViewModel extends ChangeNotifier {
 
   GroupMemberViewModel({
     required GroupRepository groupRepository,
-    required AuthTokenManager authTokenManager,
+    required PermissionManager permissionManager,
   }) : _groupRepository = groupRepository,
-       _authTokenManager = authTokenManager {
+       _permissionManager = permissionManager {
     refreshGroupMembers();
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -59,7 +59,7 @@ class GroupMemberViewModel extends ChangeNotifier {
   }
 
   bool hasPermission(String permission) {
-    return _authTokenManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, groupId);
   }
 
   @override

@@ -1,15 +1,15 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
 import 'package:flutter/widgets.dart';
 
 class LoginViewModel extends ChangeNotifier {
-  final AuthTokenManager _authTokenManager;
+  final SessionManager _sessionManager;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   Map<String, dynamic> errors = {};
   bool isLoading = false;
 
-  LoginViewModel({required AuthTokenManager authTokenManager})
-    : _authTokenManager = authTokenManager;
+  LoginViewModel({required SessionManager authTokenManager})
+    : _sessionManager = authTokenManager;
 
   Future<bool> login() async {
     errors = {};
@@ -19,7 +19,7 @@ class LoginViewModel extends ChangeNotifier {
     final username = usernameController.text;
     final password = passwordController.text;
 
-    final result = await _authTokenManager.login(username, password);
+    final result = await _sessionManager.login(username, password);
     if (result.isSuccessful) {
       isLoading = false;
       notifyListeners();

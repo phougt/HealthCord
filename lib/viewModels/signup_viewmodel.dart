@@ -1,10 +1,10 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
 import 'package:flutter/widgets.dart';
 
 class SignupViewModel extends ChangeNotifier {
   final AuthRepository _authRepository;
-  final AuthTokenManager _authTokenManager;
+  final SessionManager _sessionManager;
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -17,9 +17,9 @@ class SignupViewModel extends ChangeNotifier {
 
   SignupViewModel({
     required AuthRepository authRepository,
-    required AuthTokenManager authTokenManager,
+    required SessionManager authTokenManager,
   }) : _authRepository = authRepository,
-       _authTokenManager = authTokenManager;
+       _sessionManager = authTokenManager;
 
   @override
   void dispose() {
@@ -54,7 +54,7 @@ class SignupViewModel extends ChangeNotifier {
     );
 
     if (result.isSuccessful) {
-      _authTokenManager.setAuthToken(result.data!);
+      _sessionManager.setAuthToken(result.data!);
       isLoading = false;
       notifyListeners();
       return true;

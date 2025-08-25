@@ -10,12 +10,12 @@ _Role _$RoleFromJson(Map<String, dynamic> json) => _Role(
   id: (json['id'] as num).toInt(),
   name: json['name'] as String,
   groupId: (json['group_id'] as num).toInt(),
-  isOwner: (json['is_owner'] as num).toInt(),
+  type: const RoleTypeConverter().fromJson(json['type'] as String),
 );
 
 Map<String, dynamic> _$RoleToJson(_Role instance) => <String, dynamic>{
   'id': instance.id,
   'name': instance.name,
   'group_id': instance.groupId,
-  'is_owner': instance.isOwner,
+  'type': const RoleTypeConverter().toJson(instance.type),
 };

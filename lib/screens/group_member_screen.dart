@@ -1,4 +1,4 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/viewModels/group_member_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +9,7 @@ class GroupMemberScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<GroupMemberViewModel>();
-    final authTokenManager = context.read<AuthTokenManager>();
+    final authTokenManager = context.read<SessionManager>();
 
     if (viewModel.isLoading && viewModel.members.isEmpty) {
       return const Center(child: CircularProgressIndicator());

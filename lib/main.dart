@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:family_health_record/configs/router_config.dart';
+import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
 import 'package:family_health_record/repositories/doctor/api_doctor_repository.dart';
@@ -10,11 +11,13 @@ import 'package:family_health_record/repositories/group_link/api_group_link_repo
 import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:family_health_record/repositories/hospital/api_hospital_repository.dart';
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
+import 'package:family_health_record/repositories/user/api_user_repository.dart';
+import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'managers/auth_token_manager.dart';
+import 'managers/session_manager.dart';
 import 'package:family_health_record/configs/constant.dart';
 import 'configs/theme.dart';
 
@@ -39,10 +42,10 @@ void main() {
         ),
         ChangeNotifierProvider(
           create: (context) {
-            return AuthTokenManager(dio: context.read<Dio>())..loadAuthData();
+            return SessionManager(dio: context.read<Dio>())..loadAuthData();
           },
         ),
-        ProxyProvider<AuthTokenManager, Dio>(
+        ProxyProvider<SessionManager, Dio>(
           create: (context) {
             return Dio()
               ..options.connectTimeout = const Duration(seconds: 10)
@@ -90,6 +93,15 @@ void main() {
           create: (context) {
             return ApiGroupLinkRepository(dio: context.read<Dio>());
           },
+        ),
+        Provider<UserRepository>(
+          create: (context) {
+            return ApiUserRepository(dio: context.read<Dio>());
+          },
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              PermissionManager(userRepository: context.read<UserRepository>()),
         ),
         ChangeNotifierProvider(
           create: (context) =>

@@ -1,4 +1,4 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
-    final authTokenManager = context.watch<AuthTokenManager>();
+    final authTokenManager = context.watch<SessionManager>();
 
     return Scaffold(
       appBar: AppBar(
@@ -255,7 +255,7 @@ class HomeScreen extends StatelessWidget {
                       headers: {
                         'Content-Type': 'application/json',
                         'Authorization':
-                            'Bearer ${context.read<AuthTokenManager>().authToken?.accessToken}',
+                            'Bearer ${context.read<SessionManager>().authToken?.accessToken}',
                       },
                     ),
                   ),

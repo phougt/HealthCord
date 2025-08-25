@@ -229,6 +229,7 @@ class ApiGroupRepository extends GroupRepository {
         final members = data
             .map((e) => User.fromJson(e as Map<String, dynamic>))
             .toList();
+
         return Result.ok(
           data: members,
           message: json['message'] ?? 'Group members fetched successfully',

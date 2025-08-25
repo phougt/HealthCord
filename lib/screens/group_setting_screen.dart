@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:family_health_record/enums/role_type.dart';
 import 'package:family_health_record/viewModels/group_setting_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -163,6 +164,41 @@ class GroupSettingScreen extends StatelessWidget {
                   },
                 ),
               ),
+              Visibility(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                  onPressed: () async {
+                    _showLeaveGroupConfirmationDialog(context, () async {
+                      if (await viewModel.leaveGroup()) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Leave group successfully!'),
+                          ),
+                        );
+
+                        if (!context.mounted) return;
+                        context.goNamed('homeScreen');
+                        return;
+                      }
+
+                      if (message.isNotEmpty && errors.isEmpty) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(message)));
+                      }
+                    });
+                  },
+                  child: Row(
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.exit_to_app), Text('Leave Group')],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -194,6 +230,36 @@ void _showUnsavedChangesDialog(BuildContext context) {
               context.pop();
             },
             child: Text('Discard'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showLeaveGroupConfirmationDialog(BuildContext context, Function onLeave) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Leave Group'),
+        content: Text('Are you sure you want to leave this group?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () {
+              context.pop();
+              onLeave();
+            },
+            child: Text('Leave'),
           ),
         ],
       );

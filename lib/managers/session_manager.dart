@@ -6,24 +6,16 @@ import 'package:family_health_record/utils/result.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-class AuthTokenManager extends ChangeNotifier {
+class SessionManager extends ChangeNotifier {
   AuthToken? _authToken;
   AuthToken? get authToken => _authToken;
   User? _user;
   User? get user => _user;
-  final Map<String, List<String>> _permissions = {};
-  Map<String, List<String>> get permissions => _permissions;
   bool isFinishedLoading = false;
   final _secureStorage = FlutterSecureStorage();
   final Dio _dio;
 
-  AuthTokenManager({required Dio dio}) : _dio = dio;
-
-  bool hasPermission(String permission, int groupId) {
-    final groupPermissions = _permissions[groupId.toString()];
-    if (groupPermissions == null) return false;
-    return groupPermissions.contains(permission);
-  }
+  SessionManager({required Dio dio}) : _dio = dio;
 
   Future<void> loadAuthData() async {
     final accessToken = await _secureStorage.read(key: 'accessToken');
@@ -173,24 +165,5 @@ class AuthTokenManager extends ChangeNotifier {
     return Result.fail(
       ApiError(message: 'An unexpected error occurred while fetching user'),
     );
-  }
-
-  Future<bool> fetchPermissions(int groupId) async {
-    try {
-      final response = await _dio.get('/user/group/$groupId/permission');
-      if (response.statusCode == 200) {
-        final json = response.data;
-        final data = json['data'];
-        _permissions['$groupId'] = List<String>.from(data);
-        notifyListeners();
-        return true;
-      } else if (response.statusCode == 401 || response.statusCode == 422) {
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-
-    return false;
   }
 }

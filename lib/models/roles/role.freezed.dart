@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Role {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'name') String get name;@JsonKey(name: 'group_id') int get groupId;@JsonKey(name: 'is_owner') int get isOwner;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'name') String get name;@JsonKey(name: 'group_id') int get groupId;@RoleTypeConverter()@JsonKey(name: 'type') RoleType get type;
 /// Create a copy of Role
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RoleCopyWith<Role> get copyWith => _$RoleCopyWithImpl<Role>(this as Role, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Role&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.isOwner, isOwner) || other.isOwner == isOwner));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Role&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,groupId,isOwner);
+int get hashCode => Object.hash(runtimeType,id,name,groupId,type);
 
 @override
 String toString() {
-  return 'Role(id: $id, name: $name, groupId: $groupId, isOwner: $isOwner)';
+  return 'Role(id: $id, name: $name, groupId: $groupId, type: $type)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RoleCopyWith<$Res>  {
   factory $RoleCopyWith(Role value, $Res Function(Role) _then) = _$RoleCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@JsonKey(name: 'is_owner') int isOwner
+@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type
 });
 
 
@@ -65,13 +65,13 @@ class _$RoleCopyWithImpl<$Res>
 
 /// Create a copy of Role
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? groupId = null,Object? isOwner = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? groupId = null,Object? type = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,groupId: null == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
-as int,isOwner: null == isOwner ? _self.isOwner : isOwner // ignore: cast_nullable_to_non_nullable
-as int,
+as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as RoleType,
   ));
 }
 
@@ -153,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @JsonKey(name: 'is_owner')  int isOwner)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Role() when $default != null:
-return $default(_that.id,_that.name,_that.groupId,_that.isOwner);case _:
+return $default(_that.id,_that.name,_that.groupId,_that.type);case _:
   return orElse();
 
 }
@@ -174,10 +174,10 @@ return $default(_that.id,_that.name,_that.groupId,_that.isOwner);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @JsonKey(name: 'is_owner')  int isOwner)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type)  $default,) {final _that = this;
 switch (_that) {
 case _Role():
-return $default(_that.id,_that.name,_that.groupId,_that.isOwner);}
+return $default(_that.id,_that.name,_that.groupId,_that.type);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -191,10 +191,10 @@ return $default(_that.id,_that.name,_that.groupId,_that.isOwner);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @JsonKey(name: 'is_owner')  int isOwner)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type)?  $default,) {final _that = this;
 switch (_that) {
 case _Role() when $default != null:
-return $default(_that.id,_that.name,_that.groupId,_that.isOwner);case _:
+return $default(_that.id,_that.name,_that.groupId,_that.type);case _:
   return null;
 
 }
@@ -206,13 +206,13 @@ return $default(_that.id,_that.name,_that.groupId,_that.isOwner);case _:
 @JsonSerializable()
 
 class _Role implements Role {
-  const _Role({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'name') required this.name, @JsonKey(name: 'group_id') required this.groupId, @JsonKey(name: 'is_owner') required this.isOwner});
+  const _Role({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'name') required this.name, @JsonKey(name: 'group_id') required this.groupId, @RoleTypeConverter()@JsonKey(name: 'type') required this.type});
   factory _Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
 @override@JsonKey(name: 'name') final  String name;
 @override@JsonKey(name: 'group_id') final  int groupId;
-@override@JsonKey(name: 'is_owner') final  int isOwner;
+@override@RoleTypeConverter()@JsonKey(name: 'type') final  RoleType type;
 
 /// Create a copy of Role
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +227,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Role&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.isOwner, isOwner) || other.isOwner == isOwner));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Role&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.groupId, groupId) || other.groupId == groupId)&&(identical(other.type, type) || other.type == type));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,groupId,isOwner);
+int get hashCode => Object.hash(runtimeType,id,name,groupId,type);
 
 @override
 String toString() {
-  return 'Role(id: $id, name: $name, groupId: $groupId, isOwner: $isOwner)';
+  return 'Role(id: $id, name: $name, groupId: $groupId, type: $type)';
 }
 
 
@@ -247,7 +247,7 @@ abstract mixin class _$RoleCopyWith<$Res> implements $RoleCopyWith<$Res> {
   factory _$RoleCopyWith(_Role value, $Res Function(_Role) _then) = __$RoleCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@JsonKey(name: 'is_owner') int isOwner
+@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type
 });
 
 
@@ -264,13 +264,13 @@ class __$RoleCopyWithImpl<$Res>
 
 /// Create a copy of Role
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? groupId = null,Object? isOwner = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? groupId = null,Object? type = null,}) {
   return _then(_Role(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,groupId: null == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
-as int,isOwner: null == isOwner ? _self.isOwner : isOwner // ignore: cast_nullable_to_non_nullable
-as int,
+as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as RoleType,
   ));
 }
 

@@ -1,4 +1,4 @@
-import 'package:family_health_record/managers/auth_token_manager.dart';
+import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/models/doctors/doctor.dart';
 import 'package:family_health_record/models/hospitals/hospital.dart';
 import 'package:family_health_record/repositories/doctor/doctor_repository.dart';
@@ -17,16 +17,16 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
   int groupId = 0;
   final DoctorRepository _doctorRepository;
   final HospitalRepository _hospitalRepository;
-  final AuthTokenManager _authTokenManager;
+  final PermissionManager _permissionManager;
   final ScrollController scrollController = ScrollController();
 
   MedicalEntitiesViewModel({
     required DoctorRepository doctorRepository,
     required HospitalRepository hospitalRepository,
-    required AuthTokenManager authTokenManager,
+    required PermissionManager permissionManager,
   }) : _doctorRepository = doctorRepository,
        _hospitalRepository = hospitalRepository,
-       _authTokenManager = authTokenManager {
+       _permissionManager = permissionManager {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 100) {
@@ -82,7 +82,7 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
   }
 
   bool hasPermissions(String permission) {
-    return _authTokenManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, groupId);
   }
 
   @override
