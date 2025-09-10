@@ -18,6 +18,7 @@ abstract class GroupRepository {
   });
   Future<Result<void>> joinGroup(String link);
   Future<Result<void>> leaveGroup(int groupId);
+  Future<Result<void>> archiveGroup(int groupId);
   Future<Result<List<User>>> getGroupMembers(
     int groupId,
     int page,

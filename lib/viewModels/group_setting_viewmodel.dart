@@ -137,6 +137,27 @@ class GroupSettingViewModel extends ChangeNotifier {
     return false;
   }
 
+  Future<bool> archiveGroup() async {
+    errors = {};
+    isLoading = true;
+    notifyListeners();
+
+    final result = await _groupRepository.archiveGroup(groupId);
+
+    if (result.isSuccessful) {
+      isLoading = false;
+      group = null;
+      _permissionManager.clearGroupPermissionsCache(groupId);
+      notifyListeners();
+      return true;
+    }
+
+    errors = result.error?.toJson() ?? {};
+    isLoading = false;
+    notifyListeners();
+    return false;
+  }
+
   bool hasPermission(String permission) {
     return _permissionManager.hasPermission(permission, groupId);
   }

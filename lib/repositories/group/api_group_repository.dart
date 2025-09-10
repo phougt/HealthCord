@@ -212,6 +212,29 @@ class ApiGroupRepository extends GroupRepository {
   }
 
   @override
+  Future<Result<void>> archiveGroup(int groupId) async {
+    try {
+      final response = await _dio.delete('/group/$groupId');
+      if (response.statusCode == 200) {
+        return Result.ok(
+          data: null,
+          message: response.data['message'] ?? 'Archive group successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while archiving the group'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while archiving group'),
+    );
+  }
+
+  @override
   Future<Result<List<User>>> getGroupMembers(
     int groupId,
     int perPage,

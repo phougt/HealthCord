@@ -198,6 +198,42 @@ class GroupSettingScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              Visibility(
+                visible: viewModel.hasRoleType(RoleType.owner),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
+                  ),
+                  onPressed: () async {
+                    _showArchiveGroupConfirmationDialog(context, () async {
+                      if (await viewModel.archiveGroup()) {
+                        if (!context.mounted) return;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Archive group successfully!'),
+                          ),
+                        );
+
+                        if (!context.mounted) return;
+                        context.goNamed('homeScreen');
+                        return;
+                      }
+
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("You can not archive the group"),
+                        ),
+                      );
+                    });
+                  },
+                  child: Row(
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.exit_to_app), Text('Archive Group')],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -259,6 +295,41 @@ void _showLeaveGroupConfirmationDialog(BuildContext context, Function onLeave) {
               onLeave();
             },
             child: Text('Leave'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void _showArchiveGroupConfirmationDialog(
+  BuildContext context,
+  Function onArchive,
+) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Archive Group'),
+        content: Text(
+          'Are you sure you want to archive this group?\n\nYou can always unarchive it later.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            child: Text('Cancel'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
+            onPressed: () {
+              context.pop();
+              onArchive();
+            },
+            child: Text('Archive'),
           ),
         ],
       );
