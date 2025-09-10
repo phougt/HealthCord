@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:family_health_record/enums/role_type.dart';
 import 'package:family_health_record/viewModels/group_setting_viewmodel.dart';
@@ -26,7 +27,6 @@ class GroupSettingScreen extends StatelessWidget {
                 _showUnsavedChangesDialog(context);
                 return;
               }
-
               context.pop();
             },
             icon: Icon(Icons.arrow_back),
@@ -165,9 +165,10 @@ class GroupSettingScreen extends StatelessWidget {
                 ),
               ),
               Visibility(
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error,
+                visible: !viewModel.hasRoleType(RoleType.owner),
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Theme.of(context).colorScheme.error,
                   ),
                   onPressed: () async {
                     _showLeaveGroupConfirmationDialog(context, () async {
@@ -184,12 +185,10 @@ class GroupSettingScreen extends StatelessWidget {
                         return;
                       }
 
-                      if (message.isNotEmpty && errors.isEmpty) {
-                        if (!context.mounted) return;
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(message)));
-                      }
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text("You can not leave the group")),
+                      );
                     });
                   },
                   child: Row(

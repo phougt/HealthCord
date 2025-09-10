@@ -6,5 +6,5 @@ abstract class UserRepository {
   Future<Result<User>> getCurrentUser();
   Future<Result<void>> leaveGroup(int groupId);
   Future<Result<Role>> getCurrentUserRole(int groupId);
-  Future<Result<List<String>>> getCurrentUserGroupPermissions(int groupId);
+  Future<Result<Role>> getCurrentUserGroupRole(int groupId);
 }

@@ -1,45 +1,52 @@
 import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:flutter/material.dart';
 
+import '../enums/role_type.dart';
+import '../models/roles/role.dart';
+
 class PermissionManager extends ChangeNotifier {
-  final Map<int, List<String>> _groupPermissions = {};
+  final Map<int, Role> _groupRoles = {};
   final UserRepository _userRepository;
 
   PermissionManager({required UserRepository userRepository})
     : _userRepository = userRepository;
 
+  bool hasRoleType(RoleType roleType, int groupId) {
+    final groupRole = _groupRoles[groupId];
+    if (groupRole == null) return false;
+    return groupRole.type == roleType;
+  }
+
   bool hasPermission(String permission, int groupId) {
-    final groupPermissions = _groupPermissions[groupId];
-    if (groupPermissions == null) return false;
-    return groupPermissions.contains(permission);
+    final groupRole = _groupRoles[groupId];
+    if (groupRole == null) return false;
+    return groupRole.permissions.contains(permission);
   }
 
   bool hasPermissionsOfGroup(int groupId) {
-    return _groupPermissions.containsKey(groupId);
+    return _groupRoles.containsKey(groupId);
   }
 
-  void setGroupPermissions(int groupId, List<String> permissions) {
-    _groupPermissions[groupId] = permissions;
+  void setGroupRole(int groupId, Role role) {
+    _groupRoles[groupId] = role;
     notifyListeners();
   }
 
   bool clearGroupPermissionsCache(int groupId) {
     notifyListeners();
-    return _groupPermissions.remove(groupId) != null;
+    return _groupRoles.remove(groupId) != null;
   }
 
   void clearAllPermissions() {
-    _groupPermissions.clear();
+    _groupRoles.clear();
     notifyListeners();
   }
 
   Future<bool> fetchPermissions(int groupId) async {
-    final result = await _userRepository.getCurrentUserGroupPermissions(
-      groupId,
-    );
+    final result = await _userRepository.getCurrentUserGroupRole(groupId);
 
     if (result.isSuccessful) {
-      setGroupPermissions(groupId, result.data!);
+      setGroupRole(groupId, result.data!);
       notifyListeners();
       return true;
     }

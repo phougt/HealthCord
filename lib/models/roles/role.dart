@@ -13,6 +13,7 @@ sealed class Role with _$Role {
     @JsonKey(name: 'name') required String name,
     @JsonKey(name: 'group_id') required int groupId,
     @RoleTypeConverter() @JsonKey(name: 'type') required RoleType type,
+    @JsonKey(name: 'permissions') @Default([]) List<String> permissions,
   }) = _Role;
 
   factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);

@@ -7,6 +7,8 @@ import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../enums/role_type.dart';
+
 class GroupSettingViewModel extends ChangeNotifier {
   int groupId = 0;
   bool isLoading = true;
@@ -115,6 +117,7 @@ class GroupSettingViewModel extends ChangeNotifier {
   }
 
   Future<bool> leaveGroup() async {
+    errors = {};
     isLoading = true;
     notifyListeners();
 
@@ -128,6 +131,7 @@ class GroupSettingViewModel extends ChangeNotifier {
       return true;
     }
 
+    errors = result.error?.toJson() ?? {};
     isLoading = false;
     notifyListeners();
     return false;
@@ -135,6 +139,10 @@ class GroupSettingViewModel extends ChangeNotifier {
 
   bool hasPermission(String permission) {
     return _permissionManager.hasPermission(permission, groupId);
+  }
+
+  bool hasRoleType(RoleType roleType) {
+    return _permissionManager.hasRoleType(roleType, groupId);
   }
 
   void undoName() {

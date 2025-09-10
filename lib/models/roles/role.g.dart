@@ -11,6 +11,11 @@ _Role _$RoleFromJson(Map<String, dynamic> json) => _Role(
   name: json['name'] as String,
   groupId: (json['group_id'] as num).toInt(),
   type: const RoleTypeConverter().fromJson(json['type'] as String),
+  permissions:
+      (json['permissions'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$RoleToJson(_Role instance) => <String, dynamic>{
@@ -18,4 +23,5 @@ Map<String, dynamic> _$RoleToJson(_Role instance) => <String, dynamic>{
   'name': instance.name,
   'group_id': instance.groupId,
   'type': const RoleTypeConverter().toJson(instance.type),
+  'permissions': instance.permissions,
 };

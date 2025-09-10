@@ -7,6 +7,7 @@ import 'package:family_health_record/utils/result.dart';
 
 class ApiUserRepository extends UserRepository {
   final Dio _dio;
+
   ApiUserRepository({required Dio dio}) : _dio = dio;
 
   @override
@@ -45,7 +46,9 @@ class ApiUserRepository extends UserRepository {
           data: null,
           message: json['message'] ?? 'Left group successfully',
         );
-      } else if (response.statusCode == 401 || response.statusCode == 422) {
+      } else if (response.statusCode == 401 ||
+          response.statusCode == 422 ||
+          response.statusCode == 403) {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
@@ -88,17 +91,17 @@ class ApiUserRepository extends UserRepository {
   }
 
   @override
-  Future<Result<List<String>>> getCurrentUserGroupPermissions(
+  Future<Result<Role>> getCurrentUserGroupRole(
     int groupId,
   ) async {
     try {
-      final response = await _dio.get('/user/group/$groupId/permission');
+      final response = await _dio.get('/user/group/$groupId/group-role');
       if (response.statusCode == 200) {
         final json = response.data;
         final data = json['data'];
-        final permissions = List<String>.from(data);
+        final role = Role.fromJson(data);
         return Result.ok(
-          data: permissions,
+          data: role,
           message: json['message'] ?? 'User permissions fetched successfully',
         );
       } else if (response.statusCode == 401 || response.statusCode == 422) {

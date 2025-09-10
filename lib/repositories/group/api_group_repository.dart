@@ -7,6 +7,7 @@ import 'package:family_health_record/utils/api_error.dart';
 
 class ApiGroupRepository extends GroupRepository {
   final Dio _dio;
+
   ApiGroupRepository({required Dio dio}) : _dio = dio;
 
   @override
@@ -148,7 +149,6 @@ class ApiGroupRepository extends GroupRepository {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
-      print(e);
       return Result.fail(
         ApiError(message: 'An error occurred while updating group'),
       );
