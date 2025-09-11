@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:family_health_record/enums/role_type.dart';
 import 'package:family_health_record/viewModels/group_setting_viewmodel.dart';
@@ -73,9 +72,11 @@ class GroupSettingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GestureDetector(
-                onTap: () {
-                  viewModel.pickGroupProfile();
-                },
+                onTap: viewModel.hasPermission('group.update')
+                    ? () {
+                        viewModel.pickGroupProfile();
+                      }
+                    : null,
                 child: Column(
                   spacing: 8.0,
                   children: [
@@ -100,9 +101,12 @@ class GroupSettingScreen extends StatelessWidget {
                         child: const Icon(Icons.add_a_photo, size: 40),
                       ),
                     ),
-                    Text(
-                      'Tap to select group image',
-                      style: TextStyle(color: Colors.grey[600]),
+                    Visibility(
+                      visible: viewModel.hasPermission('group.update'),
+                      child: Text(
+                        'Tap to select group image',
+                        style: TextStyle(color: Colors.grey[600]),
+                      ),
                     ),
                   ],
                 ),
