@@ -3,6 +3,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'group.freezed.dart';
+
 part 'group.g.dart';
 
 @freezed
@@ -12,6 +13,7 @@ sealed class Group with _$Group {
     @JsonKey(name: 'name') required String name,
     @JsonKey(name: 'description') String? description,
     @JsonKey(name: 'group_profile') String? groupProfile,
+    @JsonKey(name: 'is_archived') required bool isArchived,
   }) = _Group;
 
   factory Group.fromJson(Map<String, dynamic> json) => _$GroupFromJson(json);

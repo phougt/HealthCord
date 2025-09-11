@@ -203,7 +203,9 @@ class GroupSettingScreen extends StatelessWidget {
                 ),
               ),
               Visibility(
-                visible: viewModel.hasRoleType(RoleType.owner),
+                visible:
+                    viewModel.hasRoleType(RoleType.owner) &&
+                    !(viewModel.group?.isArchived ?? false),
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.error,

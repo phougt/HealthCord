@@ -11,6 +11,7 @@ _Group _$GroupFromJson(Map<String, dynamic> json) => _Group(
   name: json['name'] as String,
   description: json['description'] as String?,
   groupProfile: json['group_profile'] as String?,
+  isArchived: json['is_archived'] as bool,
 );
 
 Map<String, dynamic> _$GroupToJson(_Group instance) => <String, dynamic>{
@@ -18,4 +19,5 @@ Map<String, dynamic> _$GroupToJson(_Group instance) => <String, dynamic>{
   'name': instance.name,
   'description': instance.description,
   'group_profile': instance.groupProfile,
+  'is_archived': instance.isArchived,
 };
