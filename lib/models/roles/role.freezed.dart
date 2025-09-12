@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Role {
 
-@JsonKey(name: 'id') int get id;@JsonKey(name: 'name') String get name;@JsonKey(name: 'group_id') int get groupId;@RoleTypeConverter()@JsonKey(name: 'type') RoleType get type;@JsonKey(name: 'permissions') List<String> get permissions;
+@JsonKey(name: 'id') int get id;@JsonKey(name: 'name') String get name;@JsonKey(name: 'group_id') int get groupId;@RoleTypeConverter()@JsonKey(name: 'type') RoleType get type;@JsonKey(name: 'permissions') List<Permission> get permissions;
 /// Create a copy of Role
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RoleCopyWith<$Res>  {
   factory $RoleCopyWith(Role value, $Res Function(Role) _then) = _$RoleCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type,@JsonKey(name: 'permissions') List<String> permissions
+@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type,@JsonKey(name: 'permissions') List<Permission> permissions
 });
 
 
@@ -72,7 +72,7 @@ as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nu
 as String,groupId: null == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as RoleType,permissions: null == permissions ? _self.permissions : permissions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<Permission>,
   ));
 }
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<String> permissions)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<Permission> permissions)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Role() when $default != null:
 return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);case _:
@@ -175,7 +175,7 @@ return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<String> permissions)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<Permission> permissions)  $default,) {final _that = this;
 switch (_that) {
 case _Role():
 return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);}
@@ -192,7 +192,7 @@ return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<String> permissions)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id')  int id, @JsonKey(name: 'name')  String name, @JsonKey(name: 'group_id')  int groupId, @RoleTypeConverter()@JsonKey(name: 'type')  RoleType type, @JsonKey(name: 'permissions')  List<Permission> permissions)?  $default,) {final _that = this;
 switch (_that) {
 case _Role() when $default != null:
 return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);case _:
@@ -207,15 +207,15 @@ return $default(_that.id,_that.name,_that.groupId,_that.type,_that.permissions);
 @JsonSerializable()
 
 class _Role implements Role {
-  const _Role({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'name') required this.name, @JsonKey(name: 'group_id') required this.groupId, @RoleTypeConverter()@JsonKey(name: 'type') required this.type, @JsonKey(name: 'permissions') final  List<String> permissions = const []}): _permissions = permissions;
+  const _Role({@JsonKey(name: 'id') required this.id, @JsonKey(name: 'name') required this.name, @JsonKey(name: 'group_id') required this.groupId, @RoleTypeConverter()@JsonKey(name: 'type') required this.type, @JsonKey(name: 'permissions') final  List<Permission> permissions = const []}): _permissions = permissions;
   factory _Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);
 
 @override@JsonKey(name: 'id') final  int id;
 @override@JsonKey(name: 'name') final  String name;
 @override@JsonKey(name: 'group_id') final  int groupId;
 @override@RoleTypeConverter()@JsonKey(name: 'type') final  RoleType type;
- final  List<String> _permissions;
-@override@JsonKey(name: 'permissions') List<String> get permissions {
+ final  List<Permission> _permissions;
+@override@JsonKey(name: 'permissions') List<Permission> get permissions {
   if (_permissions is EqualUnmodifiableListView) return _permissions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_permissions);
@@ -255,7 +255,7 @@ abstract mixin class _$RoleCopyWith<$Res> implements $RoleCopyWith<$Res> {
   factory _$RoleCopyWith(_Role value, $Res Function(_Role) _then) = __$RoleCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type,@JsonKey(name: 'permissions') List<String> permissions
+@JsonKey(name: 'id') int id,@JsonKey(name: 'name') String name,@JsonKey(name: 'group_id') int groupId,@RoleTypeConverter()@JsonKey(name: 'type') RoleType type,@JsonKey(name: 'permissions') List<Permission> permissions
 });
 
 
@@ -279,7 +279,7 @@ as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nu
 as String,groupId: null == groupId ? _self.groupId : groupId // ignore: cast_nullable_to_non_nullable
 as int,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as RoleType,permissions: null == permissions ? _self._permissions : permissions // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<Permission>,
   ));
 }
 

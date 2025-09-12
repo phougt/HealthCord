@@ -3,7 +3,10 @@
 import 'package:family_health_record/enums/role_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../permissions/permission.dart';
+
 part 'role.freezed.dart';
+
 part 'role.g.dart';
 
 @freezed
@@ -13,7 +16,7 @@ sealed class Role with _$Role {
     @JsonKey(name: 'name') required String name,
     @JsonKey(name: 'group_id') required int groupId,
     @RoleTypeConverter() @JsonKey(name: 'type') required RoleType type,
-    @JsonKey(name: 'permissions') @Default([]) List<String> permissions,
+    @JsonKey(name: 'permissions') @Default([]) List<Permission> permissions,
   }) = _Role;
 
   factory Role.fromJson(Map<String, dynamic> json) => _$RoleFromJson(json);

@@ -9,7 +9,7 @@ class PermissionManager extends ChangeNotifier {
   final UserRepository _userRepository;
 
   PermissionManager({required UserRepository userRepository})
-    : _userRepository = userRepository;
+      : _userRepository = userRepository;
 
   bool hasRoleType(RoleType roleType, int groupId) {
     final groupRole = _groupRoles[groupId];
@@ -20,7 +20,7 @@ class PermissionManager extends ChangeNotifier {
   bool hasPermission(String permission, int groupId) {
     final groupRole = _groupRoles[groupId];
     if (groupRole == null) return false;
-    return groupRole.permissions.contains(permission);
+    return groupRole.permissions.any((p) => p.slug == permission);
   }
 
   bool hasPermissionsOfGroup(int groupId) {

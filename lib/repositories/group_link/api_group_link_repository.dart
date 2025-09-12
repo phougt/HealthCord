@@ -11,13 +11,13 @@ class ApiGroupLinkRepository extends GroupLinkRepository {
   @override
   Future<Result<List<GroupLink>>> getGroupLinks(
     int groupId,
-    int pgae,
+    int page,
     int perPage,
   ) async {
     try {
       final response = await _dio.get(
         '/group/$groupId/invite-link',
-        queryParameters: {'page': pgae, 'per_page': perPage},
+        queryParameters: {'page': page, 'per_page': perPage},
       );
       if (response.statusCode == 200) {
         final json = response.data as Map<String, dynamic>;

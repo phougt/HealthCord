@@ -13,7 +13,7 @@ _Role _$RoleFromJson(Map<String, dynamic> json) => _Role(
   type: const RoleTypeConverter().fromJson(json['type'] as String),
   permissions:
       (json['permissions'] as List<dynamic>?)
-          ?.map((e) => e as String)
+          ?.map((e) => Permission.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
 );

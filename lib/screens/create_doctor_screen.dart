@@ -13,7 +13,7 @@ class CreateDoctorScreen extends StatelessWidget {
     final String message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(title: Text("Create Doctor")),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

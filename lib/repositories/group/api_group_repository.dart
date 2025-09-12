@@ -11,14 +11,19 @@ class ApiGroupRepository extends GroupRepository {
   ApiGroupRepository({required Dio dio}) : _dio = dio;
 
   @override
-  Future<Result<List<Group>>> getGroupsWithPagination(
-    int perPage,
-    int page,
-  ) async {
+  Future<Result<List<Group>>> getGroupsWithPagination({
+    required int perPage,
+    required int page,
+    bool isArchived = false,
+  }) async {
     try {
       final response = await _dio.get(
         '/group',
-        queryParameters: {'per_page': perPage, 'page': page},
+        queryParameters: {
+          'per_page': perPage,
+          'page': page,
+          'is_archived': isArchived ? 1 : 0,
+        },
       );
       if (response.statusCode == 200) {
         final json = response.data;
@@ -32,10 +37,8 @@ class ApiGroupRepository extends GroupRepository {
         return Result.fail(ApiError.fromJson(response.data));
       }
     } catch (e) {
-      return Future.value(
-        Result.fail(
-          ApiError(message: 'An error occurred while fetching groups'),
-        ),
+      return Result.fail(
+        ApiError(message: 'An error occurred while fetching groups'),
       );
     }
 

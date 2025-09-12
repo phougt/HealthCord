@@ -26,10 +26,13 @@ class HomeViewModel extends ChangeNotifier {
   ];
   final GroupRepository _groupRepository;
   final scrollController = ScrollController();
-  final groups = <Group>[];
+  bool isArchived = false;
+  final unarchivedGroups = <Group>[];
+  final archivedGroups = <Group>[];
   final perPage = 10;
   bool hasMore = true;
-  int currentPage = 1;
+  int archivedCurrentPage = 1;
+  int unarchivedCurrentPage = 1;
   bool isLoading = false;
   Map<String, dynamic> errors = {};
 
@@ -49,14 +52,25 @@ class HomeViewModel extends ChangeNotifier {
     if (isLoading) return false;
     isLoading = true;
     notifyListeners();
-    currentPage++;
+    final int currentPage;
+    if (isArchived) {
+      currentPage = ++archivedCurrentPage;
+    } else {
+      currentPage = ++unarchivedCurrentPage;
+    }
 
     final result = await _groupRepository.getGroupsWithPagination(
-      perPage,
-      currentPage,
+      perPage: perPage,
+      page: currentPage,
+      isArchived: isArchived,
     );
     if (result.isSuccessful) {
-      groups.addAll(result.data!);
+      if (isArchived) {
+        archivedGroups.addAll(result.data!);
+      } else {
+        unarchivedGroups.addAll(result.data!);
+      }
+
       isLoading = false;
       notifyListeners();
       return true;
@@ -69,9 +83,13 @@ class HomeViewModel extends ChangeNotifier {
   }
 
   Future<bool> refreshGroups() async {
-    currentPage = 0;
-    groups.clear();
-    notifyListeners();
+    if (isArchived) {
+      archivedCurrentPage = 0;
+      archivedGroups.clear();
+    } else {
+      unarchivedCurrentPage = 0;
+      unarchivedGroups.clear();
+    }
     return loadMoreGroups();
   }
 
@@ -87,7 +105,7 @@ class HomeViewModel extends ChangeNotifier {
 
     final result = await _groupRepository.leaveGroup(groupId);
     if (result.isSuccessful) {
-      groups.removeWhere((group) => group.id == groupId);
+      unarchivedGroups.removeWhere((group) => group.id == groupId);
       isLoading = false;
       notifyListeners();
       return true;

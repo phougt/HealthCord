@@ -52,52 +52,57 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            Flexible(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await viewModel.refreshGroups();
-                },
-                child: viewModel.groups.isEmpty && !viewModel.isLoading
-                    ? Stack(
-                        children: [
-                          Positioned(
-                            right: 0,
-                            bottom: 110,
-                            child: Icon(
-                              Icons.arrow_downward_rounded,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurfaceVariant,
-                              size: 80,
-                            ),
-                          ),
-                          Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/empty.png',
-                                  height: 150,
-                                ),
-                                const Text(
-                                  'No groups found.\nClick the "+" button to create or join a group.',
-                                  style: TextStyle(fontSize: 16),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    : ListView.builder(
+      body:
+          viewModel.unarchivedGroups.isEmpty &&
+              viewModel.archivedGroups.isEmpty &&
+              !viewModel.isLoading
+          ? Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  bottom: 110,
+                  child: Icon(
+                    Icons.arrow_downward_rounded,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    size: 80,
+                  ),
+                ),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset('assets/images/empty.png', height: 150),
+                      const Text(
+                        'No groups found.\nClick the "+" button to create or join a group.',
+                        style: TextStyle(fontSize: 16),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )
+          : Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                children: [
+                  Flexible(
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        await viewModel.refreshGroups();
+                      },
+                      child: ListView.builder(
                         controller: viewModel.scrollController,
-                        itemCount: viewModel.groups.length,
+                        itemCount: viewModel.isArchived
+                            ? viewModel.archivedGroups.length
+                            : viewModel.unarchivedGroups.length,
                         itemBuilder: (context, index) {
-                          final group = viewModel.groups[index];
+                          final Group group;
+                          if (viewModel.isArchived) {
+                            group = viewModel.archivedGroups[index];
+                          } else {
+                            group = viewModel.unarchivedGroups[index];
+                          }
 
                           if (index == 0) {
                             return Column(
@@ -142,6 +147,32 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Row(
+                                    spacing: 8,
+                                    children: [
+                                      ChoiceChip(
+                                        label: Text("Unarchived"),
+                                        selected: !viewModel.isArchived,
+                                        onSelected: (value) {
+                                          viewModel.isArchived = false;
+                                          viewModel.refreshGroups();
+                                        },
+                                      ),
+                                      ChoiceChip(
+                                        label: Text("Archived"),
+                                        selected: viewModel.isArchived,
+                                        onSelected: (value) {
+                                          viewModel.isArchived = true;
+                                          viewModel.refreshGroups();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     spacing: 8,
@@ -153,7 +184,9 @@ class HomeScreen extends StatelessWidget {
                                         ).colorScheme.primary,
                                       ),
                                       Text(
-                                        'Groups',
+                                        viewModel.isArchived
+                                            ? "Archived"
+                                            : "Unarchived",
                                         style: Theme.of(context)
                                             .textTheme
                                             .titleLarge
@@ -174,11 +207,11 @@ class HomeScreen extends StatelessWidget {
                         },
                         physics: const AlwaysScrollableScrollPhysics(),
                       ),
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
       floatingActionButton: Builder(
         builder: (context) {
           return FloatingActionButton(
@@ -277,14 +310,14 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
           title: Text(
-            group.name,
+            "${group.isArchived ? '⚠️ Archived - ' : ''}${group.name}",
             style: Theme.of(context).textTheme.titleMedium,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
           subtitle: Text(
             group.description == null || group.description!.isEmpty
-                ? 'No description provided this is not cool this is so cool and this is lame and this is not cool this is so cool and lame'
+                ? 'No description provided'
                 : group.description!,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
