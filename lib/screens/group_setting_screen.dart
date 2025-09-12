@@ -191,7 +191,9 @@ class GroupSettingScreen extends StatelessWidget {
 
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("You can not leave the group")),
+                        SnackBar(
+                          content: Text("You can not leave the group"),
+                        ),
                       );
                     });
                   },
@@ -236,7 +238,10 @@ class GroupSettingScreen extends StatelessWidget {
                   child: Row(
                     spacing: 5,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.exit_to_app), Text('Archive Group')],
+                    children: [
+                      Icon(Icons.exit_to_app),
+                      Text('Archive Group'),
+                    ],
                   ),
                 ),
               ),

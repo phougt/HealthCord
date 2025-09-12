@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(width: 8),
             Text(
-              'HEALTHCORD',
+              'HealthCord',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
@@ -86,6 +86,85 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Column(
                 children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Card(
+                        clipBehavior: Clip.hardEdge,
+                        color: Theme.of(context).colorScheme.primaryContainer,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Image.asset(
+                                'assets/images/family.png',
+                                fit: BoxFit.cover,
+                                scale: 2.5,
+                              ),
+                              Text(
+                                'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            ChoiceChip(
+                              label: Text("Unarchived"),
+                              selected: !viewModel.isArchived,
+                              onSelected: (value) {
+                                viewModel.isArchived = false;
+                                viewModel.refreshGroups();
+                              },
+                            ),
+                            ChoiceChip(
+                              label: Text("Archived"),
+                              selected: viewModel.isArchived,
+                              onSelected: (value) {
+                                viewModel.isArchived = true;
+                                viewModel.refreshGroups();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            Icon(
+                              Icons.group_rounded,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                            Text(
+                              viewModel.isArchived ? "Archived" : "Unarchived",
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.start,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   Flexible(
                     child: RefreshIndicator(
                       onRefresh: () async {
@@ -103,106 +182,6 @@ class HomeScreen extends StatelessWidget {
                           } else {
                             group = viewModel.unarchivedGroups[index];
                           }
-
-                          if (index == 0) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Card(
-                                  clipBehavior: Clip.hardEdge,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.primaryContainer,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 16,
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/family.png',
-                                          fit: BoxFit.cover,
-                                          scale: 2.5,
-                                        ),
-                                        Text(
-                                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26,
-                                            color: Theme.of(
-                                              context,
-                                            ).colorScheme.onPrimaryContainer,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  child: Row(
-                                    spacing: 8,
-                                    children: [
-                                      ChoiceChip(
-                                        label: Text("Unarchived"),
-                                        selected: !viewModel.isArchived,
-                                        onSelected: (value) {
-                                          viewModel.isArchived = false;
-                                          viewModel.refreshGroups();
-                                        },
-                                      ),
-                                      ChoiceChip(
-                                        label: Text("Archived"),
-                                        selected: viewModel.isArchived,
-                                        onSelected: (value) {
-                                          viewModel.isArchived = true;
-                                          viewModel.refreshGroups();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    spacing: 8,
-                                    children: [
-                                      Icon(
-                                        Icons.group_rounded,
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                      ),
-                                      Text(
-                                        viewModel.isArchived
-                                            ? "Archived"
-                                            : "Unarchived",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge
-                                            ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                        textAlign: TextAlign.start,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                groupCard(context, group, index),
-                              ],
-                            );
-                          }
-
                           return groupCard(context, group, index);
                         },
                         physics: const AlwaysScrollableScrollPhysics(),
