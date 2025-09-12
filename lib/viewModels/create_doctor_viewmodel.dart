@@ -32,4 +32,10 @@ class CreateDoctorViewModel extends ChangeNotifier {
     notifyListeners();
     return false;
   }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
 }

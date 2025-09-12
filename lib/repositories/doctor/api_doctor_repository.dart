@@ -6,6 +6,7 @@ import 'package:family_health_record/utils/result.dart';
 
 class ApiDoctorRepository extends DoctorRepository {
   final Dio _dio;
+
   ApiDoctorRepository({required Dio dio}) : _dio = dio;
 
   @override
@@ -47,7 +48,13 @@ class ApiDoctorRepository extends DoctorRepository {
     required int groupId,
   }) async {
     try {
-      final response = await _dio.post(
+      // - I don't know why setting the content-type header for _dio instance in main.dart
+      // doesn't make the below request works normally but setting it here make it work ¯\_(ツ)_/¯
+      // - Need to clone the old instance of dio and set the header here to make
+      // the request works normally
+      final dio = _dio.clone()
+        ..options.headers['Content-Type'] = 'application/json';
+      final response = await dio.post(
         '/group/$groupId/doctor',
         data: {'name': name},
       );

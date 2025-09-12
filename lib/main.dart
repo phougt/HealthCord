@@ -15,7 +15,6 @@ import 'package:family_health_record/repositories/user/api_user_repository.dart'
 import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'managers/session_manager.dart';
