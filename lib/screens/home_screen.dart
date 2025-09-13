@@ -52,145 +52,116 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      body:
-          viewModel.unarchivedGroups.isEmpty &&
-              viewModel.archivedGroups.isEmpty &&
-              !viewModel.isLoading
-          ? Stack(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Column(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Positioned(
-                  right: 0,
-                  bottom: 110,
-                  child: Icon(
-                    Icons.arrow_downward_rounded,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    size: 80,
+                Card(
+                  clipBehavior: Clip.hardEdge,
+                  color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          'assets/images/family.png',
+                          fit: BoxFit.cover,
+                          scale: 2.5,
+                        ),
+                        Text(
+                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 26,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onPrimaryContainer,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Row(
+                    spacing: 8,
                     children: [
-                      Image.asset('assets/images/empty.png', height: 150),
-                      const Text(
-                        'No groups found.\nClick the "+" button to create or join a group.',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
+                      ChoiceChip(
+                        label: Text("Unarchived"),
+                        selected: !viewModel.isArchived,
+                        onSelected: (value) {
+                          viewModel.isArchived = false;
+                          viewModel.refreshGroups();
+                        },
+                      ),
+                      ChoiceChip(
+                        label: Text("Archived"),
+                        selected: viewModel.isArchived,
+                        onSelected: (value) {
+                          viewModel.isArchived = true;
+                          viewModel.refreshGroups();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    spacing: 8,
+                    children: [
+                      Icon(
+                        Icons.group_rounded,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      Text(
+                        viewModel.isArchived ? "Archived" : "Unarchived",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        textAlign: TextAlign.start,
                       ),
                     ],
                   ),
                 ),
               ],
-            )
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Card(
-                        clipBehavior: Clip.hardEdge,
-                        color: Theme.of(context).colorScheme.primaryContainer,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                'assets/images/family.png',
-                                fit: BoxFit.cover,
-                                scale: 2.5,
-                              ),
-                              Text(
-                                'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 26,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onPrimaryContainer,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            ChoiceChip(
-                              label: Text("Unarchived"),
-                              selected: !viewModel.isArchived,
-                              onSelected: (value) {
-                                viewModel.isArchived = false;
-                                viewModel.refreshGroups();
-                              },
-                            ),
-                            ChoiceChip(
-                              label: Text("Archived"),
-                              selected: viewModel.isArchived,
-                              onSelected: (value) {
-                                viewModel.isArchived = true;
-                                viewModel.refreshGroups();
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          spacing: 8,
-                          children: [
-                            Icon(
-                              Icons.group_rounded,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            Text(
-                              viewModel.isArchived ? "Archived" : "Unarchived",
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Flexible(
-                    child: RefreshIndicator(
-                      onRefresh: () async {
-                        await viewModel.refreshGroups();
-                      },
-                      child: ListView.builder(
-                        controller: viewModel.scrollController,
-                        itemCount: viewModel.isArchived
-                            ? viewModel.archivedGroups.length
-                            : viewModel.unarchivedGroups.length,
-                        itemBuilder: (context, index) {
-                          final Group group;
-                          if (viewModel.isArchived) {
-                            group = viewModel.archivedGroups[index];
-                          } else {
-                            group = viewModel.unarchivedGroups[index];
-                          }
-                          return groupCard(context, group, index);
-                        },
-                        physics: const AlwaysScrollableScrollPhysics(),
-                      ),
-                    ),
-                  ),
-                ],
+            ),
+            Flexible(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await viewModel.refreshGroups();
+                },
+                child: ListView.builder(
+                  controller: viewModel.scrollController,
+                  itemCount: viewModel.isArchived
+                      ? viewModel.archivedGroups.length
+                      : viewModel.unarchivedGroups.length,
+                  itemBuilder: (context, index) {
+                    final Group group;
+                    if (viewModel.isArchived) {
+                      group = viewModel.archivedGroups[index];
+                    } else {
+                      group = viewModel.unarchivedGroups[index];
+                    }
+                    return groupCard(context, group, index);
+                  },
+                  physics: const AlwaysScrollableScrollPhysics(),
+                ),
               ),
             ),
+          ],
+        ),
+      ),
       floatingActionButton: Builder(
         builder: (context) {
           return FloatingActionButton(

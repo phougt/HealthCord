@@ -348,7 +348,12 @@ final GoRouter rootRouter = GoRouter(
     ),
   ],
   redirect: (context, state) {
-    return null;
+    final sessionManager = context.read<SessionManager>();
+    if (sessionManager.authToken == null) {
+      if (state.matchedLocation == '/') return null;
+      return '/login';
+    }
+    return state.matchedLocation;
   },
   initialLocation: '/',
 );
