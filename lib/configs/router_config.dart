@@ -28,7 +28,7 @@ import "package:family_health_record/viewModels/group_member_viewmodel.dart";
 import "package:family_health_record/viewModels/group_setting_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewModels/medical_entities_viewmodel.dart";
-import "package:family_health_record/viewmodels/signup_viewmodel.dart";
+import "package:family_health_record/viewModels/signup_viewmodel.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:image_picker/image_picker.dart";
