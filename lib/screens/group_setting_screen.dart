@@ -13,7 +13,6 @@ class GroupSettingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<GroupSettingViewModel>();
     final errors = viewModel.errors['errors'] ?? {};
-    final message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
       appBar: AppBar(

@@ -11,7 +11,6 @@ class CreateGroupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<CreateGroupViewModel>();
     final errors = viewModel.errors['errors'] ?? {};
-    final message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Create Group')),
