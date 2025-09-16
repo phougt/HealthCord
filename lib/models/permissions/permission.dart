@@ -1,6 +1,5 @@
 // ignore_for_file: invalid_annotation_target
 
-import 'package:family_health_record/enums/role_type.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'permission.freezed.dart';

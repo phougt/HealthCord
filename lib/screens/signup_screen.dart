@@ -1,4 +1,4 @@
-import 'package:family_health_record/viewmodels/signup_viewmodel.dart';
+import 'package:family_health_record/viewModels/signup_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,6 @@ class SignupScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<SignupViewModel>();
     final errors = viewModel.errors['errors'] ?? {};
-    final message = viewModel.errors['message'] ?? '';
 
     return Scaffold(
       appBar: AppBar(

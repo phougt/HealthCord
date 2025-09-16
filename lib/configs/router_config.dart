@@ -26,6 +26,7 @@ import "package:family_health_record/viewModels/group_home_viewmodel.dart";
 import "package:family_health_record/viewModels/group_link_viewmodel.dart";
 import "package:family_health_record/viewModels/group_member_viewmodel.dart";
 import "package:family_health_record/viewModels/group_setting_viewmodel.dart";
+import "package:family_health_record/viewModels/home_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
 import "package:family_health_record/viewModels/medical_entities_viewmodel.dart";
 import "package:family_health_record/viewModels/signup_viewmodel.dart";
@@ -42,6 +43,17 @@ final GoRouter rootRouter = GoRouter(
   navigatorKey: _rootNavigatorKey,
   routes: [
     ShellRoute(
+      redirect: (context, state) {
+        final sessionManager = context.read<SessionManager>();
+        if (sessionManager.authToken == null) {
+          if (state.matchedLocation == '/' ||
+              state.matchedLocation == '/signupScreen') {
+            return null;
+          }
+          return '/';
+        }
+        return state.matchedLocation;
+      },
       navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
         final List<String> routeNames = [
@@ -52,6 +64,16 @@ final GoRouter rootRouter = GoRouter(
         ];
         return MultiProvider(
           providers: [
+            ChangeNotifierProvider(
+              create: (context) => PermissionManager(
+                userRepository: context.read<UserRepository>(),
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => HomeViewModel(
+                groupRepository: context.read<GroupRepository>(),
+              ),
+            ),
             ChangeNotifierProvider(
               create: (context) {
                 final groupHomeViewModel = GroupHomeViewModel(
@@ -160,6 +182,47 @@ final GoRouter rootRouter = GoRouter(
         );
       },
       routes: [
+        GoRoute(
+          path: '/home',
+          name: 'homeScreen',
+          builder: (context, state) {
+            return const HomeScreen();
+          },
+        ),
+        GoRoute(
+          path: '/createGroup',
+          builder: (context, state) {
+            return MultiProvider(
+              providers: [
+                Provider<ImagePicker>(create: (context) => ImagePicker()),
+                ChangeNotifierProvider(
+                  create: (context) {
+                    return CreateGroupViewModel(
+                      imagePicker: context.read<ImagePicker>(),
+                      groupRepository: context.read<GroupRepository>(),
+                    );
+                  },
+                ),
+              ],
+              child: const CreateGroupScreen(),
+            );
+          },
+          name: 'createGroupScreen',
+        ),
+        GoRoute(
+          path: '/joinGroup',
+          builder: (context, state) {
+            return ChangeNotifierProvider(
+              create: (context) {
+                return JoinGroupViewModel(
+                  groupRepository: context.read<GroupRepository>(),
+                );
+              },
+              child: const JoinGroupScreen(),
+            );
+          },
+          name: 'joinGroupScreen',
+        ),
         GoRoute(
           path: '/groupLink',
           name: 'groupLinkScreen',
@@ -291,13 +354,6 @@ final GoRouter rootRouter = GoRouter(
       name: 'loginScreen',
     ),
     GoRoute(
-      path: '/home',
-      name: 'homeScreen',
-      builder: (context, state) {
-        return const HomeScreen();
-      },
-    ),
-    GoRoute(
       path: '/signupScreen',
       builder: (context, state) {
         return ChangeNotifierProvider(
@@ -312,48 +368,6 @@ final GoRouter rootRouter = GoRouter(
       },
       name: 'signupScreen',
     ),
-    GoRoute(
-      path: '/createGroup',
-      builder: (context, state) {
-        return MultiProvider(
-          providers: [
-            Provider<ImagePicker>(create: (context) => ImagePicker()),
-            ChangeNotifierProvider(
-              create: (context) {
-                return CreateGroupViewModel(
-                  imagePicker: context.read<ImagePicker>(),
-                  groupRepository: context.read<GroupRepository>(),
-                );
-              },
-            ),
-          ],
-          child: const CreateGroupScreen(),
-        );
-      },
-      name: 'createGroupScreen',
-    ),
-    GoRoute(
-      path: '/joinGroup',
-      builder: (context, state) {
-        return ChangeNotifierProvider(
-          create: (context) {
-            return JoinGroupViewModel(
-              groupRepository: context.read<GroupRepository>(),
-            );
-          },
-          child: const JoinGroupScreen(),
-        );
-      },
-      name: 'joinGroupScreen',
-    ),
   ],
-  redirect: (context, state) {
-    final sessionManager = context.read<SessionManager>();
-    if (sessionManager.authToken == null) {
-      if (state.matchedLocation == '/') return null;
-      return '/login';
-    }
-    return state.matchedLocation;
-  },
   initialLocation: '/',
 );

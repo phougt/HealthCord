@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import 'package:family_health_record/configs/router_config.dart';
-import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
 import 'package:family_health_record/repositories/doctor/api_doctor_repository.dart';
@@ -13,9 +12,7 @@ import 'package:family_health_record/repositories/hospital/api_hospital_reposito
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
 import 'package:family_health_record/repositories/user/api_user_repository.dart';
 import 'package:family_health_record/repositories/user/user_repository.dart';
-import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'managers/session_manager.dart';
@@ -110,14 +107,6 @@ void main() {
           create: (context) {
             return ApiUserRepository(dio: context.read<Dio>());
           },
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              PermissionManager(userRepository: context.read<UserRepository>()),
-        ),
-        ChangeNotifierProvider(
-          create: (context) =>
-              HomeViewModel(groupRepository: context.read<GroupRepository>()),
         ),
       ],
       child: const MainApp(),

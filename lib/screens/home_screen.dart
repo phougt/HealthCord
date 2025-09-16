@@ -19,19 +19,24 @@ class HomeScreen extends StatelessWidget {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: CircleAvatar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              radius: 18,
-              child: authTokenManager.user?.profile != null
-                  ? Image.network(
-                      authTokenManager.user?.profile ?? '',
-                      headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization':
-                            'Bearer ${authTokenManager.authToken?.accessToken}',
-                      },
-                    )
-                  : const Icon(Icons.person, size: 25),
+            child: IconButton(
+              onPressed: () {
+                authTokenManager.clearAuthToken();
+              },
+              icon: CircleAvatar(
+                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                radius: 18,
+                child: authTokenManager.user?.profile != null
+                    ? Image.network(
+                        authTokenManager.user?.profile ?? '',
+                        headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization':
+                              'Bearer ${authTokenManager.authToken?.accessToken}',
+                        },
+                      )
+                    : const Icon(Icons.person, size: 25),
+              ),
             ),
           ),
         ],
