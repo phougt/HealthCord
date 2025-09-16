@@ -54,131 +54,25 @@ final GoRouter rootRouter = GoRouter(
         }
         return state.matchedLocation;
       },
-      navigatorKey: _shellNavigatorKey,
       builder: (context, state, child) {
-        final List<String> routeNames = [
-          'groupHomeScreen',
-          '',
-          'medicalEntitiesScreen',
-          'groupMembersScreen',
-        ];
         return MultiProvider(
           providers: [
             ChangeNotifierProvider(
-              create: (context) => PermissionManager(
-                userRepository: context.read<UserRepository>(),
-              ),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => HomeViewModel(
-                groupRepository: context.read<GroupRepository>(),
-              ),
-            ),
-            ChangeNotifierProvider(
               create: (context) {
-                final groupHomeViewModel = GroupHomeViewModel(
-                  permissionManager: context.read<PermissionManager>(),
+                return PermissionManager(
+                  userRepository: context.read<UserRepository>(),
                 );
-
-                if (state.extra is Map<String, dynamic>) {
-                  groupHomeViewModel.groupId =
-                      (state.extra as Map<String, dynamic>)['groupId'];
-                  groupHomeViewModel.loadUserPermissions();
-                }
-
-                return groupHomeViewModel;
               },
             ),
             ChangeNotifierProvider(
-              lazy: false,
               create: (context) {
-                final viewModel = GroupMemberViewModel(
+                return HomeViewModel(
                   groupRepository: context.read<GroupRepository>(),
-                  permissionManager: context.read<PermissionManager>(),
                 );
-
-                if (state.extra is Map<String, dynamic>) {
-                  viewModel.groupId =
-                      (state.extra as Map<String, dynamic>)['groupId'];
-                  viewModel.refreshGroupMembers();
-                }
-
-                return viewModel;
-              },
-            ),
-            ChangeNotifierProvider(
-              lazy: false,
-              create: (context) {
-                final viewModel = MedicalEntitiesViewModel(
-                  doctorRepository: context.read<DoctorRepository>(),
-                  hospitalRepository: context.read<HospitalRepository>(),
-                  permissionManager: context.read<PermissionManager>(),
-                );
-                if (state.extra is Map<String, dynamic>) {
-                  viewModel.groupId =
-                      (state.extra as Map<String, dynamic>)['groupId'];
-                  viewModel.refreshEntities();
-                }
-
-                return viewModel;
-              },
-            ),
-            ChangeNotifierProvider(
-              lazy: false,
-              create: (context) {
-                final viewModel = GroupLinkViewModel(
-                  permissionManager: context.read<PermissionManager>(),
-                  groupLinkRepository: context.read<GroupLinkRepository>(),
-                );
-
-                if (state.extra is Map<String, dynamic>) {
-                  viewModel.groupId =
-                      (state.extra as Map<String, dynamic>)['groupId'];
-                  viewModel.refreshGroupLinks();
-                }
-
-                return viewModel;
               },
             ),
           ],
-          child: Scaffold(
-            body: child,
-            bottomNavigationBar:
-                routeNames.contains(GoRouter.of(context).state.name ?? '')
-                ? NavigationBar(
-                    destinations: [
-                      NavigationDestination(
-                        icon: const Icon(Icons.home_outlined),
-                        label: 'Home',
-                        selectedIcon: const Icon(Icons.home_filled),
-                      ),
-                      NavigationDestination(
-                        icon: const Icon(Icons.book_outlined),
-                        label: 'Records',
-                        selectedIcon: const Icon(Icons.book_rounded),
-                      ),
-                      NavigationDestination(
-                        icon: const Icon(Icons.medical_information_outlined),
-                        label: 'Medical Entities',
-                        selectedIcon: const Icon(
-                          Icons.medical_information_rounded,
-                        ),
-                      ),
-                      NavigationDestination(
-                        icon: const Icon(Icons.people_alt_outlined),
-                        label: 'Members',
-                        selectedIcon: const Icon(Icons.people_alt_rounded),
-                      ),
-                    ],
-                    selectedIndex: routeNames.indexOf(
-                      GoRouter.of(context).state.name ?? 'groupHomeScreen',
-                    ),
-                    onDestinationSelected: (index) {
-                      context.goNamed(routeNames[index]);
-                    },
-                  )
-                : null,
-          ),
+          child: child,
         );
       },
       routes: [
@@ -223,114 +117,238 @@ final GoRouter rootRouter = GoRouter(
           },
           name: 'joinGroupScreen',
         ),
-        GoRoute(
-          path: '/groupLink',
-          name: 'groupLinkScreen',
-          builder: (context, state) {
-            return const GroupLinkScreen();
-          },
-        ),
-        GoRoute(
-          path: '/groupSetting',
-          name: 'groupSettingScreen',
-          builder: (context, state) {
+        ShellRoute(
+          navigatorKey: _shellNavigatorKey,
+          builder: (context, state, child) {
+            final List<String> routeNames = [
+              'groupHomeScreen',
+              '',
+              'medicalEntitiesScreen',
+              'groupMembersScreen',
+            ];
             return MultiProvider(
               providers: [
-                Provider<ImagePicker>(create: (context) => ImagePicker()),
                 ChangeNotifierProvider(
                   create: (context) {
-                    final viewModel = GroupSettingViewModel(
+                    final groupHomeViewModel = GroupHomeViewModel(
                       permissionManager: context.read<PermissionManager>(),
-                      userRepository: context.read<UserRepository>(),
-                      authTokenManager: context.read<SessionManager>(),
+                    );
+
+                    if (state.extra is Map<String, dynamic>) {
+                      groupHomeViewModel.groupId =
+                          (state.extra as Map<String, dynamic>)['groupId'];
+                      groupHomeViewModel.loadUserPermissions();
+                    }
+
+                    return groupHomeViewModel;
+                  },
+                ),
+                ChangeNotifierProvider(
+                  lazy: false,
+                  create: (context) {
+                    final viewModel = GroupMemberViewModel(
                       groupRepository: context.read<GroupRepository>(),
-                      imagePicker: context.read<ImagePicker>(),
+                      permissionManager: context.read<PermissionManager>(),
                     );
 
                     if (state.extra is Map<String, dynamic>) {
                       viewModel.groupId =
                           (state.extra as Map<String, dynamic>)['groupId'];
-                      viewModel.fetchGroupDetails();
+                      viewModel.refreshGroupMembers();
                     }
 
                     return viewModel;
                   },
                 ),
-              ],
-              child: const GroupSettingScreen(),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/groupHome',
-          name: 'groupHomeScreen',
-          builder: (context, state) {
-            return const GroupHomeScreen();
-          },
-        ),
-        GoRoute(
-          path: '/groupMembers',
-          name: 'groupMembersScreen',
-          builder: (context, state) {
-            return const GroupMemberScreen();
-          },
-        ),
-        GoRoute(
-          path: '/medicalEntities',
-          name: 'medicalEntitiesScreen',
-          builder: (context, state) {
-            return const MedicalEntitiesScreen();
-          },
-        ),
-        GoRoute(
-          path: '/createDoctor',
-          name: 'createDoctorScreen',
-          builder: (context, state) {
-            return MultiProvider(
-              providers: [
                 ChangeNotifierProvider(
+                  lazy: false,
                   create: (context) {
-                    final viewModel = CreateDoctorViewModel(
+                    final viewModel = MedicalEntitiesViewModel(
                       doctorRepository: context.read<DoctorRepository>(),
-                    );
-
-                    if (state.extra is Map<String, dynamic>) {
-                      viewModel.groupId =
-                          (state.extra as Map<String, dynamic>)['groupId'];
-                    }
-
-                    return viewModel;
-                  },
-                ),
-              ],
-              child: const CreateDoctorScreen(),
-            );
-          },
-        ),
-        GoRoute(
-          path: '/createHospital',
-          name: 'createHospitalScreen',
-          builder: (context, state) {
-            return MultiProvider(
-              providers: [
-                ChangeNotifierProvider(
-                  create: (context) {
-                    final viewModel = CreateHospitalViewModel(
                       hospitalRepository: context.read<HospitalRepository>(),
+                      permissionManager: context.read<PermissionManager>(),
+                    );
+                    if (state.extra is Map<String, dynamic>) {
+                      viewModel.groupId =
+                          (state.extra as Map<String, dynamic>)['groupId'];
+                      viewModel.refreshEntities();
+                    }
+
+                    return viewModel;
+                  },
+                ),
+                ChangeNotifierProvider(
+                  lazy: false,
+                  create: (context) {
+                    final viewModel = GroupLinkViewModel(
+                      permissionManager: context.read<PermissionManager>(),
+                      groupLinkRepository: context.read<GroupLinkRepository>(),
                     );
 
                     if (state.extra is Map<String, dynamic>) {
                       viewModel.groupId =
                           (state.extra as Map<String, dynamic>)['groupId'];
+                      viewModel.refreshGroupLinks();
                     }
 
                     return viewModel;
                   },
                 ),
               ],
-              child: const CreateHospitalScreen(),
+              child: Scaffold(
+                body: child,
+                bottomNavigationBar:
+                    routeNames.contains(GoRouter.of(context).state.name ?? '')
+                    ? NavigationBar(
+                        destinations: [
+                          NavigationDestination(
+                            icon: const Icon(Icons.home_outlined),
+                            label: 'Home',
+                            selectedIcon: const Icon(Icons.home_filled),
+                          ),
+                          NavigationDestination(
+                            icon: const Icon(Icons.book_outlined),
+                            label: 'Records',
+                            selectedIcon: const Icon(Icons.book_rounded),
+                          ),
+                          NavigationDestination(
+                            icon: const Icon(
+                              Icons.medical_information_outlined,
+                            ),
+                            label: 'Medical Entities',
+                            selectedIcon: const Icon(
+                              Icons.medical_information_rounded,
+                            ),
+                          ),
+                          NavigationDestination(
+                            icon: const Icon(Icons.people_alt_outlined),
+                            label: 'Members',
+                            selectedIcon: const Icon(Icons.people_alt_rounded),
+                          ),
+                        ],
+                        selectedIndex: routeNames.indexOf(
+                          GoRouter.of(context).state.name ?? 'groupHomeScreen',
+                        ),
+                        onDestinationSelected: (index) {
+                          context.goNamed(routeNames[index]);
+                        },
+                      )
+                    : null,
+              ),
             );
           },
+          routes: [
+            GoRoute(
+              path: '/groupLink',
+              name: 'groupLinkScreen',
+              builder: (context, state) {
+                return const GroupLinkScreen();
+              },
+            ),
+            GoRoute(
+              path: '/groupSetting',
+              name: 'groupSettingScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    Provider<ImagePicker>(create: (context) => ImagePicker()),
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        final viewModel = GroupSettingViewModel(
+                          permissionManager: context.read<PermissionManager>(),
+                          userRepository: context.read<UserRepository>(),
+                          authTokenManager: context.read<SessionManager>(),
+                          groupRepository: context.read<GroupRepository>(),
+                          imagePicker: context.read<ImagePicker>(),
+                        );
+
+                        if (state.extra is Map<String, dynamic>) {
+                          viewModel.groupId =
+                              (state.extra as Map<String, dynamic>)['groupId'];
+                          viewModel.fetchGroupDetails();
+                        }
+
+                        return viewModel;
+                      },
+                    ),
+                  ],
+                  child: const GroupSettingScreen(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/groupHome',
+              name: 'groupHomeScreen',
+              builder: (context, state) {
+                return const GroupHomeScreen();
+              },
+            ),
+            GoRoute(
+              path: '/groupMembers',
+              name: 'groupMembersScreen',
+              builder: (context, state) {
+                return const GroupMemberScreen();
+              },
+            ),
+            GoRoute(
+              path: '/medicalEntities',
+              name: 'medicalEntitiesScreen',
+              builder: (context, state) {
+                return const MedicalEntitiesScreen();
+              },
+            ),
+            GoRoute(
+              path: '/createDoctor',
+              name: 'createDoctorScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        final viewModel = CreateDoctorViewModel(
+                          doctorRepository: context.read<DoctorRepository>(),
+                        );
+
+                        if (state.extra is Map<String, dynamic>) {
+                          viewModel.groupId =
+                              (state.extra as Map<String, dynamic>)['groupId'];
+                        }
+
+                        return viewModel;
+                      },
+                    ),
+                  ],
+                  child: const CreateDoctorScreen(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/createHospital',
+              name: 'createHospitalScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        final viewModel = CreateHospitalViewModel(
+                          hospitalRepository: context
+                              .read<HospitalRepository>(),
+                        );
+
+                        if (state.extra is Map<String, dynamic>) {
+                          viewModel.groupId =
+                              (state.extra as Map<String, dynamic>)['groupId'];
+                        }
+
+                        return viewModel;
+                      },
+                    ),
+                  ],
+                  child: const CreateHospitalScreen(),
+                );
+              },
+            ),
+          ],
         ),
       ],
     ),
