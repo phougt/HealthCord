@@ -31,17 +31,20 @@ class GroupHomeScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
         ),
       ),
-      body: MaterialBanner(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 8,
-          children: [
-            Icon(Icons.warning_rounded),
-            Text("This group is archived. It is now in read-only mode."),
-          ],
+      body: Visibility(
+        visible: viewModel.group.isArchived,
+        child: MaterialBanner(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8,
+            children: [
+              Icon(Icons.warning_rounded),
+              Text("This group is archived. It is now in read-only mode."),
+            ],
+          ),
+          backgroundColor: Theme.of(context).colorScheme.errorContainer,
+          actions: [SizedBox.shrink()],
         ),
-        backgroundColor: Theme.of(context).colorScheme.errorContainer,
-        actions: [SizedBox.shrink()],
       ),
     );
   }
