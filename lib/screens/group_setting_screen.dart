@@ -82,10 +82,10 @@ class GroupSettingScreen extends StatelessWidget {
                     CircleAvatar(
                       radius: 50,
                       backgroundImage: viewModel.groupProfile == null
-                          ? viewModel.group?.groupProfile == null
+                          ? viewModel.group.groupProfile == null
                                 ? null
                                 : NetworkImage(
-                                    viewModel.group!.groupProfile!,
+                                    viewModel.group.groupProfile!,
                                     headers: {
                                       'Authorization':
                                           'Bearer ${viewModel.authToken?.accessToken}',
@@ -96,7 +96,7 @@ class GroupSettingScreen extends StatelessWidget {
                       child: Visibility(
                         visible:
                             viewModel.groupProfile == null &&
-                            viewModel.group?.groupProfile == null,
+                            viewModel.group.groupProfile == null,
                         child: const Icon(Icons.add_a_photo, size: 40),
                       ),
                     ),
@@ -206,7 +206,7 @@ class GroupSettingScreen extends StatelessWidget {
               Visibility(
                 visible:
                     viewModel.hasRoleType(RoleType.owner) &&
-                    !(viewModel.group?.isArchived ?? false),
+                    !viewModel.group.isArchived,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.error,

@@ -1,3 +1,4 @@
+import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
 import 'package:flutter/material.dart';
 
@@ -6,10 +7,15 @@ class CreateHospitalViewModel extends ChangeNotifier {
   Map<String, dynamic> errors = {};
   bool isLoading = false;
   final HospitalRepository _hospitalRepository;
-  int groupId = 0;
+  final Group _group;
 
-  CreateHospitalViewModel({required HospitalRepository hospitalRepository})
-    : _hospitalRepository = hospitalRepository;
+  Group get group => _group;
+
+  CreateHospitalViewModel({
+    required HospitalRepository hospitalRepository,
+    required Group group,
+  }) : _hospitalRepository = hospitalRepository,
+       _group = group;
 
   Future<bool> createHospital() async {
     errors = {};
@@ -19,7 +25,7 @@ class CreateHospitalViewModel extends ChangeNotifier {
     final doctorName = nameController.text;
     final result = await _hospitalRepository.createHospital(
       name: doctorName,
-      groupId: groupId,
+      groupId: group.id,
     );
     if (result.isSuccessful) {
       isLoading = false;

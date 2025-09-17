@@ -221,7 +221,7 @@ class HomeScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       child: InkWell(
         onTap: () {
-          context.pushNamed('groupHomeScreen', extra: {'groupId': group.id});
+          context.pushNamed('groupHomeScreen', extra: {'group': group});
         },
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(

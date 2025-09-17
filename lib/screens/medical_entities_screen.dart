@@ -98,7 +98,7 @@ class MedicalEntitiesScreen extends StatelessWidget {
                                 onTap: () {
                                   context.pushNamed(
                                     'createDoctorScreen',
-                                    extra: {'groupId': viewModel.groupId},
+                                    extra: {'group': viewModel.group},
                                   );
                                 },
                               )
@@ -110,7 +110,7 @@ class MedicalEntitiesScreen extends StatelessWidget {
                                 onTap: () {
                                   context.pushNamed(
                                     'createHospitalScreen',
-                                    extra: {'groupId': viewModel.groupId},
+                                    extra: {'group': viewModel.group},
                                   );
                                 },
                               )

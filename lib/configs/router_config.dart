@@ -130,68 +130,41 @@ final GoRouter rootRouter = GoRouter(
               providers: [
                 ChangeNotifierProvider(
                   create: (context) {
-                    final groupHomeViewModel = GroupHomeViewModel(
+                    return GroupHomeViewModel(
                       permissionManager: context.read<PermissionManager>(),
-                    );
-
-                    if (state.extra is Map<String, dynamic>) {
-                      groupHomeViewModel.groupId =
-                          (state.extra as Map<String, dynamic>)['groupId'];
-                      groupHomeViewModel.loadUserPermissions();
-                    }
-
-                    return groupHomeViewModel;
+                      group: (state.extra as Map<String, dynamic>)['group'],
+                    )..loadUserPermissions();
                   },
                 ),
                 ChangeNotifierProvider(
                   lazy: false,
                   create: (context) {
-                    final viewModel = GroupMemberViewModel(
+                    return GroupMemberViewModel(
                       groupRepository: context.read<GroupRepository>(),
                       permissionManager: context.read<PermissionManager>(),
+                      group: (state.extra as Map<String, dynamic>)['group'],
                     );
-
-                    if (state.extra is Map<String, dynamic>) {
-                      viewModel.groupId =
-                          (state.extra as Map<String, dynamic>)['groupId'];
-                      viewModel.refreshGroupMembers();
-                    }
-
-                    return viewModel;
                   },
                 ),
                 ChangeNotifierProvider(
                   lazy: false,
                   create: (context) {
-                    final viewModel = MedicalEntitiesViewModel(
+                    return MedicalEntitiesViewModel(
                       doctorRepository: context.read<DoctorRepository>(),
                       hospitalRepository: context.read<HospitalRepository>(),
                       permissionManager: context.read<PermissionManager>(),
-                    );
-                    if (state.extra is Map<String, dynamic>) {
-                      viewModel.groupId =
-                          (state.extra as Map<String, dynamic>)['groupId'];
-                      viewModel.refreshEntities();
-                    }
-
-                    return viewModel;
+                      group: (state.extra as Map<String, dynamic>)['group'],
+                    )..refreshEntities();
                   },
                 ),
                 ChangeNotifierProvider(
                   lazy: false,
                   create: (context) {
-                    final viewModel = GroupLinkViewModel(
+                    return GroupLinkViewModel(
                       permissionManager: context.read<PermissionManager>(),
                       groupLinkRepository: context.read<GroupLinkRepository>(),
-                    );
-
-                    if (state.extra is Map<String, dynamic>) {
-                      viewModel.groupId =
-                          (state.extra as Map<String, dynamic>)['groupId'];
-                      viewModel.refreshGroupLinks();
-                    }
-
-                    return viewModel;
+                      group: (state.extra as Map<String, dynamic>)['group'],
+                    )..refreshGroupLinks();
                   },
                 ),
               ],
@@ -254,21 +227,14 @@ final GoRouter rootRouter = GoRouter(
                     Provider<ImagePicker>(create: (context) => ImagePicker()),
                     ChangeNotifierProvider(
                       create: (context) {
-                        final viewModel = GroupSettingViewModel(
+                        return GroupSettingViewModel(
                           permissionManager: context.read<PermissionManager>(),
                           userRepository: context.read<UserRepository>(),
                           authTokenManager: context.read<SessionManager>(),
                           groupRepository: context.read<GroupRepository>(),
                           imagePicker: context.read<ImagePicker>(),
-                        );
-
-                        if (state.extra is Map<String, dynamic>) {
-                          viewModel.groupId =
-                              (state.extra as Map<String, dynamic>)['groupId'];
-                          viewModel.fetchGroupDetails();
-                        }
-
-                        return viewModel;
+                          group: (state.extra as Map<String, dynamic>)['group'],
+                        )..fetchGroupDetails();
                       },
                     ),
                   ],
@@ -305,16 +271,10 @@ final GoRouter rootRouter = GoRouter(
                   providers: [
                     ChangeNotifierProvider(
                       create: (context) {
-                        final viewModel = CreateDoctorViewModel(
+                        return CreateDoctorViewModel(
                           doctorRepository: context.read<DoctorRepository>(),
+                          group: (state.extra as Map<String, dynamic>)['group'],
                         );
-
-                        if (state.extra is Map<String, dynamic>) {
-                          viewModel.groupId =
-                              (state.extra as Map<String, dynamic>)['groupId'];
-                        }
-
-                        return viewModel;
                       },
                     ),
                   ],
@@ -330,17 +290,11 @@ final GoRouter rootRouter = GoRouter(
                   providers: [
                     ChangeNotifierProvider(
                       create: (context) {
-                        final viewModel = CreateHospitalViewModel(
+                        return CreateHospitalViewModel(
                           hospitalRepository: context
                               .read<HospitalRepository>(),
+                          group: (state.extra as Map<String, dynamic>)['group'],
                         );
-
-                        if (state.extra is Map<String, dynamic>) {
-                          viewModel.groupId =
-                              (state.extra as Map<String, dynamic>)['groupId'];
-                        }
-
-                        return viewModel;
                       },
                     ),
                   ],

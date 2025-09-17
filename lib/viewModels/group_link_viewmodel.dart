@@ -1,11 +1,14 @@
 import 'package:family_health_record/managers/permission_manager.dart';
 import 'package:family_health_record/models/group_links/group_link.dart';
+import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:flutter/material.dart';
 
 class GroupLinkViewModel extends ChangeNotifier {
   List<GroupLink> groupLinks = [];
-  int groupId = 0;
+  final Group _group;
+
+  Group get group => _group;
   bool isLoading = true;
   int _page = 0;
   final int perPage = 10;
@@ -17,8 +20,10 @@ class GroupLinkViewModel extends ChangeNotifier {
   GroupLinkViewModel({
     required GroupLinkRepository groupLinkRepository,
     required PermissionManager permissionManager,
+    required Group group,
   }) : _groupLinkRepository = groupLinkRepository,
-       _permissionManager = permissionManager {
+       _permissionManager = permissionManager,
+       _group = group {
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
           scrollController.position.maxScrollExtent - 100) {
@@ -28,7 +33,7 @@ class GroupLinkViewModel extends ChangeNotifier {
   }
 
   bool hasPermission(String permission) {
-    return _permissionManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, group.id);
   }
 
   Future<bool> loadMoreGroupLinks() async {
@@ -37,7 +42,7 @@ class GroupLinkViewModel extends ChangeNotifier {
     notifyListeners();
 
     final result = await _groupLinkRepository.getGroupLinks(
-      groupId,
+      group.id,
       _page,
       perPage,
     );
@@ -66,7 +71,7 @@ class GroupLinkViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _groupLinkRepository.generateNewGroupLink(groupId);
+    final result = await _groupLinkRepository.generateNewGroupLink(group.id);
 
     if (result.isSuccessful) {
       groupLinks.insert(0, result.data!);

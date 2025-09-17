@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import '../enums/role_type.dart';
 
 class GroupSettingViewModel extends ChangeNotifier {
-  int groupId = 0;
   bool isLoading = true;
   Map<String, dynamic> errors = {};
   final SessionManager _authTokenManager;
@@ -19,7 +18,7 @@ class GroupSettingViewModel extends ChangeNotifier {
   final UserRepository _userRepository;
   XFile? groupProfile;
   final ImagePicker _imagePicker;
-  Group? group;
+  Group group;
   final TextEditingController groupNameController = TextEditingController();
   final TextEditingController groupDescriptionController =
       TextEditingController();
@@ -27,8 +26,8 @@ class GroupSettingViewModel extends ChangeNotifier {
   AuthToken? get authToken => _authTokenManager.authToken;
 
   bool get isChanged {
-    return (groupNameController.text != group?.name ||
-        groupDescriptionController.text != (group?.description ?? '') ||
+    return (groupNameController.text != group.name ||
+        groupDescriptionController.text != (group.description ?? '') ||
         groupProfile != null);
   }
 
@@ -38,6 +37,7 @@ class GroupSettingViewModel extends ChangeNotifier {
     required PermissionManager permissionManager,
     required GroupRepository groupRepository,
     required ImagePicker imagePicker,
+    required this.group,
   }) : _groupRepository = groupRepository,
        _userRepository = userRepository,
        _imagePicker = imagePicker,
@@ -49,10 +49,10 @@ class GroupSettingViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _groupRepository.getGroupDetails(groupId);
+    final result = await _groupRepository.getGroupDetails(group.id);
 
     if (result.isSuccessful) {
-      group = result.data;
+      group = result.data!;
       groupNameController.text = result.data!.name;
       groupDescriptionController.text = result.data!.description ?? '';
       isLoading = false;
@@ -75,7 +75,7 @@ class GroupSettingViewModel extends ChangeNotifier {
     final groupDescription = groupDescriptionController.text;
 
     final result = await _groupRepository.updateGroup(
-      groupId: groupId,
+      groupId: group.id,
       name: groupName,
       description: groupDescription,
       groupProfile: groupProfile?.path,
@@ -121,12 +121,11 @@ class GroupSettingViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _userRepository.leaveGroup(groupId);
+    final result = await _userRepository.leaveGroup(group.id);
 
     if (result.isSuccessful) {
       isLoading = false;
-      group = null;
-      _permissionManager.clearGroupPermissionsCache(groupId);
+      _permissionManager.clearGroupPermissionsCache(group.id);
       notifyListeners();
       return true;
     }
@@ -142,12 +141,11 @@ class GroupSettingViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final result = await _groupRepository.archiveGroup(groupId);
+    final result = await _groupRepository.archiveGroup(group.id);
 
     if (result.isSuccessful) {
       isLoading = false;
-      group = null;
-      _permissionManager.clearGroupPermissionsCache(groupId);
+      _permissionManager.clearGroupPermissionsCache(group.id);
       notifyListeners();
       return true;
     }
@@ -159,20 +157,20 @@ class GroupSettingViewModel extends ChangeNotifier {
   }
 
   bool hasPermission(String permission) {
-    return _permissionManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, group.id);
   }
 
   bool hasRoleType(RoleType roleType) {
-    return _permissionManager.hasRoleType(roleType, groupId);
+    return _permissionManager.hasRoleType(roleType, group.id);
   }
 
   void undoName() {
-    groupNameController.text = group?.name ?? '';
+    groupNameController.text = group.name;
     notifyListeners();
   }
 
   void undoDescription() {
-    groupDescriptionController.text = group?.description ?? '';
+    groupDescriptionController.text = group.description ?? '';
     notifyListeners();
   }
 

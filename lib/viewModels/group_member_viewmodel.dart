@@ -1,4 +1,5 @@
 import 'package:family_health_record/managers/permission_manager.dart';
+import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,9 @@ class GroupMemberViewModel extends ChangeNotifier {
   final PermissionManager _permissionManager;
   final GroupRepository _groupRepository;
   final ScrollController scrollController = ScrollController();
-  int groupId = 0;
+  final Group _group;
+
+  Group get group => _group;
   List<User> members = [];
   bool isLoading = true;
   Map<String, dynamic> errors = {};
@@ -17,8 +20,10 @@ class GroupMemberViewModel extends ChangeNotifier {
   GroupMemberViewModel({
     required GroupRepository groupRepository,
     required PermissionManager permissionManager,
+    required Group group,
   }) : _groupRepository = groupRepository,
-       _permissionManager = permissionManager {
+       _permissionManager = permissionManager,
+       _group = group {
     refreshGroupMembers();
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
@@ -33,7 +38,7 @@ class GroupMemberViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     final result = await _groupRepository.getGroupMembers(
-      groupId,
+      group.id,
       perPage,
       page,
     );
@@ -59,7 +64,7 @@ class GroupMemberViewModel extends ChangeNotifier {
   }
 
   bool hasPermission(String permission) {
-    return _permissionManager.hasPermission(permission, groupId);
+    return _permissionManager.hasPermission(permission, group.id);
   }
 
   @override

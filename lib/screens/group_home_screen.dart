@@ -18,7 +18,7 @@ class GroupHomeScreen extends StatelessWidget {
             onPressed: () {
               context.pushNamed(
                 'groupSettingScreen',
-                extra: {'groupId': viewModel.groupId},
+                extra: {'group': viewModel.group},
               );
             },
             icon: Icon(Icons.settings),
@@ -31,11 +31,17 @@ class GroupHomeScreen extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
         ),
       ),
-      body: Center(
-        child: Text(
-          'Group Home Screen',
-          style: Theme.of(context).textTheme.bodyLarge,
+      body: MaterialBanner(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 8,
+          children: [
+            Icon(Icons.warning_rounded),
+            Text("This group is archived. It is now in read-only mode."),
+          ],
         ),
+        backgroundColor: Theme.of(context).colorScheme.errorContainer,
+        actions: [SizedBox.shrink()],
       ),
     );
   }
