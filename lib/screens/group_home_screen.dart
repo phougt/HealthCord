@@ -34,13 +34,9 @@ class GroupHomeScreen extends StatelessWidget {
       body: Visibility(
         visible: viewModel.group.isArchived,
         child: MaterialBanner(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8,
-            children: [
-              Icon(Icons.warning_rounded),
-              Text("This group is archived. It is now in read-only mode."),
-            ],
+          content: Text(
+            "This group is archived. It is now in read-only mode.",
+            textAlign: TextAlign.center,
           ),
           backgroundColor: Theme.of(context).colorScheme.errorContainer,
           actions: [SizedBox.shrink()],
