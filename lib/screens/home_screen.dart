@@ -2,6 +2,7 @@ import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -14,155 +15,154 @@ class HomeScreen extends StatelessWidget {
     final authTokenManager = context.watch<SessionManager>();
 
     return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
-              onPressed: () {
-                authTokenManager.clearAuthToken();
-              },
-              icon: CircleAvatar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                radius: 18,
-                child: authTokenManager.user?.profile != null
-                    ? Image.network(
-                        authTokenManager.user?.profile ?? '',
-                        headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization':
-                              'Bearer ${authTokenManager.authToken?.accessToken}',
-                        },
-                      )
-                    : const Icon(Icons.person, size: 25),
-              ),
-            ),
-          ),
-        ],
-        title: Row(
-          children: [
-            Icon(
-              Icons.note_add_rounded,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              'HealthCord',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Card(
-                  clipBehavior: Clip.hardEdge,
-                  color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await viewModel.refreshGroups();
+        },
+        child:
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: viewModel.scrollController,
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: IconButton(
+                      onPressed: () {
+                        authTokenManager.clearAuthToken();
+                      },
+                      icon: CircleAvatar(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.inversePrimary,
+                        radius: 18,
+                        child: authTokenManager.user?.profile != null
+                            ? Image.network(
+                                authTokenManager.user?.profile ?? '',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization':
+                                      'Bearer ${authTokenManager.authToken?.accessToken}',
+                                },
+                              )
+                            : const Icon(Icons.person, size: 25),
+                      ),
+                    ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/family.png',
-                          fit: BoxFit.cover,
-                          scale: 2.5,
-                        ),
-                        Text(
-                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 26,
-                            color: Colors.white,
+                ],
+                title: Row(
+                  children: [
+                    Icon(
+                      Icons.note_add_rounded,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'HealthCord',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Card(
+                    color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/family.png',
+                            fit: BoxFit.cover,
+                            scale: 2.5,
                           ),
+                          Text(
+                            'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      spacing: 8,
+                      children: [
+                        ChoiceChip(
+                          label: Text("Unarchived"),
+                          selected: !viewModel.isArchived,
+                          onSelected: (value) {
+                            viewModel.isArchived = false;
+                            viewModel.refreshGroups();
+                          },
+                        ),
+                        ChoiceChip(
+                          label: Text("Archived"),
+                          selected: viewModel.isArchived,
+                          onSelected: (value) {
+                            viewModel.isArchived = true;
+                            viewModel.refreshGroups();
+                          },
                         ),
                       ],
                     ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      ChoiceChip(
-                        label: Text("Unarchived"),
-                        selected: !viewModel.isArchived,
-                        onSelected: (value) {
-                          viewModel.isArchived = false;
-                          viewModel.refreshGroups();
-                        },
-                      ),
-                      ChoiceChip(
-                        label: Text("Archived"),
-                        selected: viewModel.isArchived,
-                        onSelected: (value) {
-                          viewModel.isArchived = true;
-                          viewModel.refreshGroups();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    spacing: 8,
-                    children: [
-                      Icon(
-                        Icons.group_rounded,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      Text(
-                        viewModel.isArchived ? "Archived" : "Unarchived",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      spacing: 8,
+                      children: [
+                        Icon(
+                          Icons.group_rounded,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
-                        textAlign: TextAlign.start,
-                      ),
-                    ],
+                        Text(
+                          viewModel.isArchived ? "Archived" : "Unarchived",
+                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.start,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Flexible(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await viewModel.refreshGroups();
-                },
-                child: ListView.builder(
-                  controller: viewModel.scrollController,
-                  itemCount: viewModel.isArchived
-                      ? viewModel.archivedGroups.length
-                      : viewModel.unarchivedGroups.length,
-                  itemBuilder: (context, index) {
-                    final Group group;
-                    if (viewModel.isArchived) {
-                      group = viewModel.archivedGroups[index];
-                    } else {
-                      group = viewModel.unarchivedGroups[index];
-                    }
-                    return groupCard(context, group, index);
-                  },
-                  physics: const AlwaysScrollableScrollPhysics(),
-                ),
+                ]),
               ),
-            ),
-          ],
+              SliverList.builder(
+                itemCount: viewModel.isArchived
+                    ? viewModel.archivedGroups.length
+                    : viewModel.unarchivedGroups.length,
+                itemBuilder: (context, index) {
+                  final Group group;
+                  if (viewModel.isArchived) {
+                    group = viewModel.archivedGroups[index];
+                  } else {
+                    group = viewModel.unarchivedGroups[index];
+                  }
+                  return groupCard(context, group, index);
+                },
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: Builder(
