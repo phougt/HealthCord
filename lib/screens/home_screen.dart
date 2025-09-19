@@ -25,7 +25,7 @@ class HomeScreen extends StatelessWidget {
             controller: viewModel.scrollController,
             slivers: [
               SliverAppBar(
-                floating: true,
+                pinned: true,
                 expandedHeight: 250,
                 flexibleSpace: FlexibleSpaceBar(
                   background: Card(
