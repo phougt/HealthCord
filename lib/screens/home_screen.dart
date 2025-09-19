@@ -2,7 +2,6 @@ import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/viewModels/home_viewmodel.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -19,8 +18,7 @@ class HomeScreen extends StatelessWidget {
         onRefresh: () async {
           await viewModel.refreshGroups();
         },
-        child:
-        Padding(
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: CustomScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -29,28 +27,25 @@ class HomeScreen extends StatelessWidget {
               SliverAppBar(
                 floating: true,
                 actions: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 16.0),
-                    child: IconButton(
-                      onPressed: () {
-                        authTokenManager.clearAuthToken();
-                      },
-                      icon: CircleAvatar(
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.inversePrimary,
-                        radius: 18,
-                        child: authTokenManager.user?.profile != null
-                            ? Image.network(
-                                authTokenManager.user?.profile ?? '',
-                                headers: {
-                                  'Content-Type': 'application/json',
-                                  'Authorization':
-                                      'Bearer ${authTokenManager.authToken?.accessToken}',
-                                },
-                              )
-                            : const Icon(Icons.person, size: 25),
-                      ),
+                  IconButton(
+                    onPressed: () {
+                      authTokenManager.clearAuthToken();
+                    },
+                    icon: CircleAvatar(
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.inversePrimary,
+                      radius: 18,
+                      child: authTokenManager.user?.profile != null
+                          ? Image.network(
+                              authTokenManager.user?.profile ?? '',
+                              headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization':
+                                    'Bearer ${authTokenManager.authToken?.accessToken}',
+                              },
+                            )
+                          : const Icon(Icons.person, size: 25),
                     ),
                   ),
                 ],
@@ -137,9 +132,8 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Text(
                           viewModel.isArchived ? "Archived" : "Unarchived",
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
                           textAlign: TextAlign.start,
                         ),
                       ],

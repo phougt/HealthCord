@@ -1,8 +1,8 @@
-import "package:family_health_record/managers/session_manager.dart";
 import "package:family_health_record/managers/permission_manager.dart";
+import "package:family_health_record/managers/session_manager.dart";
 import "package:family_health_record/repositories/auth/auth_repository.dart";
-import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/repositories/doctor/doctor_repository.dart";
+import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/repositories/group_link/group_link_repository.dart";
 import "package:family_health_record/repositories/hospital/hospital_repository.dart";
 import "package:family_health_record/repositories/user/user_repository.dart";
@@ -28,13 +28,13 @@ import "package:family_health_record/viewModels/group_member_viewmodel.dart";
 import "package:family_health_record/viewModels/group_setting_viewmodel.dart";
 import "package:family_health_record/viewModels/home_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
+import "package:family_health_record/viewModels/login_viewmodel.dart";
 import "package:family_health_record/viewModels/medical_entities_viewmodel.dart";
 import "package:family_health_record/viewModels/signup_viewmodel.dart";
 import "package:flutter/material.dart";
 import "package:go_router/go_router.dart";
 import "package:image_picker/image_picker.dart";
 import "package:provider/provider.dart";
-import "package:family_health_record/viewModels/login_viewmodel.dart";
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -124,7 +124,6 @@ final GoRouter rootRouter = GoRouter(
               'groupHomeScreen',
               '',
               'medicalEntitiesScreen',
-              'groupMembersScreen',
             ];
             return MultiProvider(
               providers: [
@@ -180,30 +179,25 @@ final GoRouter rootRouter = GoRouter(
                             selectedIcon: const Icon(Icons.home_filled),
                           ),
                           NavigationDestination(
-                            icon: const Icon(Icons.book_outlined),
+                            icon: const Icon(Icons.note_alt_outlined),
                             label: 'Records',
-                            selectedIcon: const Icon(Icons.book_rounded),
+                            selectedIcon: const Icon(Icons.note_alt_rounded),
                           ),
                           NavigationDestination(
                             icon: const Icon(
                               Icons.medical_information_outlined,
                             ),
-                            label: 'Medical Entities',
+                            label: 'Entities',
                             selectedIcon: const Icon(
                               Icons.medical_information_rounded,
                             ),
-                          ),
-                          NavigationDestination(
-                            icon: const Icon(Icons.people_alt_outlined),
-                            label: 'Members',
-                            selectedIcon: const Icon(Icons.people_alt_rounded),
                           ),
                         ],
                         selectedIndex: routeNames.indexOf(
                           GoRouter.of(context).state.name ?? 'groupHomeScreen',
                         ),
                         onDestinationSelected: (index) {
-                          context.goNamed(routeNames[index]);
+                          context.replaceNamed(routeNames[index]);
                         },
                       )
                     : null,

@@ -67,7 +67,7 @@ class GroupSettingScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
-            spacing: 16.0,
+            spacing: 14.0,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GestureDetector(
@@ -167,6 +167,17 @@ class GroupSettingScreen extends StatelessWidget {
                   },
                 ),
               ),
+              ListTile(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                leading: Icon(Icons.people_alt_rounded),
+                title: Text('Members'),
+                tileColor: Theme.of(context).colorScheme.surfaceContainer,
+                onTap: () {
+                  context.pushNamed('groupMembersScreen');
+                },
+              ),
               Visibility(
                 visible: !viewModel.hasRoleType(RoleType.owner),
                 child: OutlinedButton(
@@ -190,9 +201,7 @@ class GroupSettingScreen extends StatelessWidget {
 
                       if (!context.mounted) return;
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("You can not leave the group"),
-                        ),
+                        SnackBar(content: Text("You can not leave the group")),
                       );
                     });
                   },
@@ -237,10 +246,7 @@ class GroupSettingScreen extends StatelessWidget {
                   child: Row(
                     spacing: 5,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.exit_to_app),
-                      Text('Archive Group'),
-                    ],
+                    children: [Icon(Icons.exit_to_app), Text('Archive Group')],
                   ),
                 ),
               ),
