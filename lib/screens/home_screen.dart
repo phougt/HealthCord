@@ -26,26 +26,61 @@ class HomeScreen extends StatelessWidget {
             slivers: [
               SliverAppBar(
                 floating: true,
+                expandedHeight: 250,
+                flexibleSpace: FlexibleSpaceBar(
+                  background: Card(
+                    color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            'assets/images/family.png',
+                            fit: BoxFit.cover,
+                            scale: 2.5,
+                          ),
+                          Text(
+                            'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 actions: [
-                  IconButton(
-                    onPressed: () {
-                      authTokenManager.clearAuthToken();
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.inversePrimary,
-                      radius: 18,
-                      child: authTokenManager.user?.profile != null
-                          ? Image.network(
-                              authTokenManager.user?.profile ?? '',
-                              headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization':
-                                    'Bearer ${authTokenManager.authToken?.accessToken}',
-                              },
-                            )
-                          : const Icon(Icons.person, size: 25),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: IconButton(
+                      onPressed: () {
+                        authTokenManager.clearAuthToken();
+                      },
+                      icon: CircleAvatar(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.inversePrimary,
+                        radius: 18,
+                        child: authTokenManager.user?.profile != null
+                            ? Image.network(
+                                authTokenManager.user?.profile ?? '',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization':
+                                      'Bearer ${authTokenManager.authToken?.accessToken}',
+                                },
+                              )
+                            : const Icon(Icons.person, size: 25),
+                      ),
                     ),
                   ),
                 ],
@@ -68,35 +103,6 @@ class HomeScreen extends StatelessWidget {
               ),
               SliverList(
                 delegate: SliverChildListDelegate([
-                  Card(
-                    color: Theme.of(context).colorScheme.onPrimaryFixedVariant,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/family.png',
-                            fit: BoxFit.cover,
-                            scale: 2.5,
-                          ),
-                          Text(
-                            'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Row(
