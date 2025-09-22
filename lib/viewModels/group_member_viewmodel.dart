@@ -5,6 +5,7 @@ import 'package:family_health_record/repositories/group/group_repository.dart';
 import 'package:flutter/material.dart';
 
 class GroupMemberViewModel extends ChangeNotifier {
+  bool _disposed = false;
   final PermissionManager _permissionManager;
   final GroupRepository _groupRepository;
   final ScrollController scrollController = ScrollController();
@@ -70,6 +71,13 @@ class GroupMemberViewModel extends ChangeNotifier {
   @override
   void dispose() {
     scrollController.dispose();
+    _disposed = true;
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
   }
 }
