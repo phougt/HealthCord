@@ -5,6 +5,7 @@ import 'package:family_health_record/repositories/group_link/group_link_reposito
 import 'package:flutter/material.dart';
 
 class GroupLinkViewModel extends ChangeNotifier {
+  bool _disposed = false;
   List<GroupLink> groupLinks = [];
   final Group _group;
 
@@ -103,5 +104,18 @@ class GroupLinkViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
     return false;
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    _disposed = true;
+    super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
   }
 }

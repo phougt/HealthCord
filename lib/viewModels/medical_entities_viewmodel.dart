@@ -7,6 +7,7 @@ import 'package:family_health_record/repositories/hospital/hospital_repository.d
 import 'package:flutter/material.dart';
 
 class MedicalEntitiesViewModel extends ChangeNotifier {
+  bool _disposed = false;
   List<Hospital> hospitals = [];
   List<Doctor> doctors = [];
   bool _isLoading = true;
@@ -94,6 +95,13 @@ class MedicalEntitiesViewModel extends ChangeNotifier {
   @override
   void dispose() {
     scrollController.dispose();
+    _disposed = true;
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
   }
 }

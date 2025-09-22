@@ -1,5 +1,5 @@
-import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/managers/permission_manager.dart';
+import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/models/auth_tokens/auth_token.dart';
 import 'package:family_health_record/models/groups/group.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import '../enums/role_type.dart';
 
 class GroupSettingViewModel extends ChangeNotifier {
+  bool _disposed = false;
   bool isLoading = true;
   Map<String, dynamic> errors = {};
   final SessionManager _authTokenManager;
@@ -178,6 +179,13 @@ class GroupSettingViewModel extends ChangeNotifier {
   void dispose() {
     groupNameController.dispose();
     groupDescriptionController.dispose();
+    _disposed = true;
     super.dispose();
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) return;
+    super.notifyListeners();
   }
 }
