@@ -5,6 +5,7 @@ import "package:family_health_record/repositories/doctor/doctor_repository.dart"
 import "package:family_health_record/repositories/group/group_repository.dart";
 import "package:family_health_record/repositories/group_link/group_link_repository.dart";
 import "package:family_health_record/repositories/hospital/hospital_repository.dart";
+import "package:family_health_record/repositories/permission/permission_repository.dart";
 import "package:family_health_record/repositories/user/user_repository.dart";
 import "package:family_health_record/screens/create_doctor_screen.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
@@ -12,6 +13,8 @@ import "package:family_health_record/screens/create_hospital_screen.dart";
 import "package:family_health_record/screens/group_home_screen.dart";
 import "package:family_health_record/screens/group_link_screen.dart";
 import "package:family_health_record/screens/group_member_screen.dart";
+import "package:family_health_record/screens/group_role_permissions_screen.dart";
+import "package:family_health_record/screens/group_roles_screen.dart";
 import "package:family_health_record/screens/group_setting_screen.dart";
 import "package:family_health_record/screens/home_screen.dart";
 import "package:family_health_record/screens/join_group_screen.dart";
@@ -25,6 +28,8 @@ import "package:family_health_record/viewModels/create_hospital_viewmodel.dart";
 import "package:family_health_record/viewModels/group_home_viewmodel.dart";
 import "package:family_health_record/viewModels/group_link_viewmodel.dart";
 import "package:family_health_record/viewModels/group_member_viewmodel.dart";
+import "package:family_health_record/viewModels/group_role_permissions_viewmodel.dart";
+import "package:family_health_record/viewModels/group_roles_viewmodel.dart";
 import "package:family_health_record/viewModels/group_setting_viewmodel.dart";
 import "package:family_health_record/viewModels/home_viewmodel.dart";
 import "package:family_health_record/viewModels/join_group_viewmodel.dart";
@@ -210,6 +215,46 @@ final GoRouter rootRouter = GoRouter(
               name: 'groupLinkScreen',
               builder: (context, state) {
                 return const GroupLinkScreen();
+              },
+            ),
+            GoRoute(
+              path: '/roles',
+              name: 'groupRolesScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        return GroupRolesViewModel(
+                          group: (state.extra as Map<String, dynamic>)['group'],
+                          groupRepository: context.read<GroupRepository>(),
+                        )..fetchRoles();
+                      },
+                    ),
+                  ],
+                  child: const GroupRolesScreen(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/rolePermissions',
+              name: 'groupRolePermissionsScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        return GroupRolePermissionsViewModel(
+                          group: (state.extra as Map<String, dynamic>)['group'],
+                          role: (state.extra as Map<String, dynamic>)['role'],
+                          permissionRepository: context
+                              .read<PermissionRepository>(),
+                        )..setDefaultSelectedPermissions();
+                      },
+                    ),
+                  ],
+                  child: const GroupRolePermissionsScreen(),
+                );
               },
             ),
             GoRoute(

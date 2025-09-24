@@ -1,11 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:family_health_record/utils/api_error.dart';
-import './auth_repository.dart';
+
 import '../../models/auth_tokens/auth_token.dart';
 import '../../utils/result.dart';
+import './auth_repository.dart';
 
 class ApiAuthRepository extends AuthRepository {
   final Dio _dio;
+
   ApiAuthRepository({required Dio dio}) : _dio = dio;
 
   @override

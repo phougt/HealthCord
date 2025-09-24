@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:family_health_record/configs/constant.dart';
 import 'package:family_health_record/configs/router_config.dart';
 import 'package:family_health_record/repositories/auth/api_auth_repository.dart';
 import 'package:family_health_record/repositories/auth/auth_repository.dart';
@@ -10,14 +11,16 @@ import 'package:family_health_record/repositories/group_link/api_group_link_repo
 import 'package:family_health_record/repositories/group_link/group_link_repository.dart';
 import 'package:family_health_record/repositories/hospital/api_hospital_repository.dart';
 import 'package:family_health_record/repositories/hospital/hospital_repository.dart';
+import 'package:family_health_record/repositories/permission/api_permission_repository.dart';
+import 'package:family_health_record/repositories/permission/permission_repository.dart';
 import 'package:family_health_record/repositories/user/api_user_repository.dart';
 import 'package:family_health_record/repositories/user/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'managers/session_manager.dart';
-import 'package:family_health_record/configs/constant.dart';
+
 import 'configs/theme.dart';
+import 'managers/session_manager.dart';
 
 void main() {
   runApp(
@@ -106,6 +109,11 @@ void main() {
         Provider<UserRepository>(
           create: (context) {
             return ApiUserRepository(dio: context.read<Dio>());
+          },
+        ),
+        Provider<PermissionRepository>(
+          create: (context) {
+            return ApiPermissionRepository(dio: context.read<Dio>());
           },
         ),
       ],

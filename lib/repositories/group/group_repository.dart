@@ -1,4 +1,5 @@
 import 'package:family_health_record/models/groups/group.dart';
+import 'package:family_health_record/models/roles/role.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/utils/result.dart';
 
@@ -35,4 +36,6 @@ abstract class GroupRepository {
     int page,
     int perPage,
   );
+
+  Future<Result<List<Role>>> getGroupRoles(int groupId);
 }

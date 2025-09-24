@@ -30,38 +30,7 @@ class GroupSettingScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back),
           ),
         ),
-        actions: [
-          Visibility(
-            visible: viewModel.hasPermission('group.update'),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FilledButton(
-                onPressed: !viewModel.isLoading
-                    ? () async {
-                        if (await viewModel.updateGroupDetails()) {
-                          if (!context.mounted) return;
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Group updated successfully!'),
-                            ),
-                          );
-
-                          if (!context.mounted) return;
-                          context.pop();
-                        }
-                      }
-                    : null,
-                child: Row(
-                  spacing: 5,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: !viewModel.isLoading
-                      ? const [Icon(Icons.check), Text('Update')]
-                      : const [CircularProgressIndicator()],
-                ),
-              ),
-            ),
-          ),
-        ],
+        actions: [],
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -150,33 +119,70 @@ class GroupSettingScreen extends StatelessWidget {
                   errorText: errors['description']?[0].toString(),
                 ),
               ),
-              Visibility(
-                visible:
-                    viewModel.hasPermission('invite-link.read') ||
-                    viewModel.hasPermission('invite-link.delete') ||
-                    viewModel.hasPermission('invite-link.create'),
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  leading: Icon(Icons.link),
-                  title: Text('Group Links'),
-                  tileColor: Theme.of(context).colorScheme.surfaceContainer,
-                  onTap: () {
-                    context.pushNamed('groupLinkScreen');
-                  },
+              ExpansionTile(
+                enabled: false,
+                initiallyExpanded: true,
+                trailing: SizedBox.shrink(),
+                backgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerLowest,
+                collapsedBackgroundColor: Theme.of(
+                  context,
+                ).colorScheme.surfaceContainerLowest,
+                collapsedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ),
-              ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                leading: Icon(Icons.people_alt_rounded),
-                title: Text('Members'),
-                tileColor: Theme.of(context).colorScheme.surfaceContainer,
-                onTap: () {
-                  context.pushNamed('groupMembersScreen');
-                },
+                title: Text(
+                  "Group Configuration",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                children: [
+                  Visibility(
+                    visible:
+                        viewModel.hasPermission('invite-link.read') ||
+                        viewModel.hasPermission('invite-link.delete') ||
+                        viewModel.hasPermission('invite-link.create'),
+                    child: ListTile(
+                      leading: Icon(Icons.link),
+                      title: Text('Group Links'),
+                      tileColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerLowest,
+                      onTap: () {
+                        context.pushNamed('groupLinkScreen');
+                      },
+                    ),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.people_alt_rounded),
+                    title: Text('Members'),
+                    tileColor: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerLowest,
+                    onTap: () {
+                      context.pushNamed('groupMembersScreen');
+                    },
+                  ),
+                  Visibility(
+                    visible: viewModel.hasPermission('group-role.manage'),
+                    child: ListTile(
+                      leading: Icon(Icons.security),
+                      title: Text('Roles and Permissions'),
+                      tileColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerLowest,
+                      onTap: () {
+                        context.pushNamed(
+                          'groupRolesScreen',
+                          extra: {'group': viewModel.group},
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
               Visibility(
                 visible: !viewModel.hasRoleType(RoleType.owner),
@@ -252,6 +258,43 @@ class GroupSettingScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Visibility(
+              visible: viewModel.hasPermission('group.update'),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: FilledButton(
+                  onPressed: !viewModel.isLoading
+                      ? () async {
+                          if (await viewModel.updateGroupDetails()) {
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Group updated successfully!'),
+                              ),
+                            );
+
+                            if (!context.mounted) return;
+                            context.pop();
+                          }
+                        }
+                      : null,
+                  child: Row(
+                    spacing: 5,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: !viewModel.isLoading
+                        ? const [Icon(Icons.check), Text('Update')]
+                        : const [CircularProgressIndicator()],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

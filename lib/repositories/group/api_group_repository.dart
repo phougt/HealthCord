@@ -1,9 +1,10 @@
+import 'package:dio/dio.dart';
+import 'package:family_health_record/models/groups/group.dart';
+import 'package:family_health_record/models/roles/role.dart';
 import 'package:family_health_record/models/user/user.dart';
 import 'package:family_health_record/repositories/group/group_repository.dart';
-import 'package:family_health_record/models/groups/group.dart';
-import 'package:family_health_record/utils/result.dart';
-import 'package:dio/dio.dart';
 import 'package:family_health_record/utils/api_error.dart';
+import 'package:family_health_record/utils/result.dart';
 
 class ApiGroupRepository extends GroupRepository {
   final Dio _dio;
@@ -272,6 +273,34 @@ class ApiGroupRepository extends GroupRepository {
     return Result.fail(
       ApiError(
         message: 'An unexpected error occurred while fetching group members',
+      ),
+    );
+  }
+
+  @override
+  Future<Result<List<Role>>> getGroupRoles(int groupId) async {
+    try {
+      final response = await _dio.get("/group/$groupId/role");
+      if (response.statusCode == 200) {
+        final json = response.data;
+        final data = json['data'] as List;
+        final roles = data.map((e) => Role.fromJson(e)).toList();
+        return Result.ok(
+          data: roles,
+          message: json['message'] ?? 'Group roles fetched successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while fetching group roles'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(
+        message: 'An unexpected error occurred while fetching group roles',
       ),
     );
   }
