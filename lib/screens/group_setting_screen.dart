@@ -44,30 +44,43 @@ class GroupSettingScreen extends StatelessWidget {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return SimpleDialog(
-                        contentPadding: EdgeInsets.all(0),
+                      return Dialog.fullscreen(
                         backgroundColor: Colors.transparent,
-                        children: [
-                          InteractiveViewer(
-                            boundaryMargin: const EdgeInsets.all(400.0),
-                            minScale: 0.1,
-                            maxScale: 5,
-                            child: viewModel.groupProfile == null
-                                ? viewModel.group.groupProfile == null
-                                      ? const SizedBox.shrink()
-                                      : Image.network(
-                                          viewModel.group.groupProfile!,
-                                          headers: {
-                                            'Authorization':
-                                                'Bearer ${viewModel.authToken?.accessToken}',
-                                            'Content-Type': 'application/json',
-                                          },
-                                        )
-                                : Image.file(
-                                    File(viewModel.groupProfile!.path),
-                                  ),
-                          ),
-                        ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                context.pop();
+                              },
+                              icon: Icon(Icons.close_rounded),
+                            ),
+                            Flexible(
+                              fit: FlexFit.tight,
+                              child: InteractiveViewer(
+                                boundaryMargin: const EdgeInsets.all(400.0),
+                                minScale: 0.1,
+                                maxScale: 5,
+                                child: viewModel.groupProfile == null
+                                    ? viewModel.group.groupProfile == null
+                                          ? const SizedBox.shrink()
+                                          : Image.network(
+                                              viewModel.group.groupProfile!,
+                                              headers: {
+                                                'Authorization':
+                                                    'Bearer ${viewModel.authToken?.accessToken}',
+                                                'Content-Type':
+                                                    'application/json',
+                                              },
+                                            )
+                                    : Image.file(
+                                        File(viewModel.groupProfile!.path),
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                   );
