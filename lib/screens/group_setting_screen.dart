@@ -147,6 +147,7 @@ class GroupSettingScreen extends StatelessWidget {
                         viewModel.hasPermission('invite-link.create'),
                     child: ListTile(
                       leading: Icon(Icons.link),
+                      trailing: Icon(Icons.keyboard_arrow_right_rounded),
                       title: Text('Group Links'),
                       tileColor: Theme.of(
                         context,
@@ -159,6 +160,7 @@ class GroupSettingScreen extends StatelessWidget {
                   ListTile(
                     leading: Icon(Icons.people_alt_rounded),
                     title: Text('Members'),
+                    trailing: Icon(Icons.keyboard_arrow_right_rounded),
                     tileColor: Theme.of(
                       context,
                     ).colorScheme.surfaceContainerLowest,
@@ -170,6 +172,7 @@ class GroupSettingScreen extends StatelessWidget {
                     visible: viewModel.hasPermission('group-role.manage'),
                     child: ListTile(
                       leading: Icon(Icons.security),
+                      trailing: Icon(Icons.keyboard_arrow_right_rounded),
                       title: Text('Roles and Permissions'),
                       tileColor: Theme.of(
                         context,
