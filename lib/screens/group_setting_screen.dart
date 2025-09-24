@@ -40,6 +40,38 @@ class GroupSettingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               GestureDetector(
+                onLongPress: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return SimpleDialog(
+                        contentPadding: EdgeInsets.all(0),
+                        backgroundColor: Colors.transparent,
+                        children: [
+                          InteractiveViewer(
+                            boundaryMargin: const EdgeInsets.all(400.0),
+                            minScale: 0.1,
+                            maxScale: 5,
+                            child: viewModel.groupProfile == null
+                                ? viewModel.group.groupProfile == null
+                                      ? const SizedBox.shrink()
+                                      : Image.network(
+                                          viewModel.group.groupProfile!,
+                                          headers: {
+                                            'Authorization':
+                                                'Bearer ${viewModel.authToken?.accessToken}',
+                                            'Content-Type': 'application/json',
+                                          },
+                                        )
+                                : Image.file(
+                                    File(viewModel.groupProfile!.path),
+                                  ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 onTap: viewModel.hasPermission('group.update')
                     ? () {
                         viewModel.pickGroupProfile();
@@ -75,6 +107,10 @@ class GroupSettingScreen extends StatelessWidget {
                         'Tap to select group image',
                         style: TextStyle(color: Colors.grey[600]),
                       ),
+                    ),
+                    Text(
+                      'Long press to view group image',
+                      style: TextStyle(color: Colors.grey[600]),
                     ),
                   ],
                 ),
