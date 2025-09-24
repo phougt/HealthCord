@@ -1,9 +1,9 @@
 import 'package:family_health_record/models/group_links/group_link.dart';
 import 'package:family_health_record/viewModels/group_link_viewmodel.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 
 class GroupLinkScreen extends StatelessWidget {
   const GroupLinkScreen({super.key});
@@ -73,47 +73,58 @@ class GroupLinkScreen extends StatelessWidget {
                 physics: const AlwaysScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   final link = viewModel.groupLinks[index];
-                  return ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.link)),
-                    title: SelectableText(link.link),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.copy),
-                          onPressed: () async {
-                            await Clipboard.setData(
-                              ClipboardData(text: link.link),
-                            );
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Link copied to clipboard'),
-                              ),
-                            );
-                          },
-                        ),
-                        Visibility(
-                          visible: viewModel.hasPermission(
-                            'invite-link.delete',
-                          ),
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.delete_outline_rounded,
-                              size: 30,
-                              color: Theme.of(context).colorScheme.error,
+                  return Column(
+                    spacing: 4,
+                    children: [
+                      ListTile(
+                        leading: CircleAvatar(child: Icon(Icons.link)),
+                        title: SelectableText(link.link),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.copy),
+                              onPressed: () async {
+                                await Clipboard.setData(
+                                  ClipboardData(text: link.link),
+                                );
+                                if (!context.mounted) return;
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Link copied to clipboard'),
+                                  ),
+                                );
+                              },
                             ),
-                            onPressed: () async {
-                              _showDeleteConfirmationDialog(
-                                context,
-                                viewModel,
-                                link,
-                              );
-                            },
-                          ),
+                            Visibility(
+                              visible: viewModel.hasPermission(
+                                'invite-link.delete',
+                              ),
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.delete_outline_rounded,
+                                  size: 30,
+                                  color: Theme.of(context).colorScheme.error,
+                                ),
+                                onPressed: () async {
+                                  _showDeleteConfirmationDialog(
+                                    context,
+                                    viewModel,
+                                    link,
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        indent: 16,
+                        endIndent: 16,
+                      ),
+                    ],
                   );
                 },
               ),
