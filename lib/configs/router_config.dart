@@ -10,6 +10,7 @@ import "package:family_health_record/repositories/user/user_repository.dart";
 import "package:family_health_record/screens/create_doctor_screen.dart";
 import "package:family_health_record/screens/create_group_screen.dart";
 import "package:family_health_record/screens/create_hospital_screen.dart";
+import "package:family_health_record/screens/create_role_screen.dart";
 import "package:family_health_record/screens/group_home_screen.dart";
 import "package:family_health_record/screens/group_link_screen.dart";
 import "package:family_health_record/screens/group_member_screen.dart";
@@ -25,6 +26,7 @@ import "package:family_health_record/screens/splash_screen.dart";
 import "package:family_health_record/viewModels/create_doctor_viewmodel.dart";
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
 import "package:family_health_record/viewModels/create_hospital_viewmodel.dart";
+import "package:family_health_record/viewModels/create_role_viewmodel.dart";
 import "package:family_health_record/viewModels/group_home_viewmodel.dart";
 import "package:family_health_record/viewModels/group_link_viewmodel.dart";
 import "package:family_health_record/viewModels/group_member_viewmodel.dart";
@@ -254,6 +256,26 @@ final GoRouter rootRouter = GoRouter(
                     ),
                   ],
                   child: const GroupRolePermissionsScreen(),
+                );
+              },
+            ),
+            GoRoute(
+              path: '/createRole',
+              name: 'createRoleScreen',
+              builder: (context, state) {
+                return MultiProvider(
+                  providers: [
+                    ChangeNotifierProvider(
+                      create: (context) {
+                        return CreateRoleViewModel(
+                          permissionRepository: context
+                              .read<PermissionRepository>(),
+                          group: (state.extra as Map<String, dynamic>)['group'],
+                        );
+                      },
+                    ),
+                  ],
+                  child: const CreateRoleScreen(),
                 );
               },
             ),

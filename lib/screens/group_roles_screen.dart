@@ -16,39 +16,58 @@ class GroupRolesScreen extends StatelessWidget {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(8.0),
-              child: CustomScrollView(
-                slivers: [
-                  SliverList.builder(
-                    itemCount: viewModel.roles.length,
-                    itemBuilder: (context, index) {
-                      final role = viewModel.roles[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
-                        ),
-                        child: ListTile(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await viewModel.fetchRoles();
+                },
+                child: CustomScrollView(
+                  slivers: [
+                    SliverList.builder(
+                      itemCount: viewModel.roles.length,
+                      itemBuilder: (context, index) {
+                        final role = viewModel.roles[index];
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
                           ),
-                          tileColor: Theme.of(
-                            context,
-                          ).colorScheme.surfaceContainerLowest,
-                          leading: const Icon(Icons.health_and_safety_rounded),
-                          title: Text(role.name),
-                          onTap: () {
-                            context.pushNamed(
-                              "groupRolePermissionsScreen",
-                              extra: {'group': viewModel.group, 'role': role},
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                          child: ListTile(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            tileColor: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLowest,
+                            leading: const Icon(
+                              Icons.health_and_safety_rounded,
+                            ),
+                            title: Text(role.name),
+                            subtitle: Text(
+                              'Permissions granted: ${role.permissions.length}',
+                            ),
+                            onTap: () {
+                              context.pushNamed(
+                                "groupRolePermissionsScreen",
+                                extra: {'group': viewModel.group, 'role': role},
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context.pushNamed(
+            'createRoleScreen',
+            extra: {'group': viewModel.group},
+          );
+        },
+        child: Icon(Icons.add),
+      ),
     );
   }
 }

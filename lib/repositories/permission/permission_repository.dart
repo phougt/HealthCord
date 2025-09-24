@@ -10,4 +10,6 @@ abstract class PermissionRepository {
   });
 
   Future<Result<List<Permission>>> getRolePermissions({required int roleId});
+
+  Future<Result<void>> createRole({required String name, required int groupId});
 }

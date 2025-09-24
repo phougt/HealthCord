@@ -97,4 +97,30 @@ class ApiPermissionRepository implements PermissionRepository {
       ),
     );
   }
+
+  @override
+  Future<Result<void>> createRole({
+    required String name,
+    required int groupId,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '/group/$groupId/role',
+        data: {'name': name, 'group_id': groupId},
+      );
+      if (response.statusCode == 200) {
+        return Result.ok(data: null, message: 'Role created successfully');
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while creating role'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while creating role'),
+    );
+  }
 }

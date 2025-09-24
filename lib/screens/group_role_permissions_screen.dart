@@ -12,57 +12,55 @@ class GroupRolePermissionsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Role Permissions'), actions: []),
-      body: viewModel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              padding: EdgeInsetsGeometry.all(16),
-              itemCount: viewModel.permissions.length,
-              itemBuilder: (context, index) {
-                final kind = viewModel.permissions.keys.elementAt(index);
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: ExpansionTile(
-                    backgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerLowest,
-                    collapsedBackgroundColor: Theme.of(
-                      context,
-                    ).colorScheme.surfaceContainerLowest,
-                    collapsedShape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+      body: ListView.builder(
+        padding: EdgeInsetsGeometry.all(16),
+        itemCount: viewModel.permissions.length,
+        itemBuilder: (context, index) {
+          final kind = viewModel.permissions.keys.elementAt(index);
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: ExpansionTile(
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerLowest,
+              collapsedBackgroundColor: Theme.of(
+                context,
+              ).colorScheme.surfaceContainerLowest,
+              collapsedShape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              childrenPadding: EdgeInsets.symmetric(vertical: 8),
+              maintainState: true,
+              title: Text(kind),
+              initiallyExpanded: viewModel.permissions[kind]!.isNotEmpty,
+              children: [
+                for (final permission in viewModel.permissions[kind]!)
+                  SwitchListTile(
+                    title: Text(
+                      permission.name,
+                      style: TextStyle(overflow: TextOverflow.ellipsis),
                     ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                    subtitle: Text(
+                      permission.description,
+                      style: TextStyle(overflow: TextOverflow.ellipsis),
                     ),
-                    childrenPadding: EdgeInsets.symmetric(vertical: 8),
-                    maintainState: true,
-                    title: Text(kind),
-                    initiallyExpanded: viewModel.permissions[kind]!.isNotEmpty,
-                    children: [
-                      for (final permission in viewModel.permissions[kind]!)
-                        SwitchListTile(
-                          title: Text(
-                            permission.name,
-                            style: TextStyle(overflow: TextOverflow.ellipsis),
-                          ),
-                          subtitle: Text(
-                            permission.description,
-                            style: TextStyle(overflow: TextOverflow.ellipsis),
-                          ),
-                          value: viewModel.selectedPermissions.contains(
-                            permission.id,
-                          ),
-                          onChanged: viewModel.role.type == RoleType.custom
-                              ? (value) {
-                                  viewModel.togglePermission(permission);
-                                }
-                              : null,
-                        ),
-                    ],
+                    value: viewModel.selectedPermissions.contains(
+                      permission.id,
+                    ),
+                    onChanged: viewModel.role.type == RoleType.custom
+                        ? (value) {
+                            viewModel.togglePermission(permission);
+                          }
+                        : null,
                   ),
-                );
-              },
+              ],
             ),
+          );
+        },
+      ),
       bottomNavigationBar: Visibility(
         visible: viewModel.role.type == RoleType.custom,
         child: BottomAppBar(
@@ -90,18 +88,21 @@ class GroupRolePermissionsScreen extends StatelessWidget {
                       return;
                     }
 
+                    await viewModel.setDefaultSelectedPermissions();
                     if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Failed to save changes')),
                     );
                   },
-                  child: Row(
-                    spacing: 6,
-                    children: [
-                      const Icon(Icons.save),
-                      const Text('Save Changes'),
-                    ],
-                  ),
+                  child: viewModel.isLoading
+                      ? const CircularProgressIndicator()
+                      : Row(
+                          spacing: 6,
+                          children: [
+                            const Icon(Icons.save),
+                            const Text('Save Changes'),
+                          ],
+                        ),
                 ),
               ),
             ],
