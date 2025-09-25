@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:family_health_record/viewModels/create_group_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -83,7 +84,7 @@ class CreateGroupScreen extends StatelessWidget {
                           );
 
                           if (!context.mounted) return;
-                          context.pop();
+                          context.pop<bool>(true);
                         }
                       }
                     : null,

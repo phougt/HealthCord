@@ -185,8 +185,13 @@ class HomeScreen extends StatelessWidget {
                           ),
                           leading: const Icon(Icons.group_add),
                           title: const Text('Create New Group'),
-                          onTap: () {
-                            context.pushNamed('createGroupScreen');
+                          onTap: () async {
+                            final bool? shouldRefresh = await context
+                                .pushNamed<bool>('createGroupScreen');
+
+                            if (shouldRefresh == true) {
+                              viewModel.refreshGroups();
+                            }
                           },
                         ),
                         ListTile(
@@ -195,8 +200,13 @@ class HomeScreen extends StatelessWidget {
                           ),
                           leading: const Icon(Icons.group_rounded),
                           title: const Text('Join Existing Group'),
-                          onTap: () {
-                            context.pushNamed('joinGroupScreen');
+                          onTap: () async {
+                            final bool? shouldRefresh = await context
+                                .pushNamed<bool>('joinGroupScreen');
+
+                            if (shouldRefresh == true) {
+                              viewModel.refreshGroups();
+                            }
                           },
                         ),
                       ],

@@ -45,7 +45,7 @@ class CreateHospitalScreen extends StatelessWidget {
                           );
 
                           if (!context.mounted) return;
-                          context.pop();
+                          context.pop<bool>(true);
                         }
 
                         if (message.isNotEmpty && errors.isEmpty) {

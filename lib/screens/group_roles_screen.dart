@@ -60,11 +60,15 @@ class GroupRolesScreen extends StatelessWidget {
               ),
             ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.pushNamed(
+        onPressed: () async {
+          final bool? shouldRefresh = await context.pushNamed<bool>(
             'createRoleScreen',
             extra: {'group': viewModel.group},
           );
+
+          if (shouldRefresh == true) {
+            await viewModel.fetchRoles();
+          }
         },
         child: Icon(Icons.add),
       ),

@@ -312,13 +312,13 @@ class GroupSettingScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomAppBar(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Visibility(
-              visible: viewModel.hasPermission('group.update'),
-              child: Padding(
+      bottomNavigationBar: Visibility(
+        visible: viewModel.hasPermission('group.update'),
+        child: BottomAppBar(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: FilledButton(
                   onPressed: !viewModel.isLoading
@@ -345,8 +345,8 @@ class GroupSettingScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

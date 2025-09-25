@@ -91,30 +91,42 @@ class MedicalEntitiesScreen extends StatelessWidget {
                     return Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        viewModel.hasPermissions('doctor.create')
-                            ? ListTile(
-                                leading: const Icon(Icons.person_4_rounded),
-                                title: const Text('Add Doctor'),
-                                onTap: () {
-                                  context.pushNamed(
+                        Visibility(
+                          visible: viewModel.hasPermissions('doctor.create'),
+                          child: ListTile(
+                            leading: const Icon(Icons.person_4_rounded),
+                            title: const Text('Add Doctor'),
+                            onTap: () async {
+                              final bool? shouldRefresh = await context
+                                  .pushNamed<bool>(
                                     'createDoctorScreen',
                                     extra: {'group': viewModel.group},
                                   );
-                                },
-                              )
-                            : const SizedBox.shrink(),
-                        viewModel.hasPermissions('hospital.create')
-                            ? ListTile(
-                                leading: const Icon(Icons.home_work_rounded),
-                                title: const Text('Add Hospital'),
-                                onTap: () {
-                                  context.pushNamed(
+
+                              if (shouldRefresh == true) {
+                                viewModel.refreshEntities();
+                              }
+                            },
+                          ),
+                        ),
+                        Visibility(
+                          visible: viewModel.hasPermissions('hospital.create'),
+                          child: ListTile(
+                            leading: const Icon(Icons.home_work_rounded),
+                            title: const Text('Add Hospital'),
+                            onTap: () async {
+                              final bool? shouldRefresh = await context
+                                  .pushNamed<bool>(
                                     'createHospitalScreen',
                                     extra: {'group': viewModel.group},
                                   );
-                                },
-                              )
-                            : const SizedBox.shrink(),
+
+                              if (shouldRefresh == true) {
+                                viewModel.refreshEntities();
+                              }
+                            },
+                          ),
+                        ),
                       ],
                     );
                   },

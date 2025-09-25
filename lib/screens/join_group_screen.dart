@@ -54,7 +54,7 @@ class JoinGroupScreen extends StatelessWidget {
                           );
 
                           if (!context.mounted) return;
-                          context.pop();
+                          context.pop<bool>(true);
                           return;
                         }
 
