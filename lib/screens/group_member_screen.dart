@@ -1,3 +1,4 @@
+import 'package:family_health_record/enums/role_type.dart';
 import 'package:family_health_record/managers/session_manager.dart';
 import 'package:family_health_record/viewModels/group_member_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,7 @@ class GroupMemberScreen extends StatelessWidget {
                       return [
                         if (viewModel.hasPermission('group-user.delete') &&
                             member.id != authTokenManager.user?.id &&
-                            member.roles![0].name != 'Owner')
+                            member.roles![0].type != RoleType.owner)
                           PopupMenuItem(
                             value: 'remove-from-group',
                             child: Text('Remove from Group'),
