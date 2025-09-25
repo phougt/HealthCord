@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<HomeViewModel>();
-    final authTokenManager = context.watch<SessionManager>();
+    final sessionManager = context.watch<SessionManager>();
 
     return Scaffold(
       body: RefreshIndicator(
@@ -43,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                           scale: 2.5,
                         ),
                         Text(
-                          'Welcome back, ${authTokenManager.user?.firstname ?? 'User'}',
+                          'Welcome back, ${sessionManager.user?.firstname ?? 'User'}',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -60,24 +60,31 @@ class HomeScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: IconButton(
-                    onPressed: () {
-                      authTokenManager.clearAuthToken();
-                    },
-                    icon: CircleAvatar(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.inversePrimary,
-                      radius: 18,
-                      child: authTokenManager.user?.profile != null
-                          ? Image.network(
-                              authTokenManager.user?.profile ?? '',
-                              headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization':
-                                    'Bearer ${authTokenManager.authToken?.accessToken}',
-                              },
-                            )
-                          : const Icon(Icons.person, size: 25),
+                    onPressed: () async {},
+                    icon: GestureDetector(
+                      onTap: () {
+                        _showAccountDialog(
+                          context,
+                          sessionManager: sessionManager,
+                          homeViewModel: viewModel,
+                        );
+                      },
+                      child: CircleAvatar(
+                        backgroundColor: Theme.of(
+                          context,
+                        ).colorScheme.inversePrimary,
+                        radius: 18,
+                        child: sessionManager.user?.profile != null
+                            ? Image.network(
+                                sessionManager.user?.profile ?? '',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                  'Authorization':
+                                      'Bearer ${sessionManager.authToken?.accessToken}',
+                                },
+                              )
+                            : const Icon(Icons.person, size: 25),
+                      ),
                     ),
                   ),
                 ),
@@ -291,6 +298,46 @@ class HomeScreen extends StatelessWidget {
           trailing: const Icon(Icons.chevron_right),
         ),
       ),
+    );
+  }
+
+  void _showAccountDialog(
+    BuildContext context, {
+    required SessionManager sessionManager,
+    required HomeViewModel homeViewModel,
+  }) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Account'),
+          content: FilledButton(
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all(
+                Theme.of(context).colorScheme.error,
+              ),
+            ),
+            onPressed: () async {
+              final bool logoutSuccess =
+                  (await sessionManager.logout()).isSuccessful;
+              if (logoutSuccess) {
+                if (!context.mounted) return;
+                context.go('/');
+              }
+            },
+            child: homeViewModel.isLoading
+                ? const CircularProgressIndicator()
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 5,
+                    children: [
+                      const Icon(Icons.logout_rounded),
+                      const Text("Logout"),
+                    ],
+                  ),
+          ),
+        );
+      },
     );
   }
 }
