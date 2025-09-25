@@ -104,7 +104,9 @@ class ApiPermissionRepository implements PermissionRepository {
     required int groupId,
   }) async {
     try {
-      final response = await _dio.post(
+      final dio = _dio.clone()
+        ..options.headers['Content-Type'] = 'application/json';
+      final response = await dio.post(
         '/group/$groupId/role',
         data: {'name': name, 'group_id': groupId},
       );
