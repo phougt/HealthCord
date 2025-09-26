@@ -38,4 +38,6 @@ abstract class GroupRepository {
   );
 
   Future<Result<List<Role>>> getGroupRoles(int groupId);
+
+  Future<Result<void>> deleteRole(int roleId);
 }

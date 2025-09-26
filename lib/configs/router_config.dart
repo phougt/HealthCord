@@ -230,6 +230,7 @@ final GoRouter rootRouter = GoRouter(
                         return GroupRolesViewModel(
                           group: (state.extra as Map<String, dynamic>)['group'],
                           groupRepository: context.read<GroupRepository>(),
+                          permissionManager: context.read<PermissionManager>(),
                         )..fetchRoles();
                       },
                     ),

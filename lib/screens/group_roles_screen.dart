@@ -1,3 +1,4 @@
+import 'package:family_health_record/models/roles/role.dart';
 import 'package:family_health_record/viewModels/group_roles_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +52,31 @@ class GroupRolesScreen extends StatelessWidget {
                                 extra: {'group': viewModel.group, 'role': role},
                               );
                             },
+                            trailing: PopupMenuButton(
+                              icon: Icon(Icons.more_vert_rounded),
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(
+                                      'Delete',
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.error,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      _showDeleteDialog(
+                                        context,
+                                        viewModel: viewModel,
+                                        role: role,
+                                      );
+                                    },
+                                  ),
+                                ];
+                              },
+                            ),
                           ),
                         );
                       },
@@ -72,6 +98,53 @@ class GroupRolesScreen extends StatelessWidget {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  void _showDeleteDialog(
+    BuildContext context, {
+    required GroupRolesViewModel viewModel,
+    required Role role,
+  }) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Delete Role'),
+          content: Text('Are you sure you want to delete this role?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                context.pop();
+              },
+              child: Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final bool result = await viewModel.deleteRole(role.id);
+                if (result) {
+                  if (!context.mounted) return;
+                  context.pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Role deleted successfully')),
+                  );
+                  return;
+                }
+
+                if (!context.mounted) return;
+                context.pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete role')),
+                );
+              },
+              style: FilledButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.error,
+              ),
+              child: Text('Delete'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

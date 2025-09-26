@@ -304,4 +304,27 @@ class ApiGroupRepository extends GroupRepository {
       ),
     );
   }
+
+  @override
+  Future<Result<void>> deleteRole(int roleId) async {
+    try {
+      final response = await _dio.delete('/group-role/$roleId');
+      if (response.statusCode == 200) {
+        return Result.ok(
+          data: null,
+          message: response.data['message'] ?? 'Role deleted successfully',
+        );
+      } else if (response.statusCode == 401 || response.statusCode == 422) {
+        return Result.fail(ApiError.fromJson(response.data));
+      }
+    } catch (e) {
+      return Result.fail(
+        ApiError(message: 'An error occurred while deleting role'),
+      );
+    }
+
+    return Result.fail(
+      ApiError(message: 'An unexpected error occurred while deleting role'),
+    );
+  }
 }
