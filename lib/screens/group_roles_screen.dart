@@ -1,3 +1,4 @@
+import 'package:family_health_record/enums/role_type.dart';
 import 'package:family_health_record/models/roles/role.dart';
 import 'package:family_health_record/viewModels/group_roles_viewmodel.dart';
 import 'package:flutter/material.dart';
@@ -52,30 +53,33 @@ class GroupRolesScreen extends StatelessWidget {
                                 extra: {'group': viewModel.group, 'role': role},
                               );
                             },
-                            trailing: PopupMenuButton(
-                              icon: Icon(Icons.more_vert_rounded),
-                              itemBuilder: (context) {
-                                return [
-                                  PopupMenuItem(
-                                    value: 1,
-                                    child: Text(
-                                      'Delete',
-                                      style: TextStyle(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.error,
+                            trailing: Visibility(
+                              visible: role.type == RoleType.custom,
+                              child: PopupMenuButton(
+                                icon: Icon(Icons.more_vert_rounded),
+                                itemBuilder: (context) {
+                                  return [
+                                    PopupMenuItem(
+                                      value: 1,
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.error,
+                                        ),
                                       ),
+                                      onTap: () {
+                                        _showDeleteDialog(
+                                          context,
+                                          viewModel: viewModel,
+                                          role: role,
+                                        );
+                                      },
                                     ),
-                                    onTap: () {
-                                      _showDeleteDialog(
-                                        context,
-                                        viewModel: viewModel,
-                                        role: role,
-                                      );
-                                    },
-                                  ),
-                                ];
-                              },
+                                  ];
+                                },
+                              ),
                             ),
                           ),
                         );
